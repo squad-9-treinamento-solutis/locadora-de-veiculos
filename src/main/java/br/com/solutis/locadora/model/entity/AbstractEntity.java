@@ -34,7 +34,7 @@ public abstract class AbstractEntity {
     protected void onCreate() {
             createdAt = new java.util.Date();
             updatedAt = new java.util.Date();
-            }
+    }
 
     @PreUpdate
     protected void onUpdate() {

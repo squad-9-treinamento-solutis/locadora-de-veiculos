@@ -1,4 +1,4 @@
-package br.com.solutis.locadora.model.entity;
+package br.com.solutis.locadora.model.dto;
 
 import lombok.Data;
 
