@@ -4,11 +4,16 @@ import br.com.solutis.locadora.mapper.DriverMapper;
 import br.com.solutis.locadora.model.dto.DriverDto;
 import br.com.solutis.locadora.model.entity.DriverEntity;
 import br.com.solutis.locadora.repository.DriverRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 @Service
+@RequiredArgsConstructor
+@Transactional(propagation = Propagation.REQUIRED)
 public class DriverService extends AbstractService<DriverDto>{
 
     @Autowired
