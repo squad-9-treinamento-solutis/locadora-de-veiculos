@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @ToString
 @Table(name = "persons")
-public class PersonEntity extends AbstractEntity {
+public class Person extends AbstractEntity {
     @NotNull(message = "Name is required")
     @NotBlank(message = "Name is required")
     @Size(min = 3, max = 255, message = "Name must be between 3 and 255 characters long")
@@ -38,11 +38,11 @@ public class PersonEntity extends AbstractEntity {
     @NotNull(message = "Gender is required")
     @Enumerated(EnumType.STRING)
     @Column(name = "gender", nullable = false)
-    private Gender gender;
+    private GenderEnum genderEnum;
 
     @OneToOne(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
-    private DriverEntity driver;
+    private Driver driver;
 
     @OneToOne(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
-    private EmployeeEntity employee;
+    private Employee employee;
 }
