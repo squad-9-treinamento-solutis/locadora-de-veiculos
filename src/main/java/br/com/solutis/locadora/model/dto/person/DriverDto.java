@@ -13,4 +13,5 @@ public class DriverDto extends PersonDto {
     @NotBlank(message = "CNH is required")
     @Size( max = 255, message = "CNH must be less than 255 characters long")
     private String cnh;
+    private Long id;
 }
