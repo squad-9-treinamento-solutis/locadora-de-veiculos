@@ -4,6 +4,7 @@ import br.com.solutis.locadora.mapper.DriverMapper;
 import br.com.solutis.locadora.model.dto.DriverDto;
 import br.com.solutis.locadora.model.entity.DriverEntity;
 import br.com.solutis.locadora.repository.DriverRepository;
+import br.com.solutis.locadora.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +18,7 @@ import java.util.List;
 public class DriverService extends AbstractService<DriverDto> {
     private final DriverRepository driverRepository;
     private final DriverMapper driverMapper;
+    private final PersonRepository personRepository;
 
     @Override
     public DriverDto findById(Long id) {

@@ -13,3 +13,4 @@ public interface DriverMapper extends GenericMapper<DriverEntity, DriverDto> {
     @Override
     DriverEntity dtoToModel(DriverDto dto);
 }
+
