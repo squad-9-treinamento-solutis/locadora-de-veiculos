@@ -1,7 +1,7 @@
 package br.com.solutis.locadora.controller;
 
 import br.com.solutis.locadora.model.dto.AbstractDto;
-import br.com.solutis.locadora.service.AbstractService;
+import br.com.solutis.locadora.service.CrudService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public abstract class AbstractController<T extends AbstractDto> {
 
-    private final AbstractService<T> service;
+    private final CrudService<T> service;
 
     @Operation(
             summary = "List by id",
