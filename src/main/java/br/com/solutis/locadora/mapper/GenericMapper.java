@@ -3,10 +3,11 @@ package br.com.solutis.locadora.mapper;
 
 import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
-public interface GenericMapper<E,D> {
+public interface GenericMapper<E, D> {
     @Mapping(target = ".", source = ".", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     D modelToDTO(E entity);
 
@@ -14,5 +15,5 @@ public interface GenericMapper<E,D> {
     E dtoToModel(D dto);
 
     @Mapping(target = ".", source = ".", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    List<D> listModelToListDto(List<E> all);
+    List<D> listModelToListDto(Page<E> all);
 }
