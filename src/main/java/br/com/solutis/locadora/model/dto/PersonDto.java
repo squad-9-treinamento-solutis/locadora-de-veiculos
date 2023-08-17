@@ -1,6 +1,6 @@
 package br.com.solutis.locadora.model.dto;
 
-import br.com.solutis.locadora.model.entity.Gender;
+import br.com.solutis.locadora.model.entity.GenderEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -31,5 +31,5 @@ public abstract class PersonDto extends AbstractDto {
 
     @NotNull(message = "Gender is required")
     @Column(name = "gender", nullable = false)
-    private Gender gender;
+    private GenderEnum genderEnum;
 }

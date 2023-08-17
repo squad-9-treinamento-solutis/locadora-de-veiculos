@@ -4,22 +4,20 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 
 @Entity
-@Data
-@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @SuperBuilder
 @Table(name = "insurance_policies")
-public class InsurancePolicyEntity extends AbstractEntity {
-    @NotNull(message = "Franchise value is required")
+public class InsurancePolicy extends AbstractEntity {
     @Column(name = "franchise_value", nullable = false)
     private BigDecimal franchiseValue;
 
@@ -33,5 +31,5 @@ public class InsurancePolicyEntity extends AbstractEntity {
     private boolean theftCoverage = false;
 
     @OneToOne(mappedBy = "insurancePolicy")
-    private CarRentEntity carRent;
+    private CarRent carRent;
 }

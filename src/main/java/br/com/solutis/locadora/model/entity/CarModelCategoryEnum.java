@@ -1,6 +1,6 @@
 package br.com.solutis.locadora.model.entity;
 
-public enum CarModelCategory {
+public enum CarModelCategoryEnum {
     COMPACT_HATCHBACK,
     MIDSIZE_HATCHBACK,
     COMPACT_SEDAN,

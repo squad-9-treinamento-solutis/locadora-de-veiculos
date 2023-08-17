@@ -1,6 +1,6 @@
 package br.com.solutis.locadora.model.entity;
 
-public enum Gender {
+public enum GenderEnum {
     MALE,
     FEMALE,
 }
