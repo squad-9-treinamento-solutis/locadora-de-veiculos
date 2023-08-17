@@ -4,7 +4,7 @@ import br.com.solutis.locadora.exception.BadRequestException;
 import br.com.solutis.locadora.mapper.InsurancePolicyMapper;
 import br.com.solutis.locadora.model.dto.InsurancePolicyDto;
 import br.com.solutis.locadora.model.entity.InsurancePolicy;
-import br.com.solutis.locadora.repository.GenericRepository;
+import br.com.solutis.locadora.repository.CrudRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.REQUIRED)
 public class InsurancePolicyService implements CrudService<InsurancePolicyDto>{
-    private final GenericRepository<InsurancePolicy> insurancePolicyRepository;
+    private final CrudRepository<InsurancePolicy> insurancePolicyRepository;
     private final InsurancePolicyMapper insurancePolicyMapper;
 
     public InsurancePolicyDto findById(Long id) {

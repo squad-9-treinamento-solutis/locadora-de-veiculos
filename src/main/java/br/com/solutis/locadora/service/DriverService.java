@@ -3,7 +3,7 @@ package br.com.solutis.locadora.service;
 import br.com.solutis.locadora.mapper.DriverMapper;
 import br.com.solutis.locadora.model.dto.DriverDto;
 import br.com.solutis.locadora.model.entity.Driver;
-import br.com.solutis.locadora.repository.DriverRepository;
+import br.com.solutis.locadora.repository.CrudRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -15,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.REQUIRED)
 public class DriverService implements CrudService<DriverDto>{
-    private final DriverRepository driverRepository;
+    private final CrudRepository<Driver> driverRepository;
     private final DriverMapper driverMapper;
 
     public DriverDto findById(Long id) {
