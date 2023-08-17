@@ -1,7 +1,6 @@
 package br.com.solutis.locadora.service;
 
 import br.com.solutis.locadora.model.dto.AbstractDto;
-import br.com.solutis.locadora.model.entity.AbstractEntity;
 
 import java.util.List;
 
