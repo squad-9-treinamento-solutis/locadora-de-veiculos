@@ -1,6 +1,6 @@
 package br.com.solutis.locadora.model.dto;
 
-import br.com.solutis.locadora.model.entity.GenderEnum;
+import br.com.solutis.locadora.model.entity.person.GenderEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;

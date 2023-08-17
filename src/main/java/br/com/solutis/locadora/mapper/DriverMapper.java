@@ -1,7 +1,7 @@
 package br.com.solutis.locadora.mapper;
 
 import br.com.solutis.locadora.model.dto.DriverDto;
-import br.com.solutis.locadora.model.entity.Driver;
+import br.com.solutis.locadora.model.entity.person.Driver;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueCheckStrategy;
 import org.springframework.stereotype.Component;

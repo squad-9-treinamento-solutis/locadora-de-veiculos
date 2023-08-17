@@ -1,5 +1,7 @@
-package br.com.solutis.locadora.model.entity;
+package br.com.solutis.locadora.model.entity.car;
 
+import br.com.solutis.locadora.model.entity.AbstractEntity;
+import br.com.solutis.locadora.model.entity.rent.Rent;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -39,18 +41,18 @@ public class Car extends AbstractEntity {
     @JsonIgnoreProperties("cars")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "model_id", nullable = false)
-    private CarModel model;
+    private Model model;
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "car_accessories_cars",
+            name = "car_accessories",
             joinColumns = @JoinColumn(name = "car_id"),
             inverseJoinColumns = @JoinColumn(name = "car_accessory_id")
     )
-    private List<CarAccessory> accessories;
+    private List<Accessory> accessories;
 
     @JsonIgnoreProperties("cars")
     @OneToMany(mappedBy = "car")
-    private List<CarRent> carRents;
+    private List<Rent> rents;
 }
