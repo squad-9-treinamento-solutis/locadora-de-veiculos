@@ -1,16 +1,16 @@
 package br.com.solutis.locadora.controller;
 
-import br.com.solutis.locadora.model.dto.DriverDto;
+import br.com.solutis.locadora.model.dto.PersonDto;
 import br.com.solutis.locadora.service.AbstractService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@Tag(name = "DriverController")
+@Tag(name = "PersonController")
 @Controller
-@RequestMapping("/drivers")
-public class DriverController extends AbstractController<DriverDto> {
-    public DriverController(AbstractService<DriverDto> service) {
+@RequestMapping("/persons")
+public class PersonController extends AbstractController<PersonDto> {
+    public PersonController(AbstractService<PersonDto> service) {
         super(service);
     }
 }

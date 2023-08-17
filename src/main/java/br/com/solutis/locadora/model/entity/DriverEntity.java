@@ -18,10 +18,10 @@ import java.util.List;
 @ToString
 @SuperBuilder
 @Table(name = "drivers")
-public class DriverEntity extends AbstractEntity {
+public class DriverEntity extends PersonEntity {
     @NotNull(message = "CNH is required")
     @NotBlank(message = "CNH is required")
-    @Size( max = 255, message = "CNH must be less than 255 characters long")
+    @Size(max = 255, message = "CNH must be less than 255 characters long")
     @Column(unique = true, nullable = false)
     private String cnh;
 

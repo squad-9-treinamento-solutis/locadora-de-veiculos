@@ -20,16 +20,17 @@ public abstract class AbstractController<T extends AbstractDto> {
             tags = {"id", "get"})
     @GetMapping("/{id}")
     public ResponseEntity<T> findById(@PathVariable Long id) {
-        return new ResponseEntity<>( service.findById(id), HttpStatus.OK);
+        return new ResponseEntity<>(service.findById(id), HttpStatus.OK);
     }
 
     @Operation(
             summary = "List all",
             description = "Returns the information of all objects",
-            tags = {"all", "get"})
-    @GetMapping
-    public ResponseEntity<List<T>> findAll() {
-        return new ResponseEntity<>( service.findAll(), HttpStatus.OK);
+            tags = {"all", "get", "paginated"})
+    @GetMapping("/{pageNo}/{pageSize}")
+    public ResponseEntity<List<T>> findAll(@PathVariable int pageNo,
+                                           @PathVariable int pageSize) {
+        return new ResponseEntity<>(service.findAll(pageNo, pageSize), HttpStatus.OK);
     }
 
     @Operation(
@@ -47,7 +48,7 @@ public abstract class AbstractController<T extends AbstractDto> {
             tags = {"update", "put"})
     @PutMapping
     public ResponseEntity<T> update(@RequestBody T payload) {
-        return new ResponseEntity<>( service.update(payload), HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(service.update(payload), HttpStatus.NO_CONTENT);
     }
 
     @Operation(
