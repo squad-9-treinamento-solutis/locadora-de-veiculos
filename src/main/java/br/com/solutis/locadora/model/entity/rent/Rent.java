@@ -1,5 +1,8 @@
-package br.com.solutis.locadora.model.entity;
+package br.com.solutis.locadora.model.entity.rent;
 
+import br.com.solutis.locadora.model.entity.AbstractEntity;
+import br.com.solutis.locadora.model.entity.car.Car;
+import br.com.solutis.locadora.model.entity.person.Driver;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -15,8 +18,8 @@ import java.util.Date;
 @NoArgsConstructor
 @ToString
 @SuperBuilder
-@Table(name = "car_rents")
-public class CarRent extends AbstractEntity {
+@Table(name = "rents")
+public class Rent extends AbstractEntity {
     @Column(name = "rent_date", nullable = false)
     private Date rentDate;
 

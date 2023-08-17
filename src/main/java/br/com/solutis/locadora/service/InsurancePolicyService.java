@@ -3,7 +3,7 @@ package br.com.solutis.locadora.service;
 import br.com.solutis.locadora.exception.BadRequestException;
 import br.com.solutis.locadora.mapper.InsurancePolicyMapper;
 import br.com.solutis.locadora.model.dto.InsurancePolicyDto;
-import br.com.solutis.locadora.model.entity.InsurancePolicy;
+import br.com.solutis.locadora.model.entity.rent.InsurancePolicy;
 import br.com.solutis.locadora.repository.CrudRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

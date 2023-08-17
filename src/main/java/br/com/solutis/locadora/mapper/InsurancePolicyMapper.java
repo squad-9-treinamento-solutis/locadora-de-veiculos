@@ -1,7 +1,7 @@
 package br.com.solutis.locadora.mapper;
 
 import br.com.solutis.locadora.model.dto.InsurancePolicyDto;
-import br.com.solutis.locadora.model.entity.InsurancePolicy;
+import br.com.solutis.locadora.model.entity.rent.InsurancePolicy;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueCheckStrategy;
 import org.springframework.stereotype.Component;

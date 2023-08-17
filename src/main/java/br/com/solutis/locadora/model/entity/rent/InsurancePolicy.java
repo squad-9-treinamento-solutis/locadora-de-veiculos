@@ -1,5 +1,6 @@
-package br.com.solutis.locadora.model.entity;
+package br.com.solutis.locadora.model.entity.rent;
 
+import br.com.solutis.locadora.model.entity.AbstractEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
@@ -31,5 +32,5 @@ public class InsurancePolicy extends AbstractEntity {
     private boolean theftCoverage = false;
 
     @OneToOne(mappedBy = "insurancePolicy")
-    private CarRent carRent;
+    private Rent rent;
 }

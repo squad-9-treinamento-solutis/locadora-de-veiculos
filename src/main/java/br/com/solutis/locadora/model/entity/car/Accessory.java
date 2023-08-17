@@ -1,5 +1,6 @@
-package br.com.solutis.locadora.model.entity;
+package br.com.solutis.locadora.model.entity.car;
 
+import br.com.solutis.locadora.model.entity.AbstractEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -14,15 +15,15 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 @SuperBuilder
-@Table(name = "car_accessories")
-public class CarAccessory extends AbstractEntity {
+@Table(name = "accessories")
+public class Accessory extends AbstractEntity {
     @Column(nullable = false)
     private String description;
 
     @JsonIgnore
     @ManyToMany
     @JoinTable(
-            name = "car_accessories_cars",
+            name = "car_accessories",
             joinColumns = @JoinColumn(name = "car_accessory_id"),
             inverseJoinColumns = @JoinColumn(name = "car_id")
     )

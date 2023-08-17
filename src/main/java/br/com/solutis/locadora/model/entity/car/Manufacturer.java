@@ -1,5 +1,6 @@
-package br.com.solutis.locadora.model.entity;
+package br.com.solutis.locadora.model.entity.car;
 
+import br.com.solutis.locadora.model.entity.AbstractEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -14,12 +15,12 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 @SuperBuilder
-@Table(name = "car_manufacturers")
-public class CarManufacturer extends AbstractEntity {
+@Table(name = "manufacturers")
+public class Manufacturer extends AbstractEntity {
     @Column(nullable = false)
     private String name;
 
     @JsonIgnoreProperties("manufacturer")
     @OneToMany(mappedBy = "manufacturer", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<CarModel> models;
+    private List<Model> models;
 }

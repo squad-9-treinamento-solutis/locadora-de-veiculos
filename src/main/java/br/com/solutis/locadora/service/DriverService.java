@@ -2,7 +2,7 @@ package br.com.solutis.locadora.service;
 
 import br.com.solutis.locadora.mapper.DriverMapper;
 import br.com.solutis.locadora.model.dto.DriverDto;
-import br.com.solutis.locadora.model.entity.Driver;
+import br.com.solutis.locadora.model.entity.person.Driver;
 import br.com.solutis.locadora.repository.CrudRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

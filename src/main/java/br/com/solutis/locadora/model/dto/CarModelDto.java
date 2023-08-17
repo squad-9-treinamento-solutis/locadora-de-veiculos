@@ -1,6 +1,6 @@
 package br.com.solutis.locadora.model.dto;
 
-import br.com.solutis.locadora.model.entity.CarModelCategoryEnum;
+import br.com.solutis.locadora.model.entity.car.ModelCategoryEnum;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
@@ -19,7 +19,7 @@ public class CarModelDto extends AbstractDto {
 
     @NotNull(message = "Category is required")
     @Enumerated(EnumType.STRING)
-    private CarModelCategoryEnum category;
+    private ModelCategoryEnum category;
 
     @NotNull(message = "Manufacturer is required")
     private Long manufacturerId;
