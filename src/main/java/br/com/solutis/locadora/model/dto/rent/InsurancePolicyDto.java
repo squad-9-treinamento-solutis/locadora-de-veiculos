@@ -8,8 +8,8 @@ import lombok.EqualsAndHashCode;
 import java.math.BigDecimal;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class InsurancePolicyDto extends AbstractDto {
+@EqualsAndHashCode
+public class InsurancePolicyDto {
     @NotNull(message = "Franchise value is required")
     private BigDecimal franchiseValue;
 
@@ -18,4 +18,5 @@ public class InsurancePolicyDto extends AbstractDto {
     private boolean naturalPhenomenaCoverage = false;
 
     private boolean theftCoverage = false;
+    private Long id;
 }

@@ -23,7 +23,7 @@ public class DriverService implements CrudService<DriverDto> {
         return null;
     }
 
-    public List<DriverDto> findAll(int pageNo, int pageSize) {
+    public List<DriverDto> findAll() {
         return null;
     }
 
