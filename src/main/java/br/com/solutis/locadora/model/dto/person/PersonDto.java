@@ -6,7 +6,6 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,6 +13,8 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode
 public abstract class PersonDto {
+    private Long id;
+
     @NotNull(message = "Name is required")
     @NotBlank(message = "Name is required")
     @Size(min = 3, max = 255, message = "Name must be between 3 and 255 characters long")
@@ -31,5 +32,4 @@ public abstract class PersonDto {
     @NotNull(message = "Gender is required")
     @Column(name = "gender", nullable = false)
     private GenderEnum genderEnum;
-    private Long id;
 }

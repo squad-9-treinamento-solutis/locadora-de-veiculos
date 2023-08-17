@@ -5,7 +5,6 @@ import br.com.solutis.locadora.model.dto.car.ManufacturerDto;
 import br.com.solutis.locadora.model.entity.car.Manufacturer;
 import br.com.solutis.locadora.repository.CrudRepository;
 import br.com.solutis.locadora.service.CrudService;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -20,7 +19,15 @@ public class ManufacturerService implements CrudService<ManufacturerDto> {
     private final CrudRepository<Manufacturer> manufacturerRepository;
     private final ManufacturerMapper manufacturerMapper;
 
-    public ManufacturerDto findById(Long id){return  null;}
+    public ManufacturerDto findById(Long id) {
+        return null;
+    }
+
+    @Override
+    public List<ManufacturerDto> findAll(int pageNo, int pageSize) {
+        return null;
+    }
+
     public List<ManufacturerDto> findAll() {
         return null;
     }

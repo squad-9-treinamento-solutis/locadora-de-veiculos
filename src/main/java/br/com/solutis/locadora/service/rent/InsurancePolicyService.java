@@ -8,6 +8,9 @@ import br.com.solutis.locadora.model.entity.rent.InsurancePolicy;
 import br.com.solutis.locadora.repository.CrudRepository;
 import br.com.solutis.locadora.service.CrudService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,12 +29,19 @@ public class InsurancePolicyService implements CrudService<InsurancePolicyDto> {
                 .orElseThrow(() -> new InsurancePolicyNotFoundException(id));
     }
 
+<<<<<<< Updated upstream
     public List<InsurancePolicyDto> findAll() {
         try {
             return insurancePolicyMapper.listModelToListDto(insurancePolicyRepository.findAll());
         } catch (Exception e) {
             throw new InsurancePolicyException("An error occurred while fetching insurance policies.", e);
         }
+=======
+    public List<InsurancePolicyDto> findAll(int pageNo, int pageSize) {
+        Pageable paging = PageRequest.of(pageNo, pageSize);
+        Page<InsurancePolicy> insurancePolicies = insurancePolicyRepository.findAll(paging);
+        return insurancePolicyMapper.listModelToListDto(insurancePolicies);
+>>>>>>> Stashed changes
     }
 
     public InsurancePolicyDto add(InsurancePolicyDto payload) {

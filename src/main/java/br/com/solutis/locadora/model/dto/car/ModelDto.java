@@ -12,6 +12,8 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode
 public class ModelDto {
+    private Long id;
+
     @NotNull(message = "Description is required")
     @NotBlank(message = "Description is required")
     @Size(min = 1, max = 255, message = "Description must be between 1 and 255 characters long")
@@ -23,5 +25,4 @@ public class ModelDto {
 
     @NotNull(message = "Manufacturer is required")
     private Long manufacturerId;
-    private Long id;
 }

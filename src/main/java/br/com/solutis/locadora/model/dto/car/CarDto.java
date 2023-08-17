@@ -1,6 +1,5 @@
 package br.com.solutis.locadora.model.dto.car;
 
-import br.com.solutis.locadora.model.dto.AbstractDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -13,6 +12,8 @@ import java.math.BigDecimal;
 @Data
 @EqualsAndHashCode
 public class CarDto {
+    private Long id;
+
     @NotNull(message = "Plate is required")
     @NotBlank(message = "Plate is required")
     @Size(min = 1, max = 255, message = "Plate must be between 1 and 255 characters long")
@@ -39,5 +40,4 @@ public class CarDto {
     private Long modelId;
 
     private Long[] accessoriesIds;
-    private Long id;
 }
