@@ -1,6 +1,7 @@
 package br.com.solutis.locadora.service.rent;
 
-import br.com.solutis.locadora.exception.BadRequestException;
+import br.com.solutis.locadora.exception.rent.InsurancePolicyException;
+import br.com.solutis.locadora.exception.rent.InsurancePolicyNotFoundException;
 import br.com.solutis.locadora.mapper.rent.InsurancePolicyMapper;
 import br.com.solutis.locadora.model.dto.rent.InsurancePolicyDto;
 import br.com.solutis.locadora.model.entity.rent.InsurancePolicy;
@@ -22,28 +23,48 @@ public class InsurancePolicyService implements CrudService<InsurancePolicyDto> {
 
     public InsurancePolicyDto findById(Long id) {
         return insurancePolicyRepository.findById(id).map(insurancePolicyMapper::modelToDTO)
-                .orElseThrow(() -> new BadRequestException("Insurance Policy Not found"));
+                .orElseThrow(() -> new InsurancePolicyNotFoundException(id));
     }
 
     public List<InsurancePolicyDto> findAll() {
-        return insurancePolicyMapper.listModelToListDto(insurancePolicyRepository.findAll());
+        try {
+            return insurancePolicyMapper.listModelToListDto(insurancePolicyRepository.findAll());
+        } catch (Exception e) {
+            throw new InsurancePolicyException("An error occurred while fetching insurance policies.", e);
+        }
     }
 
     public InsurancePolicyDto add(InsurancePolicyDto payload) {
-        InsurancePolicy insurancePolicy = insurancePolicyRepository
-                .save(insurancePolicyMapper.dtoToModel(payload));
+        try {
+            InsurancePolicy insurancePolicy = insurancePolicyRepository
+                    .save(insurancePolicyMapper.dtoToModel(payload));
 
-        return insurancePolicyMapper.modelToDTO(insurancePolicy);
+            return insurancePolicyMapper.modelToDTO(insurancePolicy);
+        } catch (Exception e) {
+            throw new InsurancePolicyException("An error occurred while adding insurance policy.", e);
+        }
     }
 
     public InsurancePolicyDto update(InsurancePolicyDto payload) {
-        return insurancePolicyRepository.findById(payload.getId()).map(insurancePolicy -> {
-            insurancePolicyRepository.save(insurancePolicyMapper.dtoToModel(payload));
+        findById(payload.getId());
+
+        try {
+            InsurancePolicy insurancePolicy = insurancePolicyRepository
+                    .save(insurancePolicyMapper.dtoToModel(payload));
+
             return insurancePolicyMapper.modelToDTO(insurancePolicy);
-        }).orElseThrow(() -> new BadRequestException("Insurance Policy Not found"));
+        } catch (Exception e) {
+            throw new InsurancePolicyException("An error occurred while updating insurance policy.", e);
+        }
     }
 
     public void deleteById(Long id) {
-        insurancePolicyRepository.deleteById(id);
+        findById(id);
+
+        try {
+            insurancePolicyRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new InsurancePolicyException("An error occurred while deleting insurance policy.", e);
+        }
     }
 }
