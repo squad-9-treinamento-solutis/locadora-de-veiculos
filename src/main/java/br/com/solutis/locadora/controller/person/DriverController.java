@@ -1,12 +1,11 @@
-package br.com.solutis.locadora.controller;
+package br.com.solutis.locadora.controller.person;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "InsurancePolicyController")
+@Tag(name = "DriverController")
 @RestController
-@RequestMapping("/insurances")
-public class InsurancePolicyController {
-
+@RequestMapping("/drivers")
+public class DriverController {
 }
