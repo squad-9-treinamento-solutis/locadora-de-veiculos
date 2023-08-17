@@ -1,14 +1,11 @@
 package br.com.solutis.locadora.controller;
 
-import br.com.solutis.locadora.model.dto.DriverDto;
-import br.com.solutis.locadora.service.CrudService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "DriverController")
 @RestController
-@RequestMapping("/driver")
-public class DriverController extends AbstractController<DriverDto>{
-    public DriverController(CrudService<DriverDto> service) {
-        super(service);
-    }
+@RequestMapping("/drivers")
+public class DriverController {
 }
