@@ -29,19 +29,10 @@ public class InsurancePolicyService implements CrudService<InsurancePolicyDto> {
                 .orElseThrow(() -> new InsurancePolicyNotFoundException(id));
     }
 
-<<<<<<< Updated upstream
-    public List<InsurancePolicyDto> findAll() {
-        try {
-            return insurancePolicyMapper.listModelToListDto(insurancePolicyRepository.findAll());
-        } catch (Exception e) {
-            throw new InsurancePolicyException("An error occurred while fetching insurance policies.", e);
-        }
-=======
     public List<InsurancePolicyDto> findAll(int pageNo, int pageSize) {
         Pageable paging = PageRequest.of(pageNo, pageSize);
         Page<InsurancePolicy> insurancePolicies = insurancePolicyRepository.findAll(paging);
         return insurancePolicyMapper.listModelToListDto(insurancePolicies);
->>>>>>> Stashed changes
     }
 
     public InsurancePolicyDto add(InsurancePolicyDto payload) {
