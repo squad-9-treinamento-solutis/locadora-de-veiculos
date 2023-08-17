@@ -1,7 +1,7 @@
 package br.com.solutis.locadora.mapper.person;
 
 import br.com.solutis.locadora.mapper.GenericMapper;
-import br.com.solutis.locadora.model.dto.DriverDto;
+import br.com.solutis.locadora.model.dto.person.DriverDto;
 import br.com.solutis.locadora.model.entity.person.Driver;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueCheckStrategy;

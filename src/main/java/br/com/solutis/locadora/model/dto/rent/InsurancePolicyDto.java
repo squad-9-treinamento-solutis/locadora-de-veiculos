@@ -1,5 +1,6 @@
-package br.com.solutis.locadora.model.dto;
+package br.com.solutis.locadora.model.dto.rent;
 
+import br.com.solutis.locadora.model.dto.AbstractDto;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

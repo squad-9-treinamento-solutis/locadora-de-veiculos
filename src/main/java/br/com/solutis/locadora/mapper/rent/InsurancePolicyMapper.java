@@ -1,7 +1,7 @@
 package br.com.solutis.locadora.mapper.rent;
 
 import br.com.solutis.locadora.mapper.GenericMapper;
-import br.com.solutis.locadora.model.dto.InsurancePolicyDto;
+import br.com.solutis.locadora.model.dto.rent.InsurancePolicyDto;
 import br.com.solutis.locadora.model.entity.rent.InsurancePolicy;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueCheckStrategy;

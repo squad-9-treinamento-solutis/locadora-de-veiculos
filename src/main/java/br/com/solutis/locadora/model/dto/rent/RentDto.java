@@ -1,5 +1,6 @@
-package br.com.solutis.locadora.model.dto;
+package br.com.solutis.locadora.model.dto.rent;
 
+import br.com.solutis.locadora.model.dto.AbstractDto;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -9,7 +10,7 @@ import java.util.Date;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class CarRentDto extends AbstractDto {
+public class RentDto extends AbstractDto {
     @NotNull(message = "Rent date is required")
     private Date rentDate;
 
