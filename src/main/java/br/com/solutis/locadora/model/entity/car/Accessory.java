@@ -24,7 +24,7 @@ public class Accessory extends AbstractEntity {
     @ManyToMany
     @JoinTable(
             name = "car_accessories",
-            joinColumns = @JoinColumn(name = "car_accessory_id"),
+            joinColumns = @JoinColumn(name = "accessory_id"),
             inverseJoinColumns = @JoinColumn(name = "car_id")
     )
     private List<Car> cars;

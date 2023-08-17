@@ -43,12 +43,12 @@ public class Car extends AbstractEntity {
     @JoinColumn(name = "model_id", nullable = false)
     private Model model;
 
-    @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("cars")
+    @ManyToMany
     @JoinTable(
             name = "car_accessories",
             joinColumns = @JoinColumn(name = "car_id"),
-            inverseJoinColumns = @JoinColumn(name = "car_accessory_id")
+            inverseJoinColumns = @JoinColumn(name = "accessory_id")
     )
     private List<Accessory> accessories;
 
