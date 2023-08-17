@@ -22,8 +22,8 @@ public class InsurancePolicyController {
     private final InsurancePolicyService insurancePolicyService;
 
     @Operation(
-            summary = "Find by id",
-            description = "Returns the information of a insurance policy by id",
+            summary = "Listar por id",
+            description = "Retorna as informações do seguro por id",
             tags = {"id", "get"})
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id) {
@@ -37,8 +37,8 @@ public class InsurancePolicyController {
     }
 
     @Operation(
-            summary = "Find all",
-            description = "Returns the information of all insurance policies",
+            summary = "Listar todos",
+            description = "Retorna as informações de todos os seguros",
             tags = {"all", "get"})
     @GetMapping
     public ResponseEntity<?> findAll() {
@@ -50,8 +50,8 @@ public class InsurancePolicyController {
     }
 
     @Operation(
-            summary = "Add a new insurance policy",
-            description = "Returns the information of the insurance policy added",
+            summary = "Adicionar um novo seguro",
+            description = "Retorna as informações do seguro adicionado",
             tags = {"add", "post"})
     @PostMapping
     public ResponseEntity<?> add(@RequestBody InsurancePolicyDto payload) {
@@ -63,8 +63,8 @@ public class InsurancePolicyController {
     }
 
     @Operation(
-            summary = "Update a insurance policy",
-            description = "Returns the information of the insurance policy updated",
+            summary = "Atualiza um seguro",
+            description = "Retorna o codigo 204 (No Content)",
             tags = {"update", "put"})
     @PutMapping
     public ResponseEntity<?> update(@RequestBody InsurancePolicyDto payload) {
@@ -76,8 +76,8 @@ public class InsurancePolicyController {
     }
 
     @Operation(
-            summary = "Delete a insurance policy",
-            description = "Delete a insurance policy by id",
+            summary = "Apaga um seguro por id",
+            description = ""Retorna o codigo 204 (No Content)",
             tags = {"id", "delete"})
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
