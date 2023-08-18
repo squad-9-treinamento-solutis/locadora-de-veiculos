@@ -1,11 +1,8 @@
 package br.com.solutis.locadora.controller.car;
 
-import br.com.solutis.locadora.exception.car.ManufacturerException;
 import br.com.solutis.locadora.exception.car.ModelException;
 import br.com.solutis.locadora.exception.car.ModelNotFoundException;
-import br.com.solutis.locadora.exception.rent.InsurancePolicyException;
 import br.com.solutis.locadora.model.dto.car.ModelDto;
-import br.com.solutis.locadora.model.dto.rent.InsurancePolicyDto;
 import br.com.solutis.locadora.response.ErrorResponse;
 import br.com.solutis.locadora.service.car.ModelService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,13 +21,12 @@ import org.springframework.web.bind.annotation.*;
 public class ModelController {
     private final ModelService modelService;
 
-
     @Operation(
             summary = "Listar por id",
             description = "Retorna as informações do modelo do carro por id",
             tags = {"id", "get"})
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable Long id){
+    public ResponseEntity<?> findById(@PathVariable Long id) {
         try {
             return new ResponseEntity<>(modelService.findById(id), HttpStatus.OK);
         } catch (ModelNotFoundException e) {
@@ -54,18 +50,20 @@ public class ModelController {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @Operation(
             summary = "Adicionar um novo modelo de carro",
             description = "Retorna as informações do novo modelo de carro adicionado",
             tags = {"add", "post"})
     @PostMapping
-        public ResponseEntity<?> add(@RequestBody ModelDto payload) {
-        try{
+    public ResponseEntity<?> add(@RequestBody ModelDto payload) {
+        try {
             return new ResponseEntity<>(modelService.add(payload), HttpStatus.CREATED);
-        }catch (ModelException e){
+        } catch (ModelException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @Operation(
             summary = "Atualiza um modelo de carro",
             description = "Retorna o codigo 204 (No Content)",

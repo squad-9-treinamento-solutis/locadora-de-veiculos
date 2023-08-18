@@ -4,7 +4,8 @@ import br.com.solutis.locadora.exception.BadRequestException;
 import br.com.solutis.locadora.mapper.car.CarMapper;
 import br.com.solutis.locadora.model.dto.car.CarDto;
 import br.com.solutis.locadora.model.entity.car.Car;
-import br.com.solutis.locadora.repository.CrudRepository;
+import br.com.solutis.locadora.repository.CarRepository;
+import br.com.solutis.locadora.response.PageResponse;
 import br.com.solutis.locadora.service.CrudService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,21 +21,30 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.REQUIRED)
 public class CarService implements CrudService<CarDto> {
-    private final CrudRepository<Car> carRepository;
+    private final CarRepository carRepository;
     private final CarMapper carMapper;
+
+    @Override
+    public PageResponse<CarDto> findAll(int pageNo, int pageSize) {
+        Pageable paging = PageRequest.of(pageNo, pageSize);
+
+        Page<Car> carsPage = carRepository.findByRented(false, paging);
+        List<Car> cars = carsPage.getContent();
+        List<CarDto> dtoCars = carMapper.listModelToListDto(cars);
+
+        PageResponse<CarDto> response = new PageResponse<>();
+        response.setContent(dtoCars);
+        response.setCurrentPage(carsPage.getNumber());
+        response.setTotalItems(carsPage.getTotalElements());
+        response.setTotalPages(carsPage.getTotalPages());
+
+        return response;
+    }
 
     @Override
     public CarDto findById(Long id) {
         return carRepository.findById(id).map(carMapper::modelToDTO)
                 .orElseThrow(() -> new BadRequestException("Car Not found"));
-    }
-
-    @Override
-    public List<CarDto> findAll(int pageNo, int pageSize) {
-        Pageable paging = PageRequest.of(pageNo, pageSize);
-        Page<Car> cars = carRepository.findAll(paging);
-
-        return carMapper.listModelToListDto(cars);
     }
 
     @Override
