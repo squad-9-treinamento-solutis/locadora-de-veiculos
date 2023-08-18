@@ -9,8 +9,11 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class DriverDto extends PersonDto {
+    private Long id;
+
     @NotNull(message = "CNH is required")
     @NotBlank(message = "CNH is required")
     @Size(max = 10, message = "CNH must be less than 10 characters long")
+    @Size(max = 255, message = "CNH must be less than 255 characters long")
     private String cnh;
 }

@@ -6,6 +6,7 @@ import br.com.solutis.locadora.mapper.car.ModelMapper;
 import br.com.solutis.locadora.model.dto.car.ModelDto;
 import br.com.solutis.locadora.model.entity.car.Model;
 import br.com.solutis.locadora.repository.CrudRepository;
+import br.com.solutis.locadora.response.PageResponse;
 import br.com.solutis.locadora.service.CrudService;
 import br.com.solutis.locadora.service.rent.InsurancePolicyService;
 import lombok.RequiredArgsConstructor;
@@ -41,14 +42,22 @@ public class ModelService implements CrudService<ModelDto> {
     }
 
     @Override
-    public List<ModelDto> findAll(int pageNo, int pageSize) {
+    public PageResponse<ModelDto> findAll(int pageNo, int pageSize) {
         try {
             LOGGER.info("Fetching models with page number {} and page size {}.", pageNo, pageSize);
 
             Pageable paging = PageRequest.of(pageNo, pageSize);
-            Page<Model> models = modelRepository.findAll(paging);
+            Page<Model> pagedModels = modelRepository.findAll(paging);
 
-            return modelMapper.listModelToListDto(models);
+            List<ModelDto> manufacturerDtos = modelMapper.listModelToListDto(pagedModels.getContent());
+
+            PageResponse<ModelDto> pageResponse = new PageResponse<>();
+            pageResponse.setContent(manufacturerDtos);
+            pageResponse.setCurrentPage(pagedModels.getNumber());
+            pageResponse.setTotalItems(pagedModels.getTotalElements());
+            pageResponse.setTotalPages(pagedModels.getTotalPages());
+
+            return pageResponse;
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new ModelException("An error occurred while fetching models.", e);
@@ -89,7 +98,6 @@ public class ModelService implements CrudService<ModelDto> {
     @Override
     public void deleteById(Long id) {
         findById(id);
-
         try{
             LOGGER.info("Deleting model with ID {}", id);
 
@@ -98,6 +106,5 @@ public class ModelService implements CrudService<ModelDto> {
             LOGGER.error(e.getMessage());
             throw new ModelException("An error occurred while deleting the car model", e);
         }
-
     }
 }

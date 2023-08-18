@@ -5,7 +5,6 @@ import br.com.solutis.locadora.model.dto.rent.InsurancePolicyDto;
 import br.com.solutis.locadora.model.entity.rent.InsurancePolicy;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueCheckStrategy;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -20,5 +19,5 @@ public interface InsurancePolicyMapper extends GenericMapper<InsurancePolicy, In
     InsurancePolicy dtoToModel(InsurancePolicyDto dto);
 
     @Override
-    List<InsurancePolicyDto> listModelToListDto(Page<InsurancePolicy> all);
+    List<InsurancePolicyDto> listModelToListDto(List<InsurancePolicy> all);
 }

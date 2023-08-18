@@ -6,6 +6,7 @@ import br.com.solutis.locadora.mapper.rent.InsurancePolicyMapper;
 import br.com.solutis.locadora.model.dto.rent.InsurancePolicyDto;
 import br.com.solutis.locadora.model.entity.rent.InsurancePolicy;
 import br.com.solutis.locadora.repository.CrudRepository;
+import br.com.solutis.locadora.response.PageResponse;
 import br.com.solutis.locadora.service.CrudService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -38,14 +39,21 @@ public class InsurancePolicyService implements CrudService<InsurancePolicyDto> {
                 });
     }
 
-    public List<InsurancePolicyDto> findAll(int pageNo, int pageSize) {
+    public PageResponse<InsurancePolicyDto> findAll(int pageNo, int pageSize) {
         try {
             LOGGER.info("Fetching insurance policies with page number {} and page size {}.", pageNo, pageSize);
-
             Pageable paging = PageRequest.of(pageNo, pageSize);
-            Page<InsurancePolicy> insurancePolicies = insurancePolicyRepository.findAll(paging);
+            Page<InsurancePolicy> pagedInsurancePolicies = insurancePolicyRepository.findAll(paging);
 
-            return insurancePolicyMapper.listModelToListDto(insurancePolicies);
+            List<InsurancePolicyDto> insurancePolicyDtos = insurancePolicyMapper.listModelToListDto(pagedInsurancePolicies.getContent());
+
+            PageResponse<InsurancePolicyDto> pageResponse = new PageResponse<>();
+            pageResponse.setContent(insurancePolicyDtos);
+            pageResponse.setCurrentPage(pagedInsurancePolicies.getNumber());
+            pageResponse.setTotalItems(pagedInsurancePolicies.getTotalElements());
+            pageResponse.setTotalPages(pagedInsurancePolicies.getTotalPages());
+
+            return pageResponse;
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new InsurancePolicyException("An error occurred while fetching insurance policies.", e);
