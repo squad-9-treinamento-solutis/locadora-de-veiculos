@@ -1,14 +1,17 @@
 package br.com.solutis.locadora.service.car;
 
-import br.com.solutis.locadora.exception.BadRequestException;
 import br.com.solutis.locadora.exception.car.ModelException;
+import br.com.solutis.locadora.exception.car.ModelNotFoundException;
 import br.com.solutis.locadora.mapper.car.ModelMapper;
 import br.com.solutis.locadora.model.dto.car.ModelDto;
 import br.com.solutis.locadora.model.entity.car.Model;
 import br.com.solutis.locadora.repository.CrudRepository;
 import br.com.solutis.locadora.response.PageResponse;
 import br.com.solutis.locadora.service.CrudService;
+import br.com.solutis.locadora.service.rent.InsurancePolicyService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,38 +25,55 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.REQUIRED)
 public class ModelService implements CrudService<ModelDto> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(InsurancePolicyService.class);
     private final CrudRepository<Model> modelRepository;
     private final ModelMapper modelMapper;
 
     @Override
     public ModelDto findById(Long id) {
-        return modelRepository.findById(id).map(modelMapper::modelToDTO)
-                .orElseThrow(() -> new BadRequestException("Model Not found"));
+        LOGGER.info("Finding model with ID: {}", id);
+
+        return modelRepository.findById(id)
+                .map(modelMapper::modelToDTO)
+                .orElseThrow(() -> {
+                    LOGGER.error("Model with ID {} not found.", id);
+                    return new ModelNotFoundException(id);
+                });
     }
 
     @Override
     public PageResponse<ModelDto> findAll(int pageNo, int pageSize) {
-        Pageable paging = PageRequest.of(pageNo, pageSize);
-        Page<Model> pagedModels = modelRepository.findAll(paging);
+        try {
+            LOGGER.info("Fetching models with page number {} and page size {}.", pageNo, pageSize);
 
-        List<ModelDto> manufacturerDtos = modelMapper.listModelToListDto(pagedModels.getContent());
+            Pageable paging = PageRequest.of(pageNo, pageSize);
+            Page<Model> pagedModels = modelRepository.findAll(paging);
 
-        PageResponse<ModelDto> pageResponse = new PageResponse<>();
-        pageResponse.setContent(manufacturerDtos);
-        pageResponse.setCurrentPage(pagedModels.getNumber());
-        pageResponse.setTotalItems(pagedModels.getTotalElements());
-        pageResponse.setTotalPages(pagedModels.getTotalPages());
+            List<ModelDto> manufacturerDtos = modelMapper.listModelToListDto(pagedModels.getContent());
 
-        return pageResponse;
+            PageResponse<ModelDto> pageResponse = new PageResponse<>();
+            pageResponse.setContent(manufacturerDtos);
+            pageResponse.setCurrentPage(pagedModels.getNumber());
+            pageResponse.setTotalItems(pagedModels.getTotalElements());
+            pageResponse.setTotalPages(pagedModels.getTotalPages());
+
+            return pageResponse;
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            throw new ModelException("An error occurred while fetching models.", e);
+        }
     }
 
     @Override
     public ModelDto add(ModelDto payload) {
-        try {
+        try{
+            LOGGER.info("Adding model: {}", payload);
+
             Model model = modelRepository.save(modelMapper.dtoToModel(payload));
 
             return modelMapper.modelToDTO(model);
-        } catch (Exception e) {
+        }catch (Exception e){
+            LOGGER.error(e.getMessage());
             throw new ModelException("An error occurred while adding the car model", e);
         }
     }
@@ -63,11 +83,14 @@ public class ModelService implements CrudService<ModelDto> {
         findById(payload.getId());
 
         try {
+            LOGGER.info("Updating model: {}", payload);
+
             Model model = modelRepository
                     .save(modelMapper.dtoToModel(payload));
 
             return modelMapper.modelToDTO(model);
         } catch (Exception e) {
+            LOGGER.error(e.getMessage());
             throw new ModelException("An error occurred while updating the car model.", e);
         }
     }
@@ -75,11 +98,13 @@ public class ModelService implements CrudService<ModelDto> {
     @Override
     public void deleteById(Long id) {
         findById(id);
-        try {
+        try{
+            LOGGER.info("Deleting model with ID {}", id);
+
             modelRepository.deleteById(id);
-        } catch (Exception e) {
+        }catch (Exception e){
+            LOGGER.error(e.getMessage());
             throw new ModelException("An error occurred while deleting the car model", e);
         }
-
     }
 }

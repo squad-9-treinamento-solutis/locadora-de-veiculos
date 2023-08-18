@@ -1,11 +1,8 @@
 package br.com.solutis.locadora.controller.car;
 
-import br.com.solutis.locadora.exception.car.ManufacturerException;
 import br.com.solutis.locadora.exception.car.ModelException;
 import br.com.solutis.locadora.exception.car.ModelNotFoundException;
-import br.com.solutis.locadora.exception.rent.InsurancePolicyException;
 import br.com.solutis.locadora.model.dto.car.ModelDto;
-import br.com.solutis.locadora.model.dto.rent.InsurancePolicyDto;
 import br.com.solutis.locadora.response.ErrorResponse;
 import br.com.solutis.locadora.service.car.ModelService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 
 @Tag(name = "ModelController")
 @RequiredArgsConstructor
