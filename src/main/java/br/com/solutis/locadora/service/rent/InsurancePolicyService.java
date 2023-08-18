@@ -91,12 +91,15 @@ public class InsurancePolicyService implements CrudService<InsurancePolicyDto> {
     }
 
     public void deleteById(Long id) {
-        findById(id);
+        InsurancePolicyDto insurancePolicyDto = findById(id);
 
         try {
-            LOGGER.info("Deleting insurance policy with ID: {}", id);
+            LOGGER.info("Soft deleting insurance policy with ID: {}", id);
 
-            insurancePolicyRepository.deleteById(id);
+            InsurancePolicy insurancePolicy = insurancePolicyMapper.dtoToModel(insurancePolicyDto);
+            insurancePolicy.setDeleted(true);
+
+            insurancePolicyRepository.save(insurancePolicy);
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new InsurancePolicyException("An error occurred while deleting insurance policy.", e);

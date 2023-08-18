@@ -29,7 +29,6 @@ public class ModelService implements CrudService<ModelDto> {
     private final CrudRepository<Model> modelRepository;
     private final ModelMapper modelMapper;
 
-    @Override
     public ModelDto findById(Long id) {
         LOGGER.info("Finding model with ID: {}", id);
 
@@ -41,7 +40,6 @@ public class ModelService implements CrudService<ModelDto> {
                 });
     }
 
-    @Override
     public PageResponse<ModelDto> findAll(int pageNo, int pageSize) {
         try {
             LOGGER.info("Fetching models with page number {} and page size {}.", pageNo, pageSize);
@@ -64,7 +62,6 @@ public class ModelService implements CrudService<ModelDto> {
         }
     }
 
-    @Override
     public ModelDto add(ModelDto payload) {
         try{
             LOGGER.info("Adding model: {}", payload);
@@ -78,7 +75,6 @@ public class ModelService implements CrudService<ModelDto> {
         }
     }
 
-    @Override
     public ModelDto update(ModelDto payload) {
         findById(payload.getId());
 
@@ -95,13 +91,15 @@ public class ModelService implements CrudService<ModelDto> {
         }
     }
 
-    @Override
     public void deleteById(Long id) {
-        findById(id);
+        ModelDto modelDto = findById(id);
         try{
-            LOGGER.info("Deleting model with ID {}", id);
+            LOGGER.info("Soft deleting model with ID {}", id);
 
-            modelRepository.deleteById(id);
+            Model model = modelMapper.dtoToModel(modelDto);
+            model.setDeleted(true);
+
+            modelRepository.save(model);
         }catch (Exception e){
             LOGGER.error(e.getMessage());
             throw new ModelException("An error occurred while deleting the car model", e);

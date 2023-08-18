@@ -63,9 +63,15 @@ public class DriverService implements CrudService<DriverDto> {
     }
 
     public void deleteById(Long id) {
-        try {
-            LOGGER.info("Deleting driver with ID: {}", id);
+        DriverDto driverDto = findById(id);
 
+        try {
+            LOGGER.info("Soft deleting driver with ID: {}", id);
+
+            Driver driver = driverMapper.dtoToModel(driverDto);
+            driver.setDeleted(true);
+
+            driverRepository.save(driver);
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new RuntimeException("An error occurred while deleting driver.", e);
