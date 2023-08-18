@@ -31,7 +31,6 @@ public class CarService implements CrudService<CarDto> {
 
     @Override
     public List<CarDto> findAll(int pageNo, int pageSize) {
-        // Verificar a data
         Pageable paging = PageRequest.of(pageNo, pageSize);
         Page<Car> cars = carRepository.findAll(paging);
 

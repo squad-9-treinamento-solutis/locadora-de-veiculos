@@ -17,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,11 +54,10 @@ public class CarController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "3") int size) {
         try {
-            List<Car> cars = new ArrayList<Car>();
             Pageable paging = PageRequest.of(page, size);
 
             Page<Car> carsPage = carRepository.findByRented(false, paging);
-            cars = carsPage.getContent();
+            List<Car> cars = carsPage.getContent();
 
             Map<String, Object> response = new HashMap<>();
 
@@ -68,7 +66,7 @@ public class CarController {
             response.put("totalItems", carsPage.getTotalElements());
             response.put("totalPages", carsPage.getTotalPages());
 
-            return new ResponseEntity<>(carService.findAll(page, size), HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (CarException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }

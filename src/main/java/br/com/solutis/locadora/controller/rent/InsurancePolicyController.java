@@ -39,11 +39,14 @@ public class InsurancePolicyController {
     @Operation(
             summary = "Listar todos",
             description = "Retorna as informações de todos os seguros",
-            tags = {"all", "get"})
+            tags = {"all", "get", "paginated"})
     @GetMapping
-    public ResponseEntity<?> findAll() {
+    public ResponseEntity<?> findAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size
+    ) {
         try {
-            return new ResponseEntity<>(insurancePolicyService.findAll(), HttpStatus.OK);
+            return new ResponseEntity<>(insurancePolicyService.findAll(page, size), HttpStatus.OK);
         } catch (InsurancePolicyException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -77,7 +80,7 @@ public class InsurancePolicyController {
 
     @Operation(
             summary = "Apaga um seguro por id",
-            description = ""Retorna o codigo 204 (No Content)",
+            description = "Retorna o codigo 204 (No Content)",
             tags = {"id", "delete"})
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
