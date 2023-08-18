@@ -6,6 +6,7 @@ import br.com.solutis.locadora.mapper.rent.InsurancePolicyMapper;
 import br.com.solutis.locadora.model.dto.rent.InsurancePolicyDto;
 import br.com.solutis.locadora.model.entity.rent.InsurancePolicy;
 import br.com.solutis.locadora.repository.CrudRepository;
+import br.com.solutis.locadora.response.PageResponse;
 import br.com.solutis.locadora.service.CrudService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,10 +30,19 @@ public class InsurancePolicyService implements CrudService<InsurancePolicyDto> {
                 .orElseThrow(() -> new InsurancePolicyNotFoundException(id));
     }
 
-    public List<InsurancePolicyDto> findAll(int pageNo, int pageSize) {
+    public PageResponse<InsurancePolicyDto> findAll(int pageNo, int pageSize) {
         Pageable paging = PageRequest.of(pageNo, pageSize);
-        Page<InsurancePolicy> insurancePolicies = insurancePolicyRepository.findAll(paging);
-        return insurancePolicyMapper.listModelToListDto(insurancePolicies);
+        Page<InsurancePolicy> pagedInsurancePolicies = insurancePolicyRepository.findAll(paging);
+
+        List<InsurancePolicyDto> insurancePolicyDtos = insurancePolicyMapper.listModelToListDto(pagedInsurancePolicies.getContent());
+
+        PageResponse<InsurancePolicyDto> pageResponse = new PageResponse<>();
+        pageResponse.setContent(insurancePolicyDtos);
+        pageResponse.setCurrentPage(pagedInsurancePolicies.getNumber());
+        pageResponse.setTotalItems(pagedInsurancePolicies.getTotalElements());
+        pageResponse.setTotalPages(pagedInsurancePolicies.getTotalPages());
+
+        return pageResponse;
     }
 
     public InsurancePolicyDto add(InsurancePolicyDto payload) {

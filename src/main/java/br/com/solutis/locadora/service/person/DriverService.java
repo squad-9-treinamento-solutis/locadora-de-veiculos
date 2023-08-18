@@ -4,13 +4,12 @@ import br.com.solutis.locadora.mapper.person.DriverMapper;
 import br.com.solutis.locadora.model.dto.person.DriverDto;
 import br.com.solutis.locadora.model.entity.person.Driver;
 import br.com.solutis.locadora.repository.CrudRepository;
+import br.com.solutis.locadora.response.PageResponse;
 import br.com.solutis.locadora.service.CrudService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +23,7 @@ public class DriverService implements CrudService<DriverDto> {
     }
 
     @Override
-    public List<DriverDto> findAll(int pageNo, int pageSize) {
+    public PageResponse<DriverDto> findAll(int pageNo, int pageSize) {
         return null;
     }
 

@@ -5,6 +5,7 @@ import br.com.solutis.locadora.mapper.car.ManufacturerMapper;
 import br.com.solutis.locadora.model.dto.car.ManufacturerDto;
 import br.com.solutis.locadora.model.entity.car.Manufacturer;
 import br.com.solutis.locadora.repository.CrudRepository;
+import br.com.solutis.locadora.response.PageResponse;
 import br.com.solutis.locadora.service.CrudService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -30,11 +31,19 @@ public class ManufacturerService implements CrudService<ManufacturerDto> {
     }
 
     @Override
-    public List<ManufacturerDto> findAll(int pageNo, int pageSize) {
+    public PageResponse<ManufacturerDto> findAll(int pageNo, int pageSize) {
         Pageable paging = PageRequest.of(pageNo, pageSize);
-        Page<Manufacturer> manufacturers = manufacturerRepository.findAll(paging);
+        Page<Manufacturer> pagedManufacturers = manufacturerRepository.findAll(paging);
 
-        return manufacturerMapper.listModelToListDto(manufacturers);
+        List<ManufacturerDto> manufacturerDtos = manufacturerMapper.listModelToListDto(pagedManufacturers.getContent());
+
+        PageResponse<ManufacturerDto> pageResponse = new PageResponse<>();
+        pageResponse.setContent(manufacturerDtos);
+        pageResponse.setCurrentPage(pagedManufacturers.getNumber());
+        pageResponse.setTotalItems(pagedManufacturers.getTotalElements());
+        pageResponse.setTotalPages(pagedManufacturers.getTotalPages());
+
+        return pageResponse;
     }
 
     @Override
