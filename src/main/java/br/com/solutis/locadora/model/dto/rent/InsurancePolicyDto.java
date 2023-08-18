@@ -9,6 +9,8 @@ import java.math.BigDecimal;
 @Data
 @EqualsAndHashCode
 public class InsurancePolicyDto {
+    private Long id;
+
     @NotNull(message = "Franchise value is required")
     private BigDecimal franchiseValue;
 
@@ -17,5 +19,4 @@ public class InsurancePolicyDto {
     private boolean naturalPhenomenaCoverage = false;
 
     private boolean theftCoverage = false;
-    private Long id;
 }

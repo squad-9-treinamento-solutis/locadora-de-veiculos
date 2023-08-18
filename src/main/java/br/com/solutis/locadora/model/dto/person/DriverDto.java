@@ -11,7 +11,6 @@ import lombok.EqualsAndHashCode;
 public class DriverDto extends PersonDto {
     @NotNull(message = "CNH is required")
     @NotBlank(message = "CNH is required")
-    @Size( max = 255, message = "CNH must be less than 255 characters long")
+    @Size(max = 10, message = "CNH must be less than 255 characters long")
     private String cnh;
-    private Long id;
 }

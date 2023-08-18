@@ -10,6 +10,8 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode
 public class RentDto {
+    private Long id;
+
     @NotNull(message = "Rent date is required")
     private Date rentDate;
 
@@ -30,5 +32,4 @@ public class RentDto {
 
     @NotNull(message = "Car is required")
     private long carId;
-    private Long id;
 }

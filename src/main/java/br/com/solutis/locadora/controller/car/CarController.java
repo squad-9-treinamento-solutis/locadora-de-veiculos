@@ -1,0 +1,114 @@
+package br.com.solutis.locadora.controller.car;
+
+import br.com.solutis.locadora.exception.car.CarException;
+import br.com.solutis.locadora.exception.car.CarNotFoundException;
+import br.com.solutis.locadora.model.dto.car.CarDto;
+import br.com.solutis.locadora.model.entity.car.Car;
+import br.com.solutis.locadora.repository.CarRepository;
+import br.com.solutis.locadora.response.ErrorResponse;
+import br.com.solutis.locadora.service.car.CarService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Tag(name = "CarController")
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/cars")
+@CrossOrigin
+public class CarController {
+    private final CarService carService;
+    private final CarRepository carRepository;
+
+    @Operation(
+            summary = "Listar por id",
+            description = "Retorna as informações do carro por id",
+            tags = {"id", "get"})
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable Long id) {
+        try {
+            return new ResponseEntity<>(carService.findById(id), HttpStatus.OK);
+        } catch (CarNotFoundException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        } catch (CarException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Operation(
+            summary = "Listar todos",
+            description = "Retorna as informações de todos os carros",
+            tags = {"all", "get", "paginated"})
+    @GetMapping
+    public ResponseEntity<?> findAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size) {
+        try {
+            Pageable paging = PageRequest.of(page, size);
+
+            Page<Car> carsPage = carRepository.findByRented(false, paging);
+            List<Car> cars = carsPage.getContent();
+
+            Map<String, Object> response = new HashMap<>();
+
+            response.put("cars", cars);
+            response.put("currentPage", carsPage.getNumber());
+            response.put("totalItems", carsPage.getTotalElements());
+            response.put("totalPages", carsPage.getTotalPages());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (CarException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Operation(
+            summary = "Adicionar um novo carro",
+            description = "Retorna as informações do carro adicionado",
+            tags = {"add", "post"})
+    @PostMapping
+    public ResponseEntity<?> add(@RequestBody CarDto payload) {
+        try {
+            return new ResponseEntity<>(carService.add(payload), HttpStatus.CREATED);
+        } catch (CarException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Operation(
+            summary = "Atualiza um carro",
+            description = "Retorna o codigo 204 (No Content)",
+            tags = {"update", "put"})
+    @PutMapping
+    public ResponseEntity<?> update(@RequestBody CarDto payload) {
+        try {
+            return new ResponseEntity<>(carService.update(payload), HttpStatus.NO_CONTENT);
+        } catch (CarException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Operation(
+            summary = "Apaga um carro por id",
+            description = "Retorna o codigo 204 (No Content)",
+            tags = {"id", "delete"})
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable Long id) {
+        try {
+            carService.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (CarException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+}

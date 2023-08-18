@@ -9,9 +9,10 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode
 public class ManufacturerDto {
+    private Long id;
+
     @NotNull(message = "Name is required")
     @NotBlank(message = "Name is required")
     @Size(min = 1, max = 255, message = "Name must be between 1 and 255 characters long")
     private String name;
-    private Long id;
 }
