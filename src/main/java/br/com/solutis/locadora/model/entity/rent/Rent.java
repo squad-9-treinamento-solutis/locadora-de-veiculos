@@ -3,6 +3,7 @@ package br.com.solutis.locadora.model.entity.rent;
 import br.com.solutis.locadora.model.entity.AbstractEntity;
 import br.com.solutis.locadora.model.entity.car.Car;
 import br.com.solutis.locadora.model.entity.person.Driver;
+import br.com.solutis.locadora.model.entity.person.Employee;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -41,6 +42,11 @@ public class Rent extends AbstractEntity {
     @ManyToOne(optional = false)
     @JoinColumn(name = "driver_id", nullable = false)
     private Driver driver;
+
+    @JsonIgnoreProperties("carRents")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "employee_id", nullable = false)
+    private Employee employee;
 
     @JsonIgnoreProperties("carRents")
     @ManyToOne(optional = false)
