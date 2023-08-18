@@ -29,7 +29,7 @@ public class DriverService implements CrudService<DriverDto> {
     }
 
     @Override
-    public List<DriverDto> findAll(int pageNo, int pageSize) {
+    public PageResponse<DriverDto> findAll(int pageNo, int pageSize) {
         LOGGER.info("Fetching drivers with page number {} and page size {}.", pageNo, pageSize);
 
         try {

@@ -25,8 +25,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.REQUIRED)
 public class CarService implements CrudService<CarDto> {
-    private final CarRepository carRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(InsurancePolicyService.class);
+    private final CarRepository carRepository;
     private final CarMapper carMapper;
 
     @Override
@@ -45,7 +45,7 @@ public class CarService implements CrudService<CarDto> {
     public PageResponse<CarDto> findAll(int pageNo, int pageSize) {
         try {
             LOGGER.info("Fetching cars with page number {} and page size {}.", pageNo, pageSize);
-          
+
             Pageable paging = PageRequest.of(pageNo, pageSize);
             Page<Car> pagedCars = carRepository.findByRented(false, paging);
             List<CarDto> carDtos = carMapper.listModelToListDto(pagedCars.getContent());
@@ -57,10 +57,9 @@ public class CarService implements CrudService<CarDto> {
             pageResponse.setTotalPages(pagedCars.getTotalPages());
 
             return pageResponse;
-            catch (Exception e) {
-              LOGGER.error(e.getMessage());
-              throw new CarException("An error occurred while fetching cars.", e);
-            }
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            throw new CarException("An error occurred while fetching cars.", e);
         }
     }
 
