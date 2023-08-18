@@ -5,7 +5,8 @@ import br.com.solutis.locadora.exception.car.CarNotFoundException;
 import br.com.solutis.locadora.mapper.car.CarMapper;
 import br.com.solutis.locadora.model.dto.car.CarDto;
 import br.com.solutis.locadora.model.entity.car.Car;
-import br.com.solutis.locadora.repository.CrudRepository;
+import br.com.solutis.locadora.repository.CarRepository;
+import br.com.solutis.locadora.response.PageResponse;
 import br.com.solutis.locadora.service.CrudService;
 import br.com.solutis.locadora.service.rent.InsurancePolicyService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ import java.util.List;
 @Transactional(propagation = Propagation.REQUIRED)
 public class CarService implements CrudService<CarDto> {
     private static final Logger LOGGER = LoggerFactory.getLogger(InsurancePolicyService.class);
-    private final CrudRepository<Car> carRepository;
+    private final CarRepository carRepository;
     private final CarMapper carMapper;
 
     public CarDto findById(Long id) {
@@ -39,14 +40,22 @@ public class CarService implements CrudService<CarDto> {
                 });
     }
 
-    public List<CarDto> findAll(int pageNo, int pageSize) {
+
+    public PageResponse<CarDto> findAll(int pageNo, int pageSize) {
         try {
             LOGGER.info("Fetching cars with page number {} and page size {}.", pageNo, pageSize);
 
             Pageable paging = PageRequest.of(pageNo, pageSize);
-            Page<Car> cars = carRepository.findAll(paging);
+            Page<Car> pagedCars = carRepository.findByRented(false, paging);
+            List<CarDto> carDtos = carMapper.listModelToListDto(pagedCars.getContent());
 
-            return carMapper.listModelToListDto(cars);
+            PageResponse<CarDto> pageResponse = new PageResponse<>();
+            pageResponse.setContent(carDtos);
+            pageResponse.setCurrentPage(pagedCars.getNumber());
+            pageResponse.setTotalItems(pagedCars.getTotalElements());
+            pageResponse.setTotalPages(pagedCars.getTotalPages());
+
+            return pageResponse;
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new CarException("An error occurred while fetching cars.", e);

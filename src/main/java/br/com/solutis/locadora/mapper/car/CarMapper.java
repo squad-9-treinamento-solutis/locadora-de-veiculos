@@ -5,7 +5,6 @@ import br.com.solutis.locadora.model.dto.car.CarDto;
 import br.com.solutis.locadora.model.entity.car.Car;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueCheckStrategy;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -20,5 +19,5 @@ public interface CarMapper extends GenericMapper<Car, CarDto> {
     Car dtoToModel(CarDto dto);
 
     @Override
-    List<CarDto> listModelToListDto(Page<Car> all);
+    List<CarDto> listModelToListDto(List<Car> all);
 }

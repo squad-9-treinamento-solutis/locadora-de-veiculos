@@ -3,23 +3,15 @@ package br.com.solutis.locadora.controller.car;
 import br.com.solutis.locadora.exception.car.CarException;
 import br.com.solutis.locadora.exception.car.CarNotFoundException;
 import br.com.solutis.locadora.model.dto.car.CarDto;
-import br.com.solutis.locadora.model.entity.car.Car;
 import br.com.solutis.locadora.repository.CarRepository;
 import br.com.solutis.locadora.response.ErrorResponse;
 import br.com.solutis.locadora.service.car.CarService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Tag(name = "CarController")
 @RestController
@@ -54,19 +46,7 @@ public class CarController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "3") int size) {
         try {
-            Pageable paging = PageRequest.of(page, size);
-
-            Page<Car> carsPage = carRepository.findByRented(false, paging);
-            List<Car> cars = carsPage.getContent();
-
-            Map<String, Object> response = new HashMap<>();
-
-            response.put("cars", cars);
-            response.put("currentPage", carsPage.getNumber());
-            response.put("totalItems", carsPage.getTotalElements());
-            response.put("totalPages", carsPage.getTotalPages());
-
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<>(carService.findAll(page, size), HttpStatus.OK);
         } catch (CarException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }

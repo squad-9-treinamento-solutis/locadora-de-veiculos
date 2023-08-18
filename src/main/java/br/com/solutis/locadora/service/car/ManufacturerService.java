@@ -6,6 +6,7 @@ import br.com.solutis.locadora.mapper.car.ManufacturerMapper;
 import br.com.solutis.locadora.model.dto.car.ManufacturerDto;
 import br.com.solutis.locadora.model.entity.car.Manufacturer;
 import br.com.solutis.locadora.repository.CrudRepository;
+import br.com.solutis.locadora.response.PageResponse;
 import br.com.solutis.locadora.service.CrudService;
 import br.com.solutis.locadora.service.rent.InsurancePolicyService;
 import lombok.RequiredArgsConstructor;
@@ -37,14 +38,21 @@ public class ManufacturerService implements CrudService<ManufacturerDto> {
                 });
     }
 
-    public List<ManufacturerDto> findAll(int pageNo, int pageSize) {
+    public PageResponse<ManufacturerDto> findAll(int pageNo, int pageSize) {
         try {
-            LOGGER.info("Fetching manufacturers with page number {} and page size {}.", pageNo, pageSize);
+          LOGGER.info("Fetching manufacturer with page number {} and page size {}.", pageNo, pageSize);
+          Pageable paging = PageRequest.of(pageNo, pageSize);
+          Page<Manufacturer> pagedManufacturers = manufacturerRepository.findAll(paging);
 
-            Pageable paging = PageRequest.of(pageNo, pageSize);
-            Page<Manufacturer> manufacturers = manufacturerRepository.findAll(paging);
+          List<ManufacturerDto> manufacturerDtos = manufacturerMapper.listModelToListDto(pagedManufacturers.getContent());
 
-            return manufacturerMapper.listModelToListDto(manufacturers);
+          PageResponse<ManufacturerDto> pageResponse = new PageResponse<>();
+          pageResponse.setContent(manufacturerDtos);
+          pageResponse.setCurrentPage(pagedManufacturers.getNumber());
+          pageResponse.setTotalItems(pagedManufacturers.getTotalElements());
+          pageResponse.setTotalPages(pagedManufacturers.getTotalPages());
+
+          return pageResponse;
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new ManufacturerException("An error occurred while fetching manufacturers.", e);
