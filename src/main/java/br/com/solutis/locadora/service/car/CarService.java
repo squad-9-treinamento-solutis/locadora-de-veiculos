@@ -28,7 +28,6 @@ public class CarService implements CrudService<CarDto> {
     private final CrudRepository<Car> carRepository;
     private final CarMapper carMapper;
 
-    @Override
     public CarDto findById(Long id) {
         LOGGER.info("Finding car with ID: {}", id);
 
@@ -40,7 +39,6 @@ public class CarService implements CrudService<CarDto> {
                 });
     }
 
-    @Override
     public List<CarDto> findAll(int pageNo, int pageSize) {
         try {
             LOGGER.info("Fetching cars with page number {} and page size {}.", pageNo, pageSize);
@@ -55,7 +53,6 @@ public class CarService implements CrudService<CarDto> {
         }
     }
 
-    @Override
     public CarDto add(CarDto payload) {
         try {
             LOGGER.info("Adding car: {}", payload);
@@ -70,7 +67,6 @@ public class CarService implements CrudService<CarDto> {
         }
     }
 
-    @Override
     public CarDto update(CarDto payload) {
         findById(payload.getId());
 
@@ -87,14 +83,16 @@ public class CarService implements CrudService<CarDto> {
         }
     }
 
-    @Override
     public void deleteById(Long id) {
-        findById(id);
+        CarDto carDto = findById(id);
 
         try {
-            LOGGER.info("Deleting car with ID: {}", id);
+            LOGGER.info("Soft deleting car with ID: {}", id);
 
-            carRepository.deleteById(id);
+            Car car = carMapper.dtoToModel(carDto);
+            car.setDeleted(true);
+
+            carRepository.save(car);
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new CarException("An error occurred while deleting car.", e);

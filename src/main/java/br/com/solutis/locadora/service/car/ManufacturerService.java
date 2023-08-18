@@ -28,7 +28,6 @@ public class ManufacturerService implements CrudService<ManufacturerDto> {
     private final CrudRepository<Manufacturer> manufacturerRepository;
     private final ManufacturerMapper manufacturerMapper;
 
-    @Override
     public ManufacturerDto findById(Long id) {
         return manufacturerRepository.findById(id)
                 .map(manufacturerMapper::modelToDTO)
@@ -38,7 +37,6 @@ public class ManufacturerService implements CrudService<ManufacturerDto> {
                 });
     }
 
-    @Override
     public List<ManufacturerDto> findAll(int pageNo, int pageSize) {
         try {
             LOGGER.info("Fetching manufacturers with page number {} and page size {}.", pageNo, pageSize);
@@ -53,7 +51,6 @@ public class ManufacturerService implements CrudService<ManufacturerDto> {
         }
     }
 
-    @Override
     public ManufacturerDto add(ManufacturerDto payload) {
         try {
             LOGGER.info("Adding manufacturer: {}", payload);
@@ -67,7 +64,6 @@ public class ManufacturerService implements CrudService<ManufacturerDto> {
         }
     }
 
-    @Override
     public ManufacturerDto update(ManufacturerDto payload) {
         findById(payload.getId());
 
@@ -84,14 +80,16 @@ public class ManufacturerService implements CrudService<ManufacturerDto> {
         }
     }
 
-    @Override
     public void deleteById(Long id) {
-        findById(id);
+        ManufacturerDto manufacturerDto = findById(id);
 
         try {
-            LOGGER.info("Deleting manufacturer with ID: {}", id);
+            LOGGER.info("Soft deleting manufacturer with ID: {}", id);
 
-            manufacturerRepository.deleteById(id);
+            Manufacturer manufacturer = manufacturerMapper.dtoToModel(manufacturerDto);
+            manufacturer.setDeleted(true);
+
+            manufacturerRepository.save(manufacturer);
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new ManufacturerException("An error occurred while deleting manufacturer.", e);
