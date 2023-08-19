@@ -47,10 +47,10 @@ public class ModelService implements CrudService<ModelDto> {
             Pageable paging = PageRequest.of(pageNo, pageSize);
             Page<Model> pagedModels = modelRepository.findAll(paging);
 
-            List<ModelDto> manufacturerDtos = modelMapper.listModelToListDto(pagedModels.getContent());
+            List<ModelDto> modelDtos = modelMapper.listModelToListDto(pagedModels.getContent());
 
             PageResponse<ModelDto> pageResponse = new PageResponse<>();
-            pageResponse.setContent(manufacturerDtos);
+            pageResponse.setContent(modelDtos);
             pageResponse.setCurrentPage(pagedModels.getNumber());
             pageResponse.setTotalItems(pagedModels.getTotalElements());
             pageResponse.setTotalPages(pagedModels.getTotalPages());
