@@ -31,8 +31,6 @@ public class InsurancePolicyController {
             return new ResponseEntity<>(insurancePolicyService.findById(id), HttpStatus.OK);
         } catch (InsurancePolicyNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
-        } catch (InsurancePolicyException e) {
-            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -73,7 +71,9 @@ public class InsurancePolicyController {
     public ResponseEntity<?> update(@RequestBody InsurancePolicyDto payload) {
         try {
             return new ResponseEntity<>(insurancePolicyService.update(payload), HttpStatus.NO_CONTENT);
-        } catch (InsurancePolicyException e) {
+        } catch (InsurancePolicyNotFoundException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        }  catch (InsurancePolicyException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -87,7 +87,9 @@ public class InsurancePolicyController {
         try {
             insurancePolicyService.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (InsurancePolicyException e) {
+        } catch (InsurancePolicyNotFoundException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        }  catch (InsurancePolicyException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -1,7 +1,7 @@
 package br.com.solutis.locadora.controller.person;
 
-import br.com.solutis.locadora.exception.car.CarException;
-import br.com.solutis.locadora.exception.car.CarNotFoundException;
+import br.com.solutis.locadora.exception.person.DriverException;
+import br.com.solutis.locadora.exception.person.DriverNotFoundException;
 import br.com.solutis.locadora.model.dto.person.DriverDto;
 import br.com.solutis.locadora.response.ErrorResponse;
 import br.com.solutis.locadora.service.person.DriverService;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/drivers")
+@CrossOrigin
 public class DriverController {
 
     private final DriverService driverService;
@@ -27,7 +28,7 @@ public class DriverController {
     public ResponseEntity<?> findById(@PathVariable Long id) {
         try {
             return new ResponseEntity<>(driverService.findById(id), HttpStatus.OK);
-        } catch (CarNotFoundException e) {
+        } catch (DriverNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
         }
     }
@@ -42,7 +43,7 @@ public class DriverController {
             @RequestParam(defaultValue = "3") int size) {
         try {
             return new ResponseEntity<>(driverService.findAll(page, size), HttpStatus.OK);
-        } catch (CarException e) {
+        } catch (DriverException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -55,7 +56,7 @@ public class DriverController {
     public ResponseEntity<?> add(@RequestBody DriverDto payload) {
         try {
             return new ResponseEntity<>(driverService.add(payload), HttpStatus.CREATED);
-        } catch (CarException e) {
+        } catch (DriverException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -68,13 +69,15 @@ public class DriverController {
     public ResponseEntity<?> update(@RequestBody DriverDto payload) {
         try {
             return new ResponseEntity<>(driverService.update(payload), HttpStatus.NO_CONTENT);
-        } catch (CarException e) {
+        } catch (DriverNotFoundException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        } catch (DriverException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @Operation(
-            summary = "Apaga um modorista por id",
+            summary = "Apaga um motorista por id",
             description = "Retorna o codigo 204 (No Content)",
             tags = {"id", "delete"})
     @DeleteMapping("/{id}")
@@ -82,7 +85,9 @@ public class DriverController {
         try {
             driverService.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (CarException e) {
+        } catch (DriverNotFoundException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        } catch (DriverException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
