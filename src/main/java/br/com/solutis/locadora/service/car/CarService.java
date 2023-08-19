@@ -4,9 +4,7 @@ import br.com.solutis.locadora.exception.car.CarException;
 import br.com.solutis.locadora.exception.car.CarNotFoundException;
 import br.com.solutis.locadora.mapper.GenericMapper;
 import br.com.solutis.locadora.model.dto.car.CarDto;
-import br.com.solutis.locadora.model.dto.car.ManufacturerDto;
 import br.com.solutis.locadora.model.entity.car.Car;
-import br.com.solutis.locadora.model.entity.car.Manufacturer;
 import br.com.solutis.locadora.repository.CarRepository;
 import br.com.solutis.locadora.response.PageResponse;
 import br.com.solutis.locadora.service.CrudService;
@@ -46,9 +44,9 @@ public class CarService implements CrudService<CarDto> {
             LOGGER.info("Fetching cars with page number {} and page size {}.", pageNo, pageSize);
 
             Pageable paging = PageRequest.of(pageNo, pageSize);
-            Page<Car> pagedCars = carRepository.findByRented(false, paging);
+            Page<Car> pagedCars = carRepository.findByDeletedFalseAndRentedFalse(paging);
             List<CarDto> carDtos = modelMapper.
-                mapList(pagedCars.getContent(), CarDto.class);
+                    mapList(pagedCars.getContent(), CarDto.class);
 
             PageResponse<CarDto> pageResponse = new PageResponse<>();
             pageResponse.setContent(carDtos);
@@ -110,6 +108,7 @@ public class CarService implements CrudService<CarDto> {
             throw new CarException("An error occurred while deleting car.", e);
         }
     }
+
     private void updateModelFields(CarDto payload, CarDto existingCar) {
         if (payload.getPlate() != null) {
             existingCar.setPlate(payload.getPlate());

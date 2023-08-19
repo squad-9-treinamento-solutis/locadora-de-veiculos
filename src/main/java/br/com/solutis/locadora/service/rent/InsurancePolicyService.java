@@ -3,11 +3,9 @@ package br.com.solutis.locadora.service.rent;
 import br.com.solutis.locadora.exception.rent.InsurancePolicyException;
 import br.com.solutis.locadora.exception.rent.InsurancePolicyNotFoundException;
 import br.com.solutis.locadora.mapper.GenericMapper;
-import br.com.solutis.locadora.model.dto.car.CarDto;
 import br.com.solutis.locadora.model.dto.rent.InsurancePolicyDto;
-import br.com.solutis.locadora.model.entity.car.Car;
 import br.com.solutis.locadora.model.entity.rent.InsurancePolicy;
-import br.com.solutis.locadora.repository.CrudRepository;
+import br.com.solutis.locadora.repository.InsurancePolicyRepository;
 import br.com.solutis.locadora.response.PageResponse;
 import br.com.solutis.locadora.service.CrudService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +25,7 @@ import java.util.List;
 @Transactional(propagation = Propagation.REQUIRED)
 public class InsurancePolicyService implements CrudService<InsurancePolicyDto> {
     private static final Logger LOGGER = LoggerFactory.getLogger(InsurancePolicyService.class);
-    private final CrudRepository<InsurancePolicy> insurancePolicyRepository;
+    private final InsurancePolicyRepository insurancePolicyRepository;
     private final GenericMapper<InsurancePolicyDto, InsurancePolicy> modelMapper;
 
     public InsurancePolicyDto findById(Long id) {
@@ -46,7 +44,7 @@ public class InsurancePolicyService implements CrudService<InsurancePolicyDto> {
             LOGGER.info("Fetching insurance policies with page number {} and page size {}.", pageNo, pageSize);
 
             Pageable paging = PageRequest.of(pageNo, pageSize);
-            Page<InsurancePolicy> pagedInsurancePolicies = insurancePolicyRepository.findAll(paging);
+            Page<InsurancePolicy> pagedInsurancePolicies = insurancePolicyRepository.findByDeletedFalse(paging);
 
             List<InsurancePolicyDto> insurancePolicyDtos = modelMapper.
                     mapList(pagedInsurancePolicies.getContent(), InsurancePolicyDto.class);
@@ -111,6 +109,7 @@ public class InsurancePolicyService implements CrudService<InsurancePolicyDto> {
             throw new InsurancePolicyException("An error occurred while deleting insurance policy.", e);
         }
     }
+
     private void updateModelFields(InsurancePolicyDto payload, InsurancePolicyDto existingInsurancePolicy) {
         if (payload.getFranchiseValue() != null) {
             existingInsurancePolicy.setFranchiseValue(payload.getFranchiseValue());
