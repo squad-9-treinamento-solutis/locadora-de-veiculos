@@ -3,7 +3,9 @@ package br.com.solutis.locadora.service.rent;
 import br.com.solutis.locadora.exception.rent.InsurancePolicyException;
 import br.com.solutis.locadora.exception.rent.InsurancePolicyNotFoundException;
 import br.com.solutis.locadora.mapper.GenericMapper;
+import br.com.solutis.locadora.model.dto.car.CarDto;
 import br.com.solutis.locadora.model.dto.rent.InsurancePolicyDto;
+import br.com.solutis.locadora.model.entity.car.Car;
 import br.com.solutis.locadora.model.entity.rent.InsurancePolicy;
 import br.com.solutis.locadora.repository.CrudRepository;
 import br.com.solutis.locadora.response.PageResponse;
@@ -77,13 +79,15 @@ public class InsurancePolicyService implements CrudService<InsurancePolicyDto> {
     }
 
     public InsurancePolicyDto update(InsurancePolicyDto payload) {
-        findById(payload.getId());
+        InsurancePolicyDto existingInsurancePolicy = findById(payload.getId());
 
         try {
             LOGGER.info("Updating insurance policy: {}", payload);
 
+            updateModelFields(payload, existingInsurancePolicy);
+
             InsurancePolicy insurancePolicy = insurancePolicyRepository
-                    .save(modelMapper.mapDtoToModel(payload, InsurancePolicy.class));
+                    .save(modelMapper.mapDtoToModel(existingInsurancePolicy, InsurancePolicy.class));
 
             return modelMapper.mapModelToDto(insurancePolicy, InsurancePolicyDto.class);
         } catch (Exception e) {
@@ -106,5 +110,18 @@ public class InsurancePolicyService implements CrudService<InsurancePolicyDto> {
             LOGGER.error(e.getMessage());
             throw new InsurancePolicyException("An error occurred while deleting insurance policy.", e);
         }
+    }
+    private void updateModelFields(InsurancePolicyDto payload, InsurancePolicyDto existingInsurancePolicy) {
+        if (payload.getFranchiseValue() != null) {
+            existingInsurancePolicy.setFranchiseValue(payload.getFranchiseValue());
+        }
+
+        if (payload.getRent() != null) {
+            existingInsurancePolicy.setRent(payload.getRent());
+        }
+
+        existingInsurancePolicy.setThirdPartyCoverage(payload.isThirdPartyCoverage());
+        existingInsurancePolicy.setNaturalPhenomenaCoverage(payload.isNaturalPhenomenaCoverage());
+        existingInsurancePolicy.setTheftCoverage(payload.isTheftCoverage());
     }
 }

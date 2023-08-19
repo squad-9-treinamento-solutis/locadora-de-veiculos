@@ -4,7 +4,9 @@ import br.com.solutis.locadora.exception.car.ManufacturerException;
 import br.com.solutis.locadora.exception.car.ManufacturerNotFoundException;
 import br.com.solutis.locadora.mapper.GenericMapper;
 import br.com.solutis.locadora.model.dto.car.ManufacturerDto;
+import br.com.solutis.locadora.model.dto.car.ModelDto;
 import br.com.solutis.locadora.model.entity.car.Manufacturer;
+import br.com.solutis.locadora.model.entity.car.Model;
 import br.com.solutis.locadora.repository.CrudRepository;
 import br.com.solutis.locadora.response.PageResponse;
 import br.com.solutis.locadora.service.CrudService;
@@ -78,13 +80,15 @@ public class ManufacturerService implements CrudService<ManufacturerDto> {
     }
 
     public ManufacturerDto update(ManufacturerDto payload) {
-        findById(payload.getId());
+        ManufacturerDto existingManufacturer = findById(payload.getId());
 
         try {
             LOGGER.info("Updating manufacturer: {}", payload);
 
+            updateModelFields(payload, existingManufacturer);
+
             Manufacturer manufacturer = manufacturerRepository
-                    .save(modelMapper.mapDtoToModel(payload, Manufacturer.class));
+                    .save(modelMapper.mapDtoToModel(existingManufacturer, Manufacturer.class));
 
             return modelMapper.mapModelToDto(manufacturer, ManufacturerDto.class);
         } catch (Exception e) {
@@ -106,6 +110,11 @@ public class ManufacturerService implements CrudService<ManufacturerDto> {
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new ManufacturerException("An error occurred while deleting manufacturer.", e);
+        }
+    }
+    private void updateModelFields(ManufacturerDto payload, ManufacturerDto existingManufacturer) {
+        if (payload.getName() != null) {
+            existingManufacturer.setName(payload.getName());
         }
     }
 }

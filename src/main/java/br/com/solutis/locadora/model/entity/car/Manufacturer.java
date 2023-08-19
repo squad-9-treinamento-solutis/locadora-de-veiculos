@@ -21,6 +21,6 @@ public class Manufacturer extends AbstractEntity {
     private String name;
 
     @JsonIgnoreProperties("manufacturer")
-    @OneToMany(mappedBy = "manufacturer", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "manufacturer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Model> models;
 }
