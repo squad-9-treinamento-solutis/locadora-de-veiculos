@@ -4,11 +4,14 @@ import br.com.solutis.locadora.exception.car.ModelException;
 import br.com.solutis.locadora.exception.car.ModelNotFoundException;
 import br.com.solutis.locadora.mapper.GenericMapper;
 import br.com.solutis.locadora.model.dto.car.ModelDto;
+import br.com.solutis.locadora.model.dto.person.DriverDto;
 import br.com.solutis.locadora.model.entity.car.Model;
+import br.com.solutis.locadora.model.entity.person.Driver;
 import br.com.solutis.locadora.repository.CrudRepository;
 import br.com.solutis.locadora.response.PageResponse;
 import br.com.solutis.locadora.service.CrudService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 @Service
@@ -76,13 +80,15 @@ public class ModelService implements CrudService<ModelDto> {
     }
 
     public ModelDto update(ModelDto payload) {
-        findById(payload.getId());
+        ModelDto existingModel = findById(payload.getId());
 
         try {
             LOGGER.info("Updating model: {}", payload);
 
+            updateModelFields(payload, existingModel);
+
             Model model = modelRepository
-                    .save(modelMapper.mapDtoToModel(payload, Model.class));
+                    .save(modelMapper.mapDtoToModel(existingModel, Model.class));
 
             return modelMapper.mapModelToDto(model, ModelDto.class);
         } catch (Exception e) {
@@ -103,6 +109,18 @@ public class ModelService implements CrudService<ModelDto> {
         }catch (Exception e){
             LOGGER.error(e.getMessage());
             throw new ModelException("An error occurred while deleting the car model", e);
+        }
+    }
+
+    private void updateModelFields(ModelDto payload, ModelDto existingModel) {
+        if (payload.getDescription() != null) {
+            existingModel.setDescription(payload.getDescription());
+        }
+        if (payload.getCategory() != null) {
+            existingModel.setCategory(payload.getCategory());
+        }
+        if (payload.getManufacturerId() != null) {
+            existingModel.setManufacturerId(payload.getManufacturerId());
         }
     }
 }

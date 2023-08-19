@@ -4,7 +4,9 @@ import br.com.solutis.locadora.exception.car.CarException;
 import br.com.solutis.locadora.exception.car.CarNotFoundException;
 import br.com.solutis.locadora.mapper.GenericMapper;
 import br.com.solutis.locadora.model.dto.car.CarDto;
+import br.com.solutis.locadora.model.dto.car.ManufacturerDto;
 import br.com.solutis.locadora.model.entity.car.Car;
+import br.com.solutis.locadora.model.entity.car.Manufacturer;
 import br.com.solutis.locadora.repository.CarRepository;
 import br.com.solutis.locadora.response.PageResponse;
 import br.com.solutis.locadora.service.CrudService;
@@ -76,13 +78,15 @@ public class CarService implements CrudService<CarDto> {
     }
 
     public CarDto update(CarDto payload) {
-        findById(payload.getId());
+        CarDto existingCar = findById(payload.getId());
 
         try {
             LOGGER.info("Updating car: {}", payload);
 
+            updateModelFields(payload, existingCar);
+
             Car car = carRepository
-                    .save(modelMapper.mapDtoToModel(payload, Car.class));
+                    .save(modelMapper.mapDtoToModel(existingCar, Car.class));
 
             return modelMapper.mapModelToDto(car, CarDto.class);
         } catch (Exception e) {
@@ -105,5 +109,23 @@ public class CarService implements CrudService<CarDto> {
             LOGGER.error(e.getMessage());
             throw new CarException("An error occurred while deleting car.", e);
         }
+    }
+    private void updateModelFields(CarDto payload, CarDto existingCar) {
+        if (payload.getPlate() != null) {
+            existingCar.setPlate(payload.getPlate());
+        }
+        if (payload.getChassis() != null) {
+            existingCar.setChassis(payload.getChassis());
+        }
+        if (payload.getColor() != null) {
+            existingCar.setColor(payload.getColor());
+        }
+        if (payload.getDailyValue() != null) {
+            existingCar.setDailyValue(payload.getDailyValue());
+        }
+        if (payload.getImageUrl() != null) {
+            existingCar.setImageUrl(payload.getImageUrl());
+        }
+
     }
 }
