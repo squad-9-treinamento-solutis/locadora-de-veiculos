@@ -1,23 +1,20 @@
 package br.com.solutis.locadora.model.entity.person;
 
-import br.com.solutis.locadora.model.entity.AbstractEntity;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+@Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @SuperBuilder
 @Table(name = "employees")
-public class Employee extends AbstractEntity {
+public class Employee extends Person {
     @Column(unique = true, nullable = false)
     private String registration;
-
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "person_id", referencedColumnName = "id")
-    private Person person;
 }

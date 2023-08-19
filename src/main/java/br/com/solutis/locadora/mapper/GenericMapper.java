@@ -1,18 +1,31 @@
 package br.com.solutis.locadora.mapper;
 
-
-import org.mapstruct.Mapping;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.modelmapper.ModelMapper;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-public interface GenericMapper<E, D> {
-    @Mapping(target = ".", source = ".", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    D modelToDTO(E entity);
+@Configuration
+public class GenericMapper<S, T> {
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
 
-    @Mapping(target = ".", source = ".", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    E dtoToModel(D dto);
+    public T mapDtoToModel(S dto, Class<T> targetClass) {
+        return this.modelMapper().map(dto, targetClass);
+    }
 
-    @Mapping(target = ".", source = ".", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    List<D> listModelToListDto(List<E> all);
+    public S mapModelToDto(T model, Class<S> targetClass) {
+        return this.modelMapper().map(model, targetClass);
+    }
+
+    public <S, T> List<T> mapList(List<S> source, Class<T> targetClass) {
+        return source
+                .stream()
+                .map(element -> this.modelMapper().map(element, targetClass))
+                .collect(Collectors.toList());
+    }
 }

@@ -2,13 +2,12 @@ package br.com.solutis.locadora.service.car;
 
 import br.com.solutis.locadora.exception.car.CarException;
 import br.com.solutis.locadora.exception.car.CarNotFoundException;
-import br.com.solutis.locadora.mapper.car.CarMapper;
+import br.com.solutis.locadora.mapper.GenericMapper;
 import br.com.solutis.locadora.model.dto.car.CarDto;
 import br.com.solutis.locadora.model.entity.car.Car;
 import br.com.solutis.locadora.repository.CarRepository;
 import br.com.solutis.locadora.response.PageResponse;
 import br.com.solutis.locadora.service.CrudService;
-import br.com.solutis.locadora.service.rent.InsurancePolicyService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,21 +24,20 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.REQUIRED)
 public class CarService implements CrudService<CarDto> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(InsurancePolicyService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CarService.class);
     private final CarRepository carRepository;
-    private final CarMapper carMapper;
+    private final GenericMapper<CarDto, Car> modelMapper;
 
     public CarDto findById(Long id) {
         LOGGER.info("Finding car with ID: {}", id);
 
-        return carRepository.findById(id)
-                .map(carMapper::modelToDTO)
-                .orElseThrow(() -> {
-                    LOGGER.error("Car with ID {} not found.", id);
-                    return new CarNotFoundException(id);
-                });
-    }
+        Car car = carRepository.findById(id).orElseThrow(() -> {
+            LOGGER.error("Car with ID {} not found.", id);
+            return new CarNotFoundException(id);
+        });
 
+        return modelMapper.mapModelToDto(car, CarDto.class);
+    }
 
     public PageResponse<CarDto> findAll(int pageNo, int pageSize) {
         try {
@@ -47,7 +45,8 @@ public class CarService implements CrudService<CarDto> {
 
             Pageable paging = PageRequest.of(pageNo, pageSize);
             Page<Car> pagedCars = carRepository.findByRented(false, paging);
-            List<CarDto> carDtos = carMapper.listModelToListDto(pagedCars.getContent());
+            List<CarDto> carDtos = modelMapper.
+                mapList(pagedCars.getContent(), CarDto.class);
 
             PageResponse<CarDto> pageResponse = new PageResponse<>();
             pageResponse.setContent(carDtos);
@@ -67,9 +66,9 @@ public class CarService implements CrudService<CarDto> {
             LOGGER.info("Adding car: {}", payload);
 
             Car car = carRepository
-                    .save(carMapper.dtoToModel(payload));
+                    .save(modelMapper.mapDtoToModel(payload, Car.class));
 
-            return carMapper.modelToDTO(car);
+            return modelMapper.mapModelToDto(car, CarDto.class);
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new CarException("An error occurred while adding car.", e);
@@ -83,9 +82,9 @@ public class CarService implements CrudService<CarDto> {
             LOGGER.info("Updating car: {}", payload);
 
             Car car = carRepository
-                    .save(carMapper.dtoToModel(payload));
+                    .save(modelMapper.mapDtoToModel(payload, Car.class));
 
-            return carMapper.modelToDTO(car);
+            return modelMapper.mapModelToDto(car, CarDto.class);
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new CarException("An error occurred while updating car.", e);
@@ -98,7 +97,7 @@ public class CarService implements CrudService<CarDto> {
         try {
             LOGGER.info("Soft deleting car with ID: {}", id);
 
-            Car car = carMapper.dtoToModel(carDto);
+            Car car = modelMapper.mapDtoToModel(carDto, Car.class);
             car.setDeleted(true);
 
             carRepository.save(car);

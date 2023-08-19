@@ -1,5 +1,6 @@
 package br.com.solutis.locadora.model.dto.rent;
 
+import br.com.solutis.locadora.model.entity.rent.Rent;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,4 +20,6 @@ public class InsurancePolicyDto {
     private boolean naturalPhenomenaCoverage = false;
 
     private boolean theftCoverage = false;
+
+    private Rent rent;
 }

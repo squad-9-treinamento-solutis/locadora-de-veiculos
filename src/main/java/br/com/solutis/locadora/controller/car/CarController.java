@@ -3,7 +3,6 @@ package br.com.solutis.locadora.controller.car;
 import br.com.solutis.locadora.exception.car.CarException;
 import br.com.solutis.locadora.exception.car.CarNotFoundException;
 import br.com.solutis.locadora.model.dto.car.CarDto;
-import br.com.solutis.locadora.repository.CarRepository;
 import br.com.solutis.locadora.response.ErrorResponse;
 import br.com.solutis.locadora.service.car.CarService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 public class CarController {
     private final CarService carService;
-    private final CarRepository carRepository;
 
     @Operation(
             summary = "Listar por id",
