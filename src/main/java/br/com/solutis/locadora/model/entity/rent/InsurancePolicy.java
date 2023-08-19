@@ -1,24 +1,24 @@
 package br.com.solutis.locadora.model.entity.rent;
 
-import br.com.solutis.locadora.model.entity.AbstractEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@SuperBuilder
 @Table(name = "insurance_policies")
-public class InsurancePolicy extends AbstractEntity {
+public class InsurancePolicy {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(name = "franchise_value", nullable = false)
     private BigDecimal franchiseValue;
 
@@ -33,4 +33,26 @@ public class InsurancePolicy extends AbstractEntity {
 
     @OneToOne(mappedBy = "insurancePolicy")
     private Rent rent;
+
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted = false;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private java.util.Date createdAt;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "updated_at", nullable = false)
+    private java.util.Date updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = new java.util.Date();
+        updatedAt = new java.util.Date();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = new java.util.Date();
+    }
 }
