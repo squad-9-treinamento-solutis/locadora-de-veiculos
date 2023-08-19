@@ -4,15 +4,15 @@ import br.com.solutis.locadora.model.entity.AbstractEntity;
 import br.com.solutis.locadora.model.entity.rent.Rent;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+@Data
 @Entity
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
