@@ -1,29 +1,27 @@
 package br.com.solutis.locadora.model.entity.person;
 
-import br.com.solutis.locadora.model.entity.AbstractEntity;
 import br.com.solutis.locadora.model.entity.rent.Rent;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
+@Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @SuperBuilder
 @Table(name = "drivers")
-public class Driver extends AbstractEntity {
+public class Driver extends Person {
     @Column(unique = true, nullable = false)
     private String cnh;
-
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "person_id", referencedColumnName = "id")
-    private Person person;
 
     @JsonIgnoreProperties("drivers")
     @OneToMany(mappedBy = "driver")

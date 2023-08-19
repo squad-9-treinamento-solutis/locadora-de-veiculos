@@ -4,11 +4,11 @@ import br.com.solutis.locadora.exception.car.CarNotFoundException;
 import br.com.solutis.locadora.mapper.person.DriverMapper;
 import br.com.solutis.locadora.model.dto.person.DriverDto;
 import br.com.solutis.locadora.model.entity.person.Driver;
-import br.com.solutis.locadora.repository.CrudRepository;
+import br.com.solutis.locadora.repository.DriverRepository;
 import br.com.solutis.locadora.response.PageResponse;
 import br.com.solutis.locadora.service.CrudService;
-import br.com.solutis.locadora.service.rent.InsurancePolicyService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -24,8 +24,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.REQUIRED)
 public class DriverService implements CrudService<DriverDto> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(InsurancePolicyService.class);
-    private final CrudRepository<Driver> driverRepository;
+    private static final Logger LOGGER = LoggerFactory.getLogger(DriverService.class);
+    private final DriverRepository driverRepository;
     private final DriverMapper driverMapper;
 
     public DriverDto findById(Long id) {
@@ -65,8 +65,7 @@ public class DriverService implements CrudService<DriverDto> {
         try {
             LOGGER.info("Adding driver: {}", payload);
 
-            Driver driver = driverRepository.save(driverMapper.dtoToModel(payload));
-            return driverMapper.modelToDTO(driver);
+            return driverMapper.modelToDTO(driverMapper.dtoToModel(payload));
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new RuntimeException("An error occurred while adding driver.", e);
@@ -108,7 +107,6 @@ public class DriverService implements CrudService<DriverDto> {
         }
     }
     private void updateDriverFields(DriverDto payload, DriverDto existingDriver) {
-
         if(payload.getName()!= null){
             existingDriver.setName(payload.getName());
         }
@@ -118,8 +116,8 @@ public class DriverService implements CrudService<DriverDto> {
         if(payload.getBirthDate()!= null){
             existingDriver.setBirthDate(payload.getBirthDate());
         }
-        if(payload.getGenderEnum()!= null){
-            existingDriver.setGenderEnum(payload.getGenderEnum());
+        if(payload.getGender()!= null){
+            existingDriver.setGender(payload.getGender());
         }
     }
 }

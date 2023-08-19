@@ -1,19 +1,35 @@
 package br.com.solutis.locadora.model.entity.person;
 
-import br.com.solutis.locadora.model.entity.AbstractEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 @Entity
 @Data
-@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
 @ToString
-@Table(name = "persons")
-public class Person extends AbstractEntity {
+@SuperBuilder
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public abstract class Person {
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE)
+    private Long id;
+
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted = false;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private java.util.Date createdAt;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "updated_at", nullable = false)
+    private java.util.Date updatedAt;
+
     @Column(nullable = false)
     private String name;
 
@@ -26,11 +42,16 @@ public class Person extends AbstractEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender", nullable = false)
-    private GenderEnum genderEnum;
+    private GenderEnum gender;
 
-    @OneToOne(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
-    private Driver driver;
+    @PrePersist
+    protected void onCreate() {
+        createdAt = new java.util.Date();
+        updatedAt = new java.util.Date();
+    }
 
-    @OneToOne(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
-    private Employee employee;
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = new java.util.Date();
+    }
 }
