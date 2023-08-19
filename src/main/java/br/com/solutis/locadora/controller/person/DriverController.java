@@ -30,6 +30,8 @@ public class DriverController {
             return new ResponseEntity<>(driverService.findById(id), HttpStatus.OK);
         } catch (DriverNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        } catch (DriverException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

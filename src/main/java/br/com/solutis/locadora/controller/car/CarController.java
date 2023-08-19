@@ -30,6 +30,8 @@ public class CarController {
             return new ResponseEntity<>(carService.findById(id), HttpStatus.OK);
         } catch (CarNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        } catch (CarException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

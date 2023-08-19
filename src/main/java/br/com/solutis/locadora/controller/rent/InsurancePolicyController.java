@@ -31,6 +31,8 @@ public class InsurancePolicyController {
             return new ResponseEntity<>(insurancePolicyService.findById(id), HttpStatus.OK);
         } catch (InsurancePolicyNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        } catch (InsurancePolicyException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

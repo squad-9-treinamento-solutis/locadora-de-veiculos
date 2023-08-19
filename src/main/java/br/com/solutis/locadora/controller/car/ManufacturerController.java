@@ -31,6 +31,8 @@ public class ManufacturerController {
             return new ResponseEntity<>(manufacturerService.findById(id), HttpStatus.OK);
         } catch (ManufacturerNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        } catch (ManufacturerException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

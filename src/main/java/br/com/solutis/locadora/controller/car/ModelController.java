@@ -31,6 +31,8 @@ public class ModelController {
             return new ResponseEntity<>(modelService.findById(id), HttpStatus.OK);
         } catch (ModelNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        } catch (ModelException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -30,6 +30,8 @@ public class AccessoryController {
             return new ResponseEntity<>(accessoryService.findById(id), HttpStatus.OK);
         } catch (AccessoryNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        } catch (AccessoryException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
