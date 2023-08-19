@@ -49,7 +49,7 @@ Obs: Para ver o swagger execute a aplicação. O swagger vai ser executado na po
 **Banco de dados:**
 
 
-![desafio-locadora-banco-de-dados](https://github.com/squad-9-treinamento-solutis/locadora-de-veiculos/assets/76819323/efa3ff68-2b73-49b7-8fe4-1c5a05084902)
+![desafio-locadora-banco-de-dados](https://github.com/squad-9-treinamento-solutis/locadora-de-veiculos/assets/76819323/0745adce-f8e4-4449-8569-0b87a8fdb8fa)
 
 
 ## ✒️ Autores
