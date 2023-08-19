@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @ToString
 @SuperBuilder
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class AbstractEntity {
+public class AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
@@ -32,12 +32,12 @@ public abstract class AbstractEntity {
 
     @PrePersist
     protected void onCreate() {
-            createdAt = new java.util.Date();
-            updatedAt = new java.util.Date();
+        createdAt = new java.util.Date();
+        updatedAt = new java.util.Date();
     }
 
     @PreUpdate
     protected void onUpdate() {
-            updatedAt = new java.util.Date();
-            }
+        updatedAt = new java.util.Date();
+    }
 }
