@@ -1,14 +1,13 @@
 package br.com.solutis.locadora.service.person;
 
 import br.com.solutis.locadora.exception.car.CarNotFoundException;
-import br.com.solutis.locadora.mapper.person.DriverMapper;
+import br.com.solutis.locadora.mapper.GenericMapper;
 import br.com.solutis.locadora.model.dto.person.DriverDto;
 import br.com.solutis.locadora.model.entity.person.Driver;
 import br.com.solutis.locadora.repository.DriverRepository;
 import br.com.solutis.locadora.response.PageResponse;
 import br.com.solutis.locadora.service.CrudService;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -26,18 +25,20 @@ import java.util.List;
 public class DriverService implements CrudService<DriverDto> {
     private static final Logger LOGGER = LoggerFactory.getLogger(DriverService.class);
     private final DriverRepository driverRepository;
-    private final DriverMapper driverMapper;
+    private final GenericMapper<DriverDto, Driver> modelMapper;
 
     public DriverDto findById(Long id) {
         LOGGER.info("Finding driver with ID: {}", id);
-        return driverRepository.findById(id).map(driverMapper::modelToDTO).orElseThrow(()-> {
+
+        Driver driver = driverRepository.findById(id).orElseThrow(()-> {
             LOGGER.error("Driver with ID {} not found.", id);
             return new CarNotFoundException(id);
         });
 
+        return modelMapper.mapModelToDto(driver, DriverDto.class);
     }
 
-    @Override
+
     public PageResponse<DriverDto> findAll(int pageNo, int pageSize) {
         LOGGER.info("Fetching drivers with page number {} and page size {}.", pageNo, pageSize);
 
@@ -45,7 +46,8 @@ public class DriverService implements CrudService<DriverDto> {
             Pageable paging = PageRequest.of(pageNo, pageSize);
             Page<Driver> pagedDrivers = driverRepository.findAll(paging);
 
-            List<DriverDto> driverDtos = driverMapper.listModelToListDto(pagedDrivers.getContent());
+            List<DriverDto> driverDtos = modelMapper
+                    .mapList(pagedDrivers.getContent(), DriverDto.class);
 
             PageResponse<DriverDto> pageResponse = new PageResponse<>();
             pageResponse.setContent(driverDtos);
@@ -65,7 +67,10 @@ public class DriverService implements CrudService<DriverDto> {
         try {
             LOGGER.info("Adding driver: {}", payload);
 
-            return driverMapper.modelToDTO(driverMapper.dtoToModel(payload));
+            Driver driver = driverRepository
+                    .save(modelMapper.mapDtoToModel(payload, Driver.class));
+
+            return modelMapper.mapModelToDto(driver, DriverDto.class);
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new RuntimeException("An error occurred while adding driver.", e);
@@ -80,9 +85,10 @@ public class DriverService implements CrudService<DriverDto> {
 
             updateDriverFields(payload, existingDriver);
 
-            Driver driver = driverRepository.save(driverMapper.dtoToModel(existingDriver));
+            Driver driver = driverRepository
+                    .save(modelMapper.mapDtoToModel(existingDriver, Driver.class));
 
-            return driverMapper.modelToDTO(driver);
+            return modelMapper.mapModelToDto(driver, DriverDto.class);
 
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
@@ -97,7 +103,7 @@ public class DriverService implements CrudService<DriverDto> {
             LOGGER.info("Soft deleting driver with ID: {}", id);
 
 
-            Driver driver = driverMapper.dtoToModel(driverDto);
+            Driver driver = modelMapper.mapDtoToModel(driverDto, Driver.class);
             driver.setDeleted(true);
 
             driverRepository.save(driver);
@@ -106,6 +112,7 @@ public class DriverService implements CrudService<DriverDto> {
             throw new RuntimeException("An error occurred while deleting driver.", e);
         }
     }
+
     private void updateDriverFields(DriverDto payload, DriverDto existingDriver) {
         if(payload.getName()!= null){
             existingDriver.setName(payload.getName());
