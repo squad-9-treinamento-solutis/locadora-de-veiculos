@@ -30,12 +30,7 @@ public class ManufacturerService implements CrudService<ManufacturerDto> {
 
     public ManufacturerDto findById(Long id) {
         LOGGER.info("Finding manufacturer with ID: {}", id);
-
-        Manufacturer manufacturer = manufacturerRepository.findById(id)
-                .orElseThrow(() -> {
-                    LOGGER.error("Manufacturer with ID {} not found.", id);
-                    return new ManufacturerNotFoundException(id);
-                });
+        Manufacturer manufacturer = getManufacturer(id);
 
         return modelMapper.mapModelToDto(manufacturer, ManufacturerDto.class);
     }
@@ -78,15 +73,18 @@ public class ManufacturerService implements CrudService<ManufacturerDto> {
     }
 
     public ManufacturerDto update(ManufacturerDto payload) {
-        ManufacturerDto existingManufacturer = findById(payload.getId());
+        Manufacturer existingManufacturer = getManufacturer(payload.getId());
+        if (existingManufacturer.isDeleted()) throw new ManufacturerNotFoundException(existingManufacturer.getId());
 
         try {
             LOGGER.info("Updating manufacturer: {}", payload);
+            ManufacturerDto manufacturerDto = modelMapper
+                    .mapModelToDto(existingManufacturer, ManufacturerDto.class);
 
-            updateModelFields(payload, existingManufacturer);
+            updateModelFields(payload, manufacturerDto);
 
             Manufacturer manufacturer = manufacturerRepository
-                    .save(modelMapper.mapDtoToModel(existingManufacturer, Manufacturer.class));
+                    .save(modelMapper.mapDtoToModel(manufacturerDto, Manufacturer.class));
 
             return modelMapper.mapModelToDto(manufacturer, ManufacturerDto.class);
         } catch (Exception e) {
@@ -115,5 +113,13 @@ public class ManufacturerService implements CrudService<ManufacturerDto> {
         if (payload.getName() != null) {
             existingManufacturer.setName(payload.getName());
         }
+    }
+
+    private Manufacturer getManufacturer(Long id) {
+        return manufacturerRepository.findById(id)
+                .orElseThrow(() -> {
+                    LOGGER.error("Manufacturer with ID {} not found.", id);
+                    return new ManufacturerNotFoundException(id);
+                });
     }
 }

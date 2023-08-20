@@ -30,11 +30,7 @@ public class AccessoryService implements CrudService<AccessoryDto> {
 
     public AccessoryDto findById(Long id) {
         LOGGER.info("Finding accessory with ID: {}", id);
-
-        Accessory accessory = accessoryRepository.findById(id).orElseThrow(() -> {
-            LOGGER.error("Accessory with ID {} not found.", id);
-            return new AccessoryNotFoundException(id);
-        });
+        Accessory accessory = getAccessory(id);
 
         return modelMapper.mapModelToDto(accessory, AccessoryDto.class);
     }
@@ -76,15 +72,18 @@ public class AccessoryService implements CrudService<AccessoryDto> {
     }
 
     public AccessoryDto update(AccessoryDto payload) {
-        AccessoryDto existingAccessory = findById(payload.getId());
+        Accessory existingAccessory = getAccessory(payload.getId());
+        if (existingAccessory.isDeleted()) throw new AccessoryNotFoundException(existingAccessory.getId());
 
         try {
             LOGGER.info("Updating accessory {}.", payload);
+            AccessoryDto accessoryDto = modelMapper
+                    .mapModelToDto(existingAccessory, AccessoryDto.class);
 
-            updateAccessoryFields(payload, existingAccessory);
+            updateAccessoryFields(payload, accessoryDto);
 
             Accessory accessory = accessoryRepository
-                    .save(modelMapper.mapDtoToModel(existingAccessory, Accessory.class));
+                    .save(modelMapper.mapDtoToModel(accessoryDto, Accessory.class));
 
             return modelMapper.mapModelToDto(accessory, AccessoryDto.class);
         } catch (Exception e) {
@@ -113,5 +112,12 @@ public class AccessoryService implements CrudService<AccessoryDto> {
         if (payload.getDescription() != null) {
             existingAccessory.setDescription(payload.getDescription());
         }
+    }
+
+    private Accessory getAccessory(Long id) {
+        return accessoryRepository.findById(id).orElseThrow(() -> {
+            LOGGER.error("Accessory with ID {} not found.", id);
+            return new AccessoryNotFoundException(id);
+        });
     }
 }

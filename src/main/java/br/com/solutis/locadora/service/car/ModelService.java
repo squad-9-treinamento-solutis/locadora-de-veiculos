@@ -30,11 +30,7 @@ public class ModelService implements CrudService<ModelDto> {
 
     public ModelDto findById(Long id) {
         LOGGER.info("Finding model with ID: {}", id);
-
-        Model model = modelRepository.findById(id).orElseThrow(() -> {
-            LOGGER.error("Model with ID {} not found.", id);
-            return new ModelNotFoundException(id);
-        });
+        Model model = getModel(id);
 
         return modelMapper.mapModelToDto(model, ModelDto.class);
     }
@@ -76,15 +72,18 @@ public class ModelService implements CrudService<ModelDto> {
     }
 
     public ModelDto update(ModelDto payload) {
-        ModelDto existingModel = findById(payload.getId());
+        Model existingModel = getModel(payload.getId());
+        if (existingModel.isDeleted()) throw new ModelNotFoundException(existingModel.getId());
 
         try {
             LOGGER.info("Updating model: {}", payload);
+            ModelDto modelDto = modelMapper
+                    .mapModelToDto(existingModel, ModelDto.class);
 
-            updateModelFields(payload, existingModel);
+            updateModelFields(payload, modelDto);
 
             Model model = modelRepository
-                    .save(modelMapper.mapDtoToModel(existingModel, Model.class));
+                    .save(modelMapper.mapDtoToModel(modelDto, Model.class));
 
             return modelMapper.mapModelToDto(model, ModelDto.class);
         } catch (Exception e) {
@@ -118,5 +117,12 @@ public class ModelService implements CrudService<ModelDto> {
         if (payload.getManufacturerId() != null) {
             existingModel.setManufacturerId(payload.getManufacturerId());
         }
+    }
+
+    private Model getModel(Long id) {
+        return modelRepository.findById(id).orElseThrow(() -> {
+            LOGGER.error("Model with ID {} not found.", id);
+            return new ModelNotFoundException(id);
+        });
     }
 }
