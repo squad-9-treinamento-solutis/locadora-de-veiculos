@@ -5,7 +5,7 @@ import br.com.solutis.locadora.exception.rent.InsurancePolicyNotFoundException;
 import br.com.solutis.locadora.mapper.GenericMapper;
 import br.com.solutis.locadora.model.dto.rent.InsurancePolicyDto;
 import br.com.solutis.locadora.model.entity.rent.InsurancePolicy;
-import br.com.solutis.locadora.repository.InsurancePolicyRepository;
+import br.com.solutis.locadora.repository.rent.InsurancePolicyRepository;
 import br.com.solutis.locadora.response.PageResponse;
 import br.com.solutis.locadora.service.CrudService;
 import lombok.RequiredArgsConstructor;

@@ -38,7 +38,7 @@ public class Rent {
     private BigDecimal value;
 
     @Column(nullable = false)
-    private boolean finished;
+    private boolean confirmed = false;
 
     @JsonIgnoreProperties("rents")
     @ManyToOne(optional = false)

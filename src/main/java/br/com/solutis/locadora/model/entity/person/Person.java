@@ -25,10 +25,8 @@ public abstract class Person {
     @Column(name = "deleted", nullable = false)
     private boolean deleted = false;
 
-
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
-
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
@@ -38,7 +36,6 @@ public abstract class Person {
 
     @Column(unique = true, nullable = false)
     private String cpf;
-
 
     @Column(nullable = false)
     private LocalDate birthDate;
