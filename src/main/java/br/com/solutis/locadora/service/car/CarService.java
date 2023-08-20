@@ -2,6 +2,7 @@ package br.com.solutis.locadora.service.car;
 
 import br.com.solutis.locadora.exception.car.CarException;
 import br.com.solutis.locadora.exception.car.CarNotFoundException;
+import br.com.solutis.locadora.exception.car.ManufacturerNotFoundException;
 import br.com.solutis.locadora.mapper.GenericMapper;
 import br.com.solutis.locadora.model.dto.car.CarDto;
 import br.com.solutis.locadora.model.entity.car.Car;
@@ -31,11 +32,7 @@ public class CarService implements CrudService<CarDto> {
 
     public CarDto findById(Long id) {
         LOGGER.info("Finding car with ID: {}", id);
-
-        Car car = carRepository.findById(id).orElseThrow(() -> {
-            LOGGER.error("Car with ID {} not found.", id);
-            return new CarNotFoundException(id);
-        });
+        Car car = getCar(id);
 
         return modelMapper.mapModelToDto(car, CarDto.class);
     }
@@ -77,15 +74,18 @@ public class CarService implements CrudService<CarDto> {
     }
 
     public CarDto update(CarDto payload) {
-        CarDto existingCar = findById(payload.getId());
+        Car existingCar = getCar(payload.getId());
+        if (existingCar.isDeleted()) throw new ManufacturerNotFoundException(existingCar.getId());
 
         try {
             LOGGER.info("Updating car: {}", payload);
+            CarDto carDto = modelMapper
+                    .mapModelToDto(existingCar, CarDto.class);
 
-            updateModelFields(payload, existingCar);
+            updateModelFields(payload, carDto);
 
             Car car = carRepository
-                    .save(modelMapper.mapDtoToModel(existingCar, Car.class));
+                    .save(modelMapper.mapDtoToModel(carDto, Car.class));
 
             return modelMapper.mapModelToDto(car, CarDto.class);
         } catch (Exception e) {
@@ -134,4 +134,10 @@ public class CarService implements CrudService<CarDto> {
         return modelMapper.mapList(availableCars, CarDto.class);
     }
 
+    private Car getCar(Long id) {
+        return carRepository.findById(id).orElseThrow(() -> {
+            LOGGER.error("Car with ID {} not found.", id);
+            return new CarNotFoundException(id);
+        });
+    }
 }

@@ -102,6 +102,8 @@ public class CartService implements CrudService<CartDto> {
             LOGGER.info("Updating cart: {}", payload);
 
             Cart driverCart = cartRepository.findByDriverId(payload.getDriverId());
+            if (driverCart.isDeleted()) throw new CartNotFoundException(driverCart.getId());
+           
             driverCart.setRents(payload.getRentsIds());
 
             Cart cart = cartRepository.save(driverCart);

@@ -30,11 +30,7 @@ public class InsurancePolicyService implements CrudService<InsurancePolicyDto> {
 
     public InsurancePolicyDto findById(Long id) {
         LOGGER.info("Finding insurance policy with ID: {}", id);
-
-        InsurancePolicy insurancePolicy = insurancePolicyRepository.findById(id).orElseThrow(() -> {
-            LOGGER.error("Insurance policy with ID {} not found.", id);
-            return new InsurancePolicyNotFoundException(id);
-        });
+        InsurancePolicy insurancePolicy = getInsurancePolicy(id);
 
         return modelMapper.mapModelToDto(insurancePolicy, InsurancePolicyDto.class);
     }
@@ -77,15 +73,19 @@ public class InsurancePolicyService implements CrudService<InsurancePolicyDto> {
     }
 
     public InsurancePolicyDto update(InsurancePolicyDto payload) {
-        InsurancePolicyDto existingInsurancePolicy = findById(payload.getId());
+        InsurancePolicy existingInsurancePolicy = getInsurancePolicy(payload.getId());
+        if (existingInsurancePolicy.isDeleted())
+            throw new InsurancePolicyNotFoundException(existingInsurancePolicy.getId());
 
         try {
             LOGGER.info("Updating insurance policy: {}", payload);
+            InsurancePolicyDto insurancePolicyDto = modelMapper
+                    .mapModelToDto(existingInsurancePolicy, InsurancePolicyDto.class);
 
-            updateModelFields(payload, existingInsurancePolicy);
+            updateModelFields(payload, insurancePolicyDto);
 
             InsurancePolicy insurancePolicy = insurancePolicyRepository
-                    .save(modelMapper.mapDtoToModel(existingInsurancePolicy, InsurancePolicy.class));
+                    .save(modelMapper.mapDtoToModel(insurancePolicyDto, InsurancePolicy.class));
 
             return modelMapper.mapModelToDto(insurancePolicy, InsurancePolicyDto.class);
         } catch (Exception e) {
@@ -118,5 +118,12 @@ public class InsurancePolicyService implements CrudService<InsurancePolicyDto> {
         existingInsurancePolicy.setThirdPartyCoverage(payload.isThirdPartyCoverage());
         existingInsurancePolicy.setNaturalPhenomenaCoverage(payload.isNaturalPhenomenaCoverage());
         existingInsurancePolicy.setTheftCoverage(payload.isTheftCoverage());
+    }
+
+    private InsurancePolicy getInsurancePolicy(Long id) {
+        return insurancePolicyRepository.findById(id).orElseThrow(() -> {
+            LOGGER.error("Insurance policy with ID {} not found.", id);
+            return new InsurancePolicyNotFoundException(id);
+        });
     }
 }

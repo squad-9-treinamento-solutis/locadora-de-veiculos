@@ -30,15 +30,10 @@ public class DriverService implements CrudService<DriverDto> {
 
     public DriverDto findById(Long id) {
         LOGGER.info("Finding driver with ID: {}", id);
-
-        Driver driver = driverRepository.findById(id).orElseThrow(() -> {
-            LOGGER.error("Driver with ID {} not found.", id);
-            return new DriverNotFoundException(id);
-        });
+        Driver driver = getDriver(id);
 
         return modelMapper.mapModelToDto(driver, DriverDto.class);
     }
-
 
     public PageResponse<DriverDto> findAll(int pageNo, int pageSize) {
         LOGGER.info("Fetching drivers with page number {} and page size {}.", pageNo, pageSize);
@@ -79,15 +74,18 @@ public class DriverService implements CrudService<DriverDto> {
     }
 
     public DriverDto update(DriverDto payload) {
-        DriverDto existingDriver = findById(payload.getId());
+        Driver existingDriver = getDriver(payload.getId());
+        if (existingDriver.isDeleted()) throw new DriverNotFoundException(existingDriver.getId());
 
         try {
             LOGGER.info("Updating driver: {}", payload);
+            DriverDto driverDto = modelMapper
+                    .mapModelToDto(existingDriver, DriverDto.class);
 
-            updateDriverFields(payload, existingDriver);
+            updateDriverFields(payload, driverDto);
 
             Driver driver = driverRepository
-                    .save(modelMapper.mapDtoToModel(existingDriver, Driver.class));
+                    .save(modelMapper.mapDtoToModel(driverDto, Driver.class));
 
             return modelMapper.mapModelToDto(driver, DriverDto.class);
 
@@ -127,5 +125,12 @@ public class DriverService implements CrudService<DriverDto> {
         if (payload.getGender() != null) {
             existingDriver.setGender(payload.getGender());
         }
+    }
+
+    private Driver getDriver(Long id) {
+        return driverRepository.findById(id).orElseThrow(() -> {
+            LOGGER.error("Driver with ID {} not found.", id);
+            return new DriverNotFoundException(id);
+        });
     }
 }
