@@ -5,7 +5,7 @@ import br.com.solutis.locadora.exception.person.DriverNotFoundException;
 import br.com.solutis.locadora.mapper.GenericMapper;
 import br.com.solutis.locadora.model.dto.person.DriverDto;
 import br.com.solutis.locadora.model.entity.person.Driver;
-import br.com.solutis.locadora.repository.DriverRepository;
+import br.com.solutis.locadora.repository.person.DriverRepository;
 import br.com.solutis.locadora.response.PageResponse;
 import br.com.solutis.locadora.service.CrudService;
 import lombok.RequiredArgsConstructor;

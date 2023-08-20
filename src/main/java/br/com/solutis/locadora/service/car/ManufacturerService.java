@@ -5,7 +5,7 @@ import br.com.solutis.locadora.exception.car.ManufacturerNotFoundException;
 import br.com.solutis.locadora.mapper.GenericMapper;
 import br.com.solutis.locadora.model.dto.car.ManufacturerDto;
 import br.com.solutis.locadora.model.entity.car.Manufacturer;
-import br.com.solutis.locadora.repository.ManufacturerRepository;
+import br.com.solutis.locadora.repository.car.ManufacturerRepository;
 import br.com.solutis.locadora.response.PageResponse;
 import br.com.solutis.locadora.service.CrudService;
 import lombok.RequiredArgsConstructor;

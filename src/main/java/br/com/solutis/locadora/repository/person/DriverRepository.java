@@ -1,4 +1,4 @@
-package br.com.solutis.locadora.repository;
+package br.com.solutis.locadora.repository.person;
 
 import br.com.solutis.locadora.model.entity.person.Driver;
 import org.springframework.data.domain.Page;

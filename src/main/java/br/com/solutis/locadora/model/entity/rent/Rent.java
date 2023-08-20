@@ -1,6 +1,7 @@
 package br.com.solutis.locadora.model.entity.rent;
 
 import br.com.solutis.locadora.model.entity.car.Car;
+import br.com.solutis.locadora.model.entity.cart.Cart;
 import br.com.solutis.locadora.model.entity.person.Driver;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -36,24 +37,31 @@ public class Rent {
     @Column(nullable = false)
     private BigDecimal value;
 
-    @JsonIgnoreProperties("carRents")
+    @Column(nullable = false)
+    private boolean confirmed = false;
+
+    @JsonIgnoreProperties("rents")
     @ManyToOne(optional = false)
     @JoinColumn(name = "insurance_policy_id", nullable = false)
     private InsurancePolicy insurancePolicy;
 
-    @JsonIgnoreProperties("carRents")
+    @JsonIgnoreProperties("rents")
     @ManyToOne(optional = false)
     @JoinColumn(name = "driver_id", nullable = false)
     private Driver driver;
 
-    @JsonIgnoreProperties("carRents")
+    @JsonIgnoreProperties("rents")
     @ManyToOne(optional = false)
     @JoinColumn(name = "car_id", nullable = false)
     private Car car;
 
+    @JsonIgnoreProperties("rents")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "cart_id", nullable = false)
+    private Cart cart;
+
     @Column(name = "deleted", nullable = false)
     private boolean deleted = false;
-
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

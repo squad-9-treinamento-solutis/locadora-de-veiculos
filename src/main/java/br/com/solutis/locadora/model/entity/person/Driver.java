@@ -1,11 +1,9 @@
 package br.com.solutis.locadora.model.entity.person;
 
+import br.com.solutis.locadora.model.entity.cart.Cart;
 import br.com.solutis.locadora.model.entity.rent.Rent;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -26,4 +24,8 @@ public class Driver extends Person {
     @JsonIgnoreProperties("drivers")
     @OneToMany(mappedBy = "driver")
     private List<Rent> rents;
+
+    @JsonIgnoreProperties("drivers")
+    @OneToOne(mappedBy = "driver")
+    private Cart cart;
 }

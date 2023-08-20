@@ -1,9 +1,13 @@
 package br.com.solutis.locadora.controller.person;
 
+
+import br.com.solutis.locadora.exception.cart.CartException;
+import br.com.solutis.locadora.exception.cart.CartNotFoundException;
 import br.com.solutis.locadora.exception.person.DriverException;
 import br.com.solutis.locadora.exception.person.DriverNotFoundException;
 import br.com.solutis.locadora.model.dto.person.DriverDto;
 import br.com.solutis.locadora.response.ErrorResponse;
+import br.com.solutis.locadora.service.cart.CartService;
 import br.com.solutis.locadora.service.person.DriverService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,8 +22,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/drivers")
 @CrossOrigin
 public class DriverController {
-
     private final DriverService driverService;
+    private final CartService cartService;
 
     @Operation(
             summary = "Listar por id",
@@ -58,7 +62,11 @@ public class DriverController {
     @PostMapping
     public ResponseEntity<?> add(@RequestBody DriverDto payload) {
         try {
-            return new ResponseEntity<>(driverService.add(payload), HttpStatus.CREATED);
+            DriverDto driverDto = driverService.add(payload);
+
+            cartService.addByDriverId(driverDto.getId());
+
+            return new ResponseEntity<>(driverDto, HttpStatus.CREATED);
         } catch (DriverException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -86,11 +94,25 @@ public class DriverController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         try {
+            cartService.deleteByDriverId(id);
+
             driverService.deleteById(id);
+
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (DriverNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
         } catch (DriverException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/{driverId}/carts")
+    public ResponseEntity<?> findCartByDriverId(@PathVariable Long driverId) {
+        try {
+            return new ResponseEntity<>(cartService.findByDriverId(driverId), HttpStatus.OK);
+        } catch (CartNotFoundException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        } catch (CartException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -40,7 +40,6 @@ public class Model {
     @Column(name = "deleted", nullable = false)
     private boolean deleted = false;
 
-
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

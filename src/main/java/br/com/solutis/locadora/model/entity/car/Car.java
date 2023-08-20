@@ -57,11 +57,10 @@ public class Car {
 
     @JsonIgnoreProperties("cars")
     @OneToMany(mappedBy = "car")
-
     private List<Rent> rents;
+
     @Column(name = "deleted", nullable = false)
     private boolean deleted = false;
-
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

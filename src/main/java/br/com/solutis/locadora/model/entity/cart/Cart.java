@@ -1,5 +1,8 @@
-package br.com.solutis.locadora.model.entity.person;
+package br.com.solutis.locadora.model.entity.cart;
 
+import br.com.solutis.locadora.model.entity.person.Driver;
+import br.com.solutis.locadora.model.entity.rent.Rent;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,20 +10,29 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
-@Entity
 @Data
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @SuperBuilder
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Person {
+@Table(name = "carts")
+public class Cart {
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @JsonIgnoreProperties("carts")
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "driver_id", nullable = false)
+    private Driver driver;
+
+    @JsonIgnoreProperties("carts")
+    @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Rent> rents;
 
     @Column(name = "deleted", nullable = false)
     private boolean deleted = false;
@@ -30,19 +42,6 @@ public abstract class Person {
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
-
-    @Column(nullable = false)
-    private String name;
-
-    @Column(unique = true, nullable = false)
-    private String cpf;
-
-    @Column(nullable = false)
-    private LocalDate birthDate;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "gender", nullable = false)
-    private GenderEnum gender;
 
     @PrePersist
     protected void onCreate() {

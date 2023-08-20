@@ -1,4 +1,4 @@
-package br.com.solutis.locadora.repository;
+package br.com.solutis.locadora.repository.rent;
 
 import br.com.solutis.locadora.model.entity.rent.InsurancePolicy;
 import org.springframework.data.domain.Page;
