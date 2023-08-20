@@ -26,7 +26,7 @@ public class ModelController {
             description = "Retorna as informações do modelo do carro por id",
             tags = {"id", "get"})
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable Long id){
+    public ResponseEntity<?> findById(@PathVariable Long id) {
         try {
             return new ResponseEntity<>(modelService.findById(id), HttpStatus.OK);
         } catch (ModelNotFoundException e) {
@@ -50,18 +50,20 @@ public class ModelController {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @Operation(
             summary = "Adicionar um novo modelo de carro",
             description = "Retorna as informações do novo modelo de carro adicionado",
             tags = {"add", "post"})
     @PostMapping
-        public ResponseEntity<?> add(@RequestBody ModelDto payload) {
-        try{
+    public ResponseEntity<?> add(@RequestBody ModelDto payload) {
+        try {
             return new ResponseEntity<>(modelService.add(payload), HttpStatus.CREATED);
-        }catch (ModelException e){
+        } catch (ModelException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @Operation(
             summary = "Atualiza um modelo de carro",
             description = "Retorna o codigo 204 (No Content)",

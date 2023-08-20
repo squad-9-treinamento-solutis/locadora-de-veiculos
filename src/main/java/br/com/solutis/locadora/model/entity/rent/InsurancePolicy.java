@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
@@ -31,28 +33,28 @@ public class InsurancePolicy {
     @Column(name = "theft_coverage")
     private boolean theftCoverage = false;
 
-    @OneToOne(mappedBy = "insurancePolicy")
-    private Rent rent;
+    @OneToMany(mappedBy = "insurancePolicy")
+    private List<Rent> carRents;
 
     @Column(name = "deleted", nullable = false)
     private boolean deleted = false;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private java.util.Date createdAt;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+
     @Column(name = "updated_at", nullable = false)
-    private java.util.Date updatedAt;
+    private LocalDateTime updatedAt;
 
     @PrePersist
     protected void onCreate() {
-        createdAt = new java.util.Date();
-        updatedAt = new java.util.Date();
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        updatedAt = new java.util.Date();
+        updatedAt = LocalDateTime.now();
     }
 }

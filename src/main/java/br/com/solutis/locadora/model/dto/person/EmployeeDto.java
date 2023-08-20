@@ -9,6 +9,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
 public class EmployeeDto {
     private Long id;
@@ -25,7 +27,7 @@ public class EmployeeDto {
 
     @NotNull(message = "Birth Date is required")
     @Temporal(TemporalType.TIMESTAMP)
-    private java.util.Date birthDate;
+    private LocalDate birthDate;
 
     @NotNull(message = "Gender is required")
     @Column(name = "gender", nullable = false)
@@ -33,6 +35,6 @@ public class EmployeeDto {
 
     @NotNull(message = "Registration is required")
     @NotBlank(message = "Registration is required")
-    @Size( max = 255, message = "Registration must be less than 255 characters long")
+    @Size(max = 255, message = "Registration must be less than 255 characters long")
     private String registration;
 }

@@ -115,10 +115,6 @@ public class InsurancePolicyService implements CrudService<InsurancePolicyDto> {
             existingInsurancePolicy.setFranchiseValue(payload.getFranchiseValue());
         }
 
-        if (payload.getRent() != null) {
-            existingInsurancePolicy.setRent(payload.getRent());
-        }
-
         existingInsurancePolicy.setThirdPartyCoverage(payload.isThirdPartyCoverage());
         existingInsurancePolicy.setNaturalPhenomenaCoverage(payload.isNaturalPhenomenaCoverage());
         existingInsurancePolicy.setTheftCoverage(payload.isTheftCoverage());

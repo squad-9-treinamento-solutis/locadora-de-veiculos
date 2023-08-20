@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class DriverController {
 
     private final DriverService driverService;
+
     @Operation(
             summary = "Listar por id",
             description = "Retorna as informações do motorista por id",
