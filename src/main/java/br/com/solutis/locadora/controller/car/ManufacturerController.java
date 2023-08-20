@@ -70,7 +70,9 @@ public class ManufacturerController {
     public ResponseEntity<?> update(@RequestBody ManufacturerDto payload) {
         try {
             return new ResponseEntity<>(manufacturerService.update(payload), HttpStatus.NO_CONTENT);
-        } catch (ManufacturerException e) {
+        } catch (ManufacturerNotFoundException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        }  catch (ManufacturerException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -84,7 +86,9 @@ public class ManufacturerController {
         try {
             manufacturerService.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (ManufacturerException e) {
+        } catch (ManufacturerNotFoundException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        }  catch (ManufacturerException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

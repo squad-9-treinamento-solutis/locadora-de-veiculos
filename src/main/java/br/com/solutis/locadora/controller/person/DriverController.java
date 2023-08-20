@@ -1,5 +1,6 @@
 package br.com.solutis.locadora.controller.person;
 
+
 import br.com.solutis.locadora.exception.cart.CartException;
 import br.com.solutis.locadora.exception.cart.CartNotFoundException;
 import br.com.solutis.locadora.exception.person.DriverException;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/drivers")
+@CrossOrigin
 public class DriverController {
     private final DriverService driverService;
     private final CartService cartService;
@@ -33,6 +35,8 @@ public class DriverController {
             return new ResponseEntity<>(driverService.findById(id), HttpStatus.OK);
         } catch (DriverNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        } catch (DriverException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -76,6 +80,8 @@ public class DriverController {
     public ResponseEntity<?> update(@RequestBody DriverDto payload) {
         try {
             return new ResponseEntity<>(driverService.update(payload), HttpStatus.NO_CONTENT);
+        } catch (DriverNotFoundException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
         } catch (DriverException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
