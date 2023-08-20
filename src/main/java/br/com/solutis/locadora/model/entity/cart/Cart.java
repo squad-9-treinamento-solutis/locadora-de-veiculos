@@ -32,14 +32,13 @@ public class Cart {
 
     @JsonIgnoreProperties("carts")
     @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Rent> rent;
+    private List<Rent> rents;
 
     @Column(name = "deleted", nullable = false)
     private boolean deleted = false;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
-
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
