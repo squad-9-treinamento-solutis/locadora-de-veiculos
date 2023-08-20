@@ -31,7 +31,7 @@ public class DriverService implements CrudService<DriverDto> {
     public DriverDto findById(Long id) {
         LOGGER.info("Finding driver with ID: {}", id);
 
-        Driver driver = driverRepository.findById(id).orElseThrow(()-> {
+        Driver driver = driverRepository.findById(id).orElseThrow(() -> {
             LOGGER.error("Driver with ID {} not found.", id);
             return new DriverNotFoundException(id);
         });
@@ -45,7 +45,7 @@ public class DriverService implements CrudService<DriverDto> {
 
         try {
             Pageable paging = PageRequest.of(pageNo, pageSize);
-            Page<Driver> pagedDrivers = driverRepository.findAll(paging);
+            Page<Driver> pagedDrivers = driverRepository.findByDeletedFalse(paging);
 
             List<DriverDto> driverDtos = modelMapper
                     .mapList(pagedDrivers.getContent(), DriverDto.class);
@@ -115,16 +115,16 @@ public class DriverService implements CrudService<DriverDto> {
     }
 
     private void updateDriverFields(DriverDto payload, DriverDto existingDriver) {
-        if(payload.getName()!= null){
+        if (payload.getName() != null) {
             existingDriver.setName(payload.getName());
         }
-        if(payload.getCnh()!= null){
+        if (payload.getCnh() != null) {
             existingDriver.setCnh(payload.getCnh());
         }
-        if(payload.getBirthDate()!= null){
+        if (payload.getBirthDate() != null) {
             existingDriver.setBirthDate(payload.getBirthDate());
         }
-        if(payload.getGender()!= null){
+        if (payload.getGender() != null) {
             existingDriver.setGender(payload.getGender());
         }
     }

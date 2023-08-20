@@ -8,9 +8,13 @@ import br.com.solutis.locadora.service.car.CarService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Tag(name = "CarController")
 @RestController
@@ -92,5 +96,18 @@ public class CarController {
         } catch (CarException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @Operation(
+            summary = "lista carros disponiveis por intervalo de data",
+            description = "Retorna o codigo 204 (No Content)",
+            tags = {"all", "get"})
+    @GetMapping("/available")
+    public ResponseEntity<List<CarDto>> getAvailableCarsByDateRange(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+
+        List<CarDto> availableCars = carService.findAvailableCarsByDateRange(startDate, endDate);
+        return new ResponseEntity<>(availableCars, HttpStatus.OK);
     }
 }

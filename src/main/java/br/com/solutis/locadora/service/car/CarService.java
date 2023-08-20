@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -44,9 +45,9 @@ public class CarService implements CrudService<CarDto> {
             LOGGER.info("Fetching cars with page number {} and page size {}.", pageNo, pageSize);
 
             Pageable paging = PageRequest.of(pageNo, pageSize);
-            Page<Car> pagedCars = carRepository.findByRented(false, paging);
+            Page<Car> pagedCars = carRepository.findByDeletedFalseAndRentedFalse(paging);
             List<CarDto> carDtos = modelMapper.
-                mapList(pagedCars.getContent(), CarDto.class);
+                    mapList(pagedCars.getContent(), CarDto.class);
 
             PageResponse<CarDto> pageResponse = new PageResponse<>();
             pageResponse.setContent(carDtos);
@@ -108,6 +109,7 @@ public class CarService implements CrudService<CarDto> {
             throw new CarException("An error occurred while deleting car.", e);
         }
     }
+
     private void updateModelFields(CarDto payload, CarDto existingCar) {
         if (payload.getPlate() != null) {
             existingCar.setPlate(payload.getPlate());
@@ -126,4 +128,10 @@ public class CarService implements CrudService<CarDto> {
         }
 
     }
+
+    public List<CarDto> findAvailableCarsByDateRange(LocalDate startDate, LocalDate endDate) {
+        List<Car> availableCars = carRepository.findAvailableCarsByDateRange(startDate, endDate);
+        return modelMapper.mapList(availableCars, CarDto.class);
+    }
+
 }

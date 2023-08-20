@@ -9,11 +9,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 @OpenAPIDefinition
 public class LocadoraApplication {
-	private static final Logger LOGGER = LoggerFactory.getLogger(LocadoraApplication.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LocadoraApplication.class);
 
-	public static void main(String[] args) {
-		LOGGER.info("Starting Locadora!");
-		SpringApplication.run(LocadoraApplication.class, args);
-		LOGGER.info("Locadora started successfully!");
-	}
+    public static void main(String[] args) {
+        LOGGER.info("Starting Locadora!");
+        SpringApplication.run(LocadoraApplication.class, args);
+        LOGGER.info("Locadora started successfully!");
+    }
 }

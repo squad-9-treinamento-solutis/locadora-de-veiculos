@@ -5,7 +5,7 @@ import br.com.solutis.locadora.exception.car.ManufacturerNotFoundException;
 import br.com.solutis.locadora.mapper.GenericMapper;
 import br.com.solutis.locadora.model.dto.car.ManufacturerDto;
 import br.com.solutis.locadora.model.entity.car.Manufacturer;
-import br.com.solutis.locadora.repository.CrudRepository;
+import br.com.solutis.locadora.repository.ManufacturerRepository;
 import br.com.solutis.locadora.response.PageResponse;
 import br.com.solutis.locadora.service.CrudService;
 import lombok.RequiredArgsConstructor;
@@ -25,38 +25,38 @@ import java.util.List;
 @Transactional(propagation = Propagation.REQUIRED)
 public class ManufacturerService implements CrudService<ManufacturerDto> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ManufacturerService.class);
-    private final CrudRepository<Manufacturer> manufacturerRepository;
+    private final ManufacturerRepository manufacturerRepository;
     private final GenericMapper<ManufacturerDto, Manufacturer> modelMapper;
 
     public ManufacturerDto findById(Long id) {
         LOGGER.info("Finding manufacturer with ID: {}", id);
 
         Manufacturer manufacturer = manufacturerRepository.findById(id)
-            .orElseThrow(() -> {
-                LOGGER.error("Manufacturer with ID {} not found.", id);
-                return new ManufacturerNotFoundException(id);
-            });
+                .orElseThrow(() -> {
+                    LOGGER.error("Manufacturer with ID {} not found.", id);
+                    return new ManufacturerNotFoundException(id);
+                });
 
         return modelMapper.mapModelToDto(manufacturer, ManufacturerDto.class);
     }
 
     public PageResponse<ManufacturerDto> findAll(int pageNo, int pageSize) {
         try {
-          LOGGER.info("Fetching manufacturer with page number {} and page size {}.", pageNo, pageSize);
+            LOGGER.info("Fetching manufacturer with page number {} and page size {}.", pageNo, pageSize);
 
-          Pageable paging = PageRequest.of(pageNo, pageSize);
-          Page<Manufacturer> pagedManufacturers = manufacturerRepository.findAll(paging);
+            Pageable paging = PageRequest.of(pageNo, pageSize);
+            Page<Manufacturer> pagedManufacturers = manufacturerRepository.findByDeletedFalse(paging);
 
-          List<ManufacturerDto> manufacturerDtos = modelMapper
-                  .mapList(pagedManufacturers.getContent(), ManufacturerDto.class);
+            List<ManufacturerDto> manufacturerDtos = modelMapper
+                    .mapList(pagedManufacturers.getContent(), ManufacturerDto.class);
 
-          PageResponse<ManufacturerDto> pageResponse = new PageResponse<>();
-          pageResponse.setContent(manufacturerDtos);
-          pageResponse.setCurrentPage(pagedManufacturers.getNumber());
-          pageResponse.setTotalItems(pagedManufacturers.getTotalElements());
-          pageResponse.setTotalPages(pagedManufacturers.getTotalPages());
+            PageResponse<ManufacturerDto> pageResponse = new PageResponse<>();
+            pageResponse.setContent(manufacturerDtos);
+            pageResponse.setCurrentPage(pagedManufacturers.getNumber());
+            pageResponse.setTotalItems(pagedManufacturers.getTotalElements());
+            pageResponse.setTotalPages(pagedManufacturers.getTotalPages());
 
-          return pageResponse;
+            return pageResponse;
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new ManufacturerException("An error occurred while fetching manufacturers.", e);
@@ -110,6 +110,7 @@ public class ManufacturerService implements CrudService<ManufacturerDto> {
             throw new ManufacturerException("An error occurred while deleting manufacturer.", e);
         }
     }
+
     private void updateModelFields(ManufacturerDto payload, ManufacturerDto existingManufacturer) {
         if (payload.getName() != null) {
             existingManufacturer.setName(payload.getName());

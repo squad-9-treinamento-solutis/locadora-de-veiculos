@@ -1,22 +1,26 @@
 package br.com.solutis.locadora.model.entity.car;
 
-import br.com.solutis.locadora.model.entity.AbstractEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
 @Entity
-@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@SuperBuilder
 @Table(name = "models")
-public class Model extends AbstractEntity {
+public class Model {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(nullable = false)
     private String description;
 
@@ -32,4 +36,26 @@ public class Model extends AbstractEntity {
     @JsonIgnoreProperties("models")
     @OneToMany(mappedBy = "model", fetch = FetchType.LAZY)
     private List<Car> cars;
+
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted = false;
+
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }

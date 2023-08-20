@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @EqualsAndHashCode
@@ -13,13 +13,13 @@ public class RentDto {
     private Long id;
 
     @NotNull(message = "Rent date is required")
-    private Date rentDate;
+    private LocalDate rentDate;
 
     @NotNull(message = "Start date is required")
-    private Date startDate;
+    private LocalDate startDate;
 
     @NotNull(message = "End date is required")
-    private Date endDate;
+    private LocalDate endDate;
 
     @NotNull(message = "Value is required")
     private BigDecimal value;
