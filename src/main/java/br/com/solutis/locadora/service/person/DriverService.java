@@ -1,6 +1,7 @@
 package br.com.solutis.locadora.service.person;
 
-import br.com.solutis.locadora.exception.car.CarNotFoundException;
+import br.com.solutis.locadora.exception.person.DriverException;
+import br.com.solutis.locadora.exception.person.DriverNotFoundException;
 import br.com.solutis.locadora.mapper.GenericMapper;
 import br.com.solutis.locadora.model.dto.person.DriverDto;
 import br.com.solutis.locadora.model.entity.person.Driver;
@@ -32,7 +33,7 @@ public class DriverService implements CrudService<DriverDto> {
 
         Driver driver = driverRepository.findById(id).orElseThrow(() -> {
             LOGGER.error("Driver with ID {} not found.", id);
-            return new CarNotFoundException(id);
+            return new DriverNotFoundException(id);
         });
 
         return modelMapper.mapModelToDto(driver, DriverDto.class);
@@ -59,7 +60,7 @@ public class DriverService implements CrudService<DriverDto> {
 
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException("An error occurred while fetching drivers.", e);
+            throw new DriverException("An error occurred while fetching drivers.", e);
         }
     }
 
@@ -73,7 +74,7 @@ public class DriverService implements CrudService<DriverDto> {
             return modelMapper.mapModelToDto(driver, DriverDto.class);
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException("An error occurred while adding driver.", e);
+            throw new DriverException("An error occurred while adding driver.", e);
         }
     }
 
@@ -92,7 +93,7 @@ public class DriverService implements CrudService<DriverDto> {
 
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException("An error occurred while updating driver.", e);
+            throw new DriverException("An error occurred while updating driver.", e);
         }
     }
 
@@ -109,7 +110,7 @@ public class DriverService implements CrudService<DriverDto> {
             driverRepository.save(driver);
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new RuntimeException("An error occurred while deleting driver.", e);
+            throw new DriverException("An error occurred while deleting driver.", e);
         }
     }
 

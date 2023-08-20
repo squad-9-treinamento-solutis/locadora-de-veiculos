@@ -1,10 +1,10 @@
-package br.com.solutis.locadora.controller.person;
+package br.com.solutis.locadora.controller.car;
 
-import br.com.solutis.locadora.exception.person.DriverException;
-import br.com.solutis.locadora.exception.person.DriverNotFoundException;
-import br.com.solutis.locadora.model.dto.person.DriverDto;
+import br.com.solutis.locadora.exception.car.AccessoryException;
+import br.com.solutis.locadora.exception.car.AccessoryNotFoundException;
+import br.com.solutis.locadora.model.dto.car.AccessoryDto;
 import br.com.solutis.locadora.response.ErrorResponse;
-import br.com.solutis.locadora.service.person.DriverService;
+import br.com.solutis.locadora.service.car.AccessoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -12,85 +12,84 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "DriverController")
+@Tag(name = "AccessoryController")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/drivers")
+@RequestMapping("/accessories")
 @CrossOrigin
-public class DriverController {
-
-    private final DriverService driverService;
+public class AccessoryController {
+    private final AccessoryService accessoryService;
 
     @Operation(
             summary = "Listar por id",
-            description = "Retorna as informações do motorista por id",
+            description = "Retorna as informações do acessório por id",
             tags = {"id", "get"})
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id) {
         try {
-            return new ResponseEntity<>(driverService.findById(id), HttpStatus.OK);
-        } catch (DriverNotFoundException e) {
+            return new ResponseEntity<>(accessoryService.findById(id), HttpStatus.OK);
+        } catch (AccessoryNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
-        } catch (DriverException e) {
+        } catch (AccessoryException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @Operation(
             summary = "Listar todos",
-            description = "Retorna as informações de todos os motoristas",
+            description = "Retorna as informações de todos os acessórios",
             tags = {"all", "get", "paginated"})
     @GetMapping
     public ResponseEntity<?> findAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "3") int size) {
         try {
-            return new ResponseEntity<>(driverService.findAll(page, size), HttpStatus.OK);
-        } catch (DriverException e) {
+            return new ResponseEntity<>(accessoryService.findAll(page, size), HttpStatus.OK);
+        } catch (AccessoryException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @Operation(
-            summary = "Adicionar um novo motorista",
-            description = "Retorna as informações do motorista adicionado",
+            summary = "Adicionar um novo acessório",
+            description = "Retorna as informações do acessório adicionado",
             tags = {"add", "post"})
     @PostMapping
-    public ResponseEntity<?> add(@RequestBody DriverDto payload) {
+    public ResponseEntity<?> add(@RequestBody AccessoryDto payload) {
         try {
-            return new ResponseEntity<>(driverService.add(payload), HttpStatus.CREATED);
-        } catch (DriverException e) {
+            return new ResponseEntity<>(accessoryService.add(payload), HttpStatus.CREATED);
+        } catch (AccessoryException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @Operation(
-            summary = "Atualiza um motorista",
+            summary = "Atualizar um acessório",
             description = "Retorna o codigo 204 (No Content)",
             tags = {"update", "put"})
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody DriverDto payload) {
+    public ResponseEntity<?> update(@RequestBody AccessoryDto payload) {
         try {
-            return new ResponseEntity<>(driverService.update(payload), HttpStatus.NO_CONTENT);
-        } catch (DriverNotFoundException e) {
+            return new ResponseEntity<>(accessoryService.update(payload), HttpStatus.NO_CONTENT);
+        } catch (AccessoryNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
-        } catch (DriverException e) {
+        } catch (AccessoryException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @Operation(
-            summary = "Apaga um motorista por id",
+            summary = "Apagar um acessório por id",
             description = "Retorna o codigo 204 (No Content)",
-            tags = {"id", "delete"})
+            tags = {"delete", "delete"})
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         try {
-            driverService.deleteById(id);
+            accessoryService.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (DriverNotFoundException e) {
+        } catch (AccessoryNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
-        } catch (DriverException e) {
+        } catch (AccessoryException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -75,6 +75,8 @@ public class CarController {
     public ResponseEntity<?> update(@RequestBody CarDto payload) {
         try {
             return new ResponseEntity<>(carService.update(payload), HttpStatus.NO_CONTENT);
+        } catch (CarNotFoundException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
         } catch (CarException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -89,6 +91,8 @@ public class CarController {
         try {
             carService.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (CarNotFoundException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
         } catch (CarException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }

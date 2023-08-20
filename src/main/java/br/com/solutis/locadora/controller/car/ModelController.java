@@ -72,7 +72,9 @@ public class ModelController {
     public ResponseEntity<?> update(@RequestBody ModelDto payload) {
         try {
             return new ResponseEntity<>(modelService.update(payload), HttpStatus.NO_CONTENT);
-        } catch (ModelException e) {
+        } catch (ModelNotFoundException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        }  catch (ModelException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -86,7 +88,9 @@ public class ModelController {
         try {
             modelService.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (ModelException e) {
+        } catch (ModelNotFoundException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        }  catch (ModelException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
