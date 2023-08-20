@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @CrossOrigin
-@RequestMapping("/manufacturer")
+@RequestMapping("/manufacturers")
 public class ManufacturerController {
     private final ManufacturerService manufacturerService;
 

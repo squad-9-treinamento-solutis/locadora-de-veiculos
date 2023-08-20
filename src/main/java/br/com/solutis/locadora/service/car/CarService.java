@@ -23,7 +23,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(propagation = Propagation.REQUIRED)
 public class CarService implements CrudService<CarDto> {
     private static final Logger LOGGER = LoggerFactory.getLogger(CarService.class);
     private final CarRepository carRepository;

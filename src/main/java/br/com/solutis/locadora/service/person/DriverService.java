@@ -22,7 +22,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(propagation = Propagation.REQUIRED)
 public class DriverService implements CrudService<DriverDto> {
     private static final Logger LOGGER = LoggerFactory.getLogger(DriverService.class);
     private final DriverRepository driverRepository;
@@ -67,7 +66,6 @@ public class DriverService implements CrudService<DriverDto> {
     public DriverDto add(DriverDto payload) {
         try {
             LOGGER.info("Adding driver: {}", payload);
-
             Driver driver = driverRepository
                     .save(modelMapper.mapDtoToModel(payload, Driver.class));
 

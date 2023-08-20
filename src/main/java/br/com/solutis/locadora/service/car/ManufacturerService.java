@@ -22,7 +22,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(propagation = Propagation.REQUIRED)
 public class ManufacturerService implements CrudService<ManufacturerDto> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ManufacturerService.class);
     private final ManufacturerRepository manufacturerRepository;
@@ -97,7 +96,7 @@ public class ManufacturerService implements CrudService<ManufacturerDto> {
 
     public void deleteById(Long id) {
         ManufacturerDto manufacturerDto = findById(id);
-
+        System.out.println("aqui deleta");
         try {
             LOGGER.info("Soft deleting manufacturer with ID: {}", id);
 

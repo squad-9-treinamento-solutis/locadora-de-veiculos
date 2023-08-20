@@ -21,7 +21,7 @@ public class CarDto {
 
     @NotNull(message = "Chassis is required")
     @NotBlank(message = "Chassis is required")
-    @Size(min = 1, max = 255, message = "Chassis must be between 1 and 255 characters long")
+    @Size(max = 17, message = "Chassis must be 17 characters long")
     private String chassis;
 
     @NotNull(message = "Color is required")

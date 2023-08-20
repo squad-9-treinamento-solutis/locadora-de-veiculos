@@ -22,7 +22,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(propagation = Propagation.REQUIRED)
 public class InsurancePolicyService implements CrudService<InsurancePolicyDto> {
     private static final Logger LOGGER = LoggerFactory.getLogger(InsurancePolicyService.class);
     private final InsurancePolicyRepository insurancePolicyRepository;

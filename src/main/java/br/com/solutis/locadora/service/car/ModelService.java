@@ -22,7 +22,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(propagation = Propagation.REQUIRED)
 public class ModelService implements CrudService<ModelDto> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ModelService.class);
     private final ModelRepository modelRepository;
