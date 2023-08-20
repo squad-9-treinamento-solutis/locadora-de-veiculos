@@ -27,6 +27,7 @@ public class Manufacturer {
     @JsonIgnoreProperties("manufacturer")
     @OneToMany(mappedBy = "manufacturer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Model> models;
+
     @Column(name = "deleted", nullable = false)
     private boolean deleted = false;
 

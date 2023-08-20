@@ -1,11 +1,14 @@
-package br.com.solutis.locadora.model.entity.car;
+package br.com.solutis.locadora.model.entity.cart;
 
+import br.com.solutis.locadora.model.entity.person.Driver;
+import br.com.solutis.locadora.model.entity.rent.Rent;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,27 +18,21 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Table(name = "models")
-public class Model {
+@SuperBuilder
+@Table(name = "carts")
+public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String description;
+    @JsonIgnoreProperties("carts")
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "driver_id", nullable = false)
+    private Driver driver;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "category", nullable = false)
-    private ModelCategoryEnum category;
-
-    @JsonIgnoreProperties("models")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "manufacturer_id", nullable = false)
-    private Manufacturer manufacturer;
-
-    @JsonIgnoreProperties("models")
-    @OneToMany(mappedBy = "model", fetch = FetchType.LAZY)
-    private List<Car> cars;
+    @JsonIgnoreProperties("carts")
+    @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Rent> rent;
 
     @Column(name = "deleted", nullable = false)
     private boolean deleted = false;
