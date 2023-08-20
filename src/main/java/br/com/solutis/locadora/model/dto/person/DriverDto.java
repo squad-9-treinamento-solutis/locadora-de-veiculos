@@ -2,12 +2,12 @@ package br.com.solutis.locadora.model.dto.person;
 
 import br.com.solutis.locadora.model.entity.person.GenderEnum;
 import jakarta.persistence.Column;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+
+import java.time.LocalDate;
 
 @Data
 public class DriverDto {
@@ -30,8 +30,8 @@ public class DriverDto {
     private String cpf;
 
     @NotNull(message = "Birth Date is required")
-    @Temporal(TemporalType.TIMESTAMP)
-    private java.util.Date birthDate;
+
+    private LocalDate birthDate;
 
     @NotNull(message = "Gender is required")
     @Column(name = "gender", nullable = false)

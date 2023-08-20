@@ -31,6 +31,8 @@ public class CarDto {
     @NotNull(message = "Daily value is required")
     private BigDecimal dailyValue;
 
+    private boolean rented = false;
+
     @NotNull(message = "Image URL is required")
     @NotBlank(message = "Image URL is required")
     @URL(message = "Image URL must be a valid URL")
