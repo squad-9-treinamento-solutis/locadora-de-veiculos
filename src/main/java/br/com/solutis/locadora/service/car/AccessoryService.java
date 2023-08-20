@@ -5,7 +5,7 @@ import br.com.solutis.locadora.exception.car.AccessoryNotFoundException;
 import br.com.solutis.locadora.mapper.GenericMapper;
 import br.com.solutis.locadora.model.dto.car.AccessoryDto;
 import br.com.solutis.locadora.model.entity.car.Accessory;
-import br.com.solutis.locadora.repository.CrudRepository;
+import br.com.solutis.locadora.repository.car.AccessoryRepository;
 import br.com.solutis.locadora.response.PageResponse;
 import br.com.solutis.locadora.service.CrudService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ import java.util.List;
 @Transactional(propagation = Propagation.REQUIRED)
 public class AccessoryService implements CrudService<AccessoryDto> {
     private static final Logger LOGGER = LoggerFactory.getLogger(CarService.class);
-    private final CrudRepository<Accessory> accessoryRepository;
+    private final AccessoryRepository accessoryRepository;
     private final GenericMapper<AccessoryDto, Accessory> modelMapper;
 
     public AccessoryDto findById(Long id) {

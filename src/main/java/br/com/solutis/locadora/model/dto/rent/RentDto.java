@@ -32,4 +32,7 @@ public class RentDto {
 
     @NotNull(message = "Car is required")
     private long carId;
+
+    @NotNull(message = "cart is required")
+    private long cartId;
 }
