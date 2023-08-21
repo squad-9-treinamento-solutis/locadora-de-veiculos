@@ -1,10 +1,10 @@
 package br.com.solutis.locadora.model.entity.rent;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -14,7 +14,6 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Table(name = "insurance_policies")
 public class InsurancePolicy {
     @Id
@@ -33,6 +32,7 @@ public class InsurancePolicy {
     @Column(name = "theft_coverage")
     private boolean theftCoverage = false;
 
+    @JsonIgnoreProperties("insurancePolicy")
     @OneToMany(mappedBy = "insurancePolicy")
     private List<Rent> carRents;
 
@@ -56,5 +56,19 @@ public class InsurancePolicy {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    @Override
+    public String toString() {
+        return "InsurancePolicy{" +
+                "id=" + id +
+                ", franchiseValue=" + franchiseValue +
+                ", thirdPartyCoverage=" + thirdPartyCoverage +
+                ", naturalPhenomenaCoverage=" + naturalPhenomenaCoverage +
+                ", theftCoverage=" + theftCoverage +
+                ", deleted=" + deleted +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }

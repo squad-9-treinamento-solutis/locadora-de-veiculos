@@ -1,6 +1,5 @@
 package br.com.solutis.locadora.model.dto.cart;
 
-import br.com.solutis.locadora.model.entity.rent.Rent;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,5 +14,5 @@ public class CartDto {
     @NotNull(message = "Driver is required")
     private long driverId;
 
-    private List<Rent> rentsIds;
+    private List<Long> rentsIds;
 }

@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
@@ -17,7 +16,6 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @SuperBuilder
 @Table(name = "carts")
 public class Cart {
@@ -52,5 +50,15 @@ public class Cart {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    @Override
+    public String toString() {
+        return "Cart{" +
+                "id=" + id +
+                ", deleted=" + deleted +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }

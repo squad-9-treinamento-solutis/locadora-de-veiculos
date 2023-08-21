@@ -1,10 +1,15 @@
 package br.com.solutis.locadora.controller.person;
 
+import br.com.solutis.locadora.exception.car.CarException;
 import br.com.solutis.locadora.exception.cart.CartException;
 import br.com.solutis.locadora.exception.cart.CartNotFoundException;
 import br.com.solutis.locadora.exception.person.DriverException;
 import br.com.solutis.locadora.exception.person.DriverNotFoundException;
+import br.com.solutis.locadora.exception.rent.RentException;
+import br.com.solutis.locadora.exception.rent.RentNotFoundException;
+import br.com.solutis.locadora.model.dto.cart.CartDto;
 import br.com.solutis.locadora.model.dto.person.DriverDto;
+import br.com.solutis.locadora.model.dto.rent.RentDto;
 import br.com.solutis.locadora.response.ErrorResponse;
 import br.com.solutis.locadora.service.cart.CartService;
 import br.com.solutis.locadora.service.person.DriverService;
@@ -124,13 +129,20 @@ public class DriverController {
     }
 
     @Operation(
-            summary = "Adiciona o aluguel no carrinho",
+            summary = "Criando o aluguel",
             description = "Retorna as informações do carrinho"
     )
-    @PostMapping("/{driverId}/carts/{cartId}")
-    public ResponseEntity<?> addRentToCart(@PathVariable Long driverId, @PathVariable Long cartId) {
+    @PostMapping("/{driverId}/carts/rents")
+    public ResponseEntity<?> addRent(@PathVariable Long driverId, @RequestBody RentDto payload) {
         try {
-            return new ResponseEntity<>(cartService.addRentToCartByDriverId(driverId, rentId), HttpStatus.OK);
+            payload.setDriverId(driverId);
+            RentDto rentDto = rentService.add(payload);
+
+            cartService.addRentToCartByDriverId(driverId, rentDto.getDriverId());
+
+            return new ResponseEntity<>(rentDto, HttpStatus.OK);
+        } catch (CarException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
         } catch (CartNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
         } catch (CartException e) {
@@ -142,14 +154,35 @@ public class DriverController {
             summary = "Apaga o aluguel do carrinho",
             description = "Retorna o codigo 204 (No Content)"
     )
-    @DeleteMapping("/{driverId}/carts/{rentId}")
+    @DeleteMapping("/{driverId}/carts/rents/{rentId}")
     public ResponseEntity<?> deleteRentFromCart(@PathVariable Long driverId, @PathVariable Long rentId) {
         try {
+            cartService.removeRentFromCartByDriverId(driverId, rentId);
             rentService.deleteById(rentId);
 
-            return new ResponseEntity<>(cartService.removeRentFromCartByDriverId(driverId, rentId), HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (CartNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        } catch (CartException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Operation(
+            summary = "Confirma o aluguel do carrinho",
+            description = "Retorna as informações do carrinho"
+    )
+    @PostMapping("/{driverId}/carts/rents/{rentId}/confirm")
+    public ResponseEntity<?> confirmRentFromCart(@PathVariable Long driverId, @PathVariable Long rentId) {
+        try {
+            rentService.confirmRent(rentId);
+            CartDto cartDto = cartService.removeRentFromCartByDriverId(driverId, rentId);
+
+            return new ResponseEntity<>(cartDto, HttpStatus.OK);
+        } catch (RentNotFoundException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        } catch (CarException | RentException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
         } catch (CartException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
