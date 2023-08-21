@@ -3,6 +3,8 @@ package br.com.solutis.locadora.controller.car;
 import br.com.solutis.locadora.exception.car.CarException;
 import br.com.solutis.locadora.exception.car.CarNotFoundException;
 import br.com.solutis.locadora.model.dto.car.CarDto;
+import br.com.solutis.locadora.model.entity.car.Accessory;
+import br.com.solutis.locadora.model.entity.car.ModelCategoryEnum;
 import br.com.solutis.locadora.response.ErrorResponse;
 import br.com.solutis.locadora.service.car.CarService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -99,15 +101,16 @@ public class CarController {
     }
 
     @Operation(
-            summary = "lista carros disponiveis por intervalo de data",
-            description = "Retorna o codigo 204 (No Content)"
+            summary = "lista carros por filtro",
+            description = "Retorna os carros de acordo com o filtro"
     )
-    @GetMapping("/available")
-    public ResponseEntity<List<CarDto>> getAvailableCarsByDateRange(
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
-
-        List<CarDto> availableCars = carService.findAvailableCarsByDateRange(startDate, endDate);
-        return new ResponseEntity<>(availableCars, HttpStatus.OK);
+    @GetMapping("/filtered")
+    public ResponseEntity<List<CarDto>> findCarsByFilters(
+            @RequestParam(value = "category", required = false) ModelCategoryEnum category,
+            @RequestParam(value = "accessory", required = false) Accessory accessory,
+            @RequestParam(value = "model", required = false) String model,
+            @RequestParam(value = "rented") Boolean rented) {
+        List<CarDto> cars = carService.findCarsByFilters(category, accessory, model, rented);
+        return new ResponseEntity<>(cars, HttpStatus.OK);
     }
 }
