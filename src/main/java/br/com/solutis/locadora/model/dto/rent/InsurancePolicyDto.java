@@ -19,6 +19,4 @@ public class InsurancePolicyDto {
     private boolean naturalPhenomenaCoverage = false;
 
     private boolean theftCoverage = false;
-
-    private Long rentId;
 }

@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.URL;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode
@@ -41,5 +42,5 @@ public class CarDto {
     @NotNull(message = "Model is required")
     private Long modelId;
 
-    private Long[] accessoriesIds;
+    private List<Long> accessoriesIds;
 }
