@@ -1,7 +1,7 @@
 package br.com.solutis.locadora.service.person;
 
-import br.com.solutis.locadora.exception.person.EmployeeException;
-import br.com.solutis.locadora.exception.person.EmployeeNotFoundException;
+import br.com.solutis.locadora.exception.person.employee.EmployeeException;
+import br.com.solutis.locadora.exception.person.employee.EmployeeNotFoundException;
 import br.com.solutis.locadora.mapper.GenericMapper;
 import br.com.solutis.locadora.model.dto.person.EmployeeDto;
 import br.com.solutis.locadora.model.entity.person.Employee;

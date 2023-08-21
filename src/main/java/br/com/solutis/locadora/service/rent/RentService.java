@@ -167,8 +167,14 @@ public class RentService implements CrudService<RentDto> {
         }
     }
 
-    private void rentalCalculator(RentDto payload, BigDecimal dailyValue, BigDecimal franchiseValue) {
+    private void rentalCalculator(RentDto payload, BigDecimal dailyValue, BigDecimal franchiseValue) throws Exception {
         long daysBetween = ChronoUnit.DAYS.between(payload.getStartDate(), payload.getEndDate());
+        daysBetween = daysBetween == 0 ? 1 : daysBetween;
+
+        if (daysBetween < 1) {
+            throw new Exception("The rental period must be at least one day.");
+        }
+
         BigDecimal daysBetweenDecimal = new BigDecimal(String.valueOf(daysBetween));
         BigDecimal rentTotal = dailyValue.multiply(daysBetweenDecimal).add(franchiseValue);
 

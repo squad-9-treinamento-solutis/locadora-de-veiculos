@@ -1,4 +1,4 @@
-package br.com.solutis.locadora.swagger;
+package br.com.solutis.locadora.config;
 
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;

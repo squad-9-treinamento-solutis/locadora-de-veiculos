@@ -1,4 +1,4 @@
-package br.com.solutis.locadora.exception.cart;
+package br.com.solutis.locadora.exception.rent.cart;
 
 public class CartException extends RuntimeException {
     public CartException(String message, Throwable cause) {

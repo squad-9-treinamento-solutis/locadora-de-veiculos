@@ -1,7 +1,7 @@
 package br.com.solutis.locadora.service.car;
 
-import br.com.solutis.locadora.exception.car.AccessoryException;
-import br.com.solutis.locadora.exception.car.AccessoryNotFoundException;
+import br.com.solutis.locadora.exception.car.accessory.AccessoryException;
+import br.com.solutis.locadora.exception.car.accessory.AccessoryNotFoundException;
 import br.com.solutis.locadora.mapper.GenericMapper;
 import br.com.solutis.locadora.model.dto.car.AccessoryDto;
 import br.com.solutis.locadora.model.entity.car.Accessory;
