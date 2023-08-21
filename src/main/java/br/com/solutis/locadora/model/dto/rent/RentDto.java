@@ -12,27 +12,23 @@ import java.time.LocalDate;
 public class RentDto {
     private Long id;
 
-    @NotNull(message = "Rent date is required")
-    private LocalDate rentDate;
-
     @NotNull(message = "Start date is required")
     private LocalDate startDate;
 
     @NotNull(message = "End date is required")
     private LocalDate endDate;
 
-    @NotNull(message = "Value is required")
+    private LocalDate finishedDate;
+
     private BigDecimal value;
 
     @NotNull(message = "Insurance policy is required")
     private long insurancePolicyId;
 
-    @NotNull(message = "Driver is required")
     private long driverId;
 
     @NotNull(message = "Car is required")
     private long carId;
 
-    @NotNull(message = "cart is required")
     private long cartId;
 }

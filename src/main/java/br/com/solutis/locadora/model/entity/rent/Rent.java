@@ -22,20 +22,23 @@ public class Rent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "rent_date", nullable = false)
-    private LocalDate rentDate;
-
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
 
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
+    @Column(name = "finished_date")
+    private LocalDate finishedDate;
+
     @Column(nullable = false)
     private BigDecimal value;
 
     @Column(nullable = false)
     private boolean confirmed = false;
+
+    @Column(nullable = false)
+    private boolean finished = false;
 
     @JsonIgnoreProperties("rents")
     @ManyToOne(optional = false)
@@ -53,7 +56,7 @@ public class Rent {
     private Car car;
 
     @JsonIgnoreProperties("rents")
-    @ManyToOne(optional = false)
+    @ManyToOne
     @JoinColumn(name = "cart_id", nullable = false)
     private Cart cart;
 
@@ -82,7 +85,7 @@ public class Rent {
     public String toString() {
         return "Rent{" +
                 "id=" + id +
-                ", rentDate=" + rentDate +
+                ", finishedDate=" + finishedDate +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", value=" + value +
