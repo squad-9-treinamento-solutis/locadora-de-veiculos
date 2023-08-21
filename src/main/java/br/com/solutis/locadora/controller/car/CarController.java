@@ -3,6 +3,7 @@ package br.com.solutis.locadora.controller.car;
 import br.com.solutis.locadora.exception.car.CarException;
 import br.com.solutis.locadora.exception.car.CarNotFoundException;
 import br.com.solutis.locadora.model.dto.car.CarDto;
+import br.com.solutis.locadora.model.dto.car.CarDtoResponse;
 import br.com.solutis.locadora.model.entity.car.Accessory;
 import br.com.solutis.locadora.model.entity.car.ModelCategoryEnum;
 import br.com.solutis.locadora.response.ErrorResponse;
@@ -105,12 +106,12 @@ public class CarController {
             description = "Retorna os carros de acordo com o filtro"
     )
     @GetMapping("/filtered")
-    public ResponseEntity<List<CarDto>> findCarsByFilters(
+    public ResponseEntity<List<CarDtoResponse>> findCarsByFilters(
             @RequestParam(value = "category", required = false) ModelCategoryEnum category,
             @RequestParam(value = "accessory", required = false) Accessory accessory,
             @RequestParam(value = "model", required = false) String model,
             @RequestParam(value = "rented") Boolean rented) {
-        List<CarDto> cars = carService.findCarsByFilters(category, accessory, model, rented);
+        List<CarDtoResponse> cars = carService.findCarsByFilters(category, accessory, model, rented);
         return new ResponseEntity<>(cars, HttpStatus.OK);
     }
 }

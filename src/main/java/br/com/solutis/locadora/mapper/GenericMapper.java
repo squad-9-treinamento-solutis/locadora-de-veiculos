@@ -11,7 +11,9 @@ import java.util.stream.Collectors;
 public class GenericMapper<S, T> {
     @Bean
     public ModelMapper modelMapper() {
-        return new ModelMapper();
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.addConverter(new CarToCarDtoResponseConverter());
+        return modelMapper;
     }
 
     public T mapDtoToModel(S dto, Class<T> targetClass) {

@@ -5,13 +5,13 @@ import br.com.solutis.locadora.exception.car.CarNotFoundException;
 import br.com.solutis.locadora.exception.car.ManufacturerNotFoundException;
 import br.com.solutis.locadora.mapper.GenericMapper;
 import br.com.solutis.locadora.model.dto.car.CarDto;
+import br.com.solutis.locadora.model.dto.car.CarDtoResponse;
 import br.com.solutis.locadora.model.entity.car.Accessory;
 import br.com.solutis.locadora.model.entity.car.Car;
 import br.com.solutis.locadora.model.entity.car.ModelCategoryEnum;
 import br.com.solutis.locadora.repository.car.AccessoryRepository;
 import br.com.solutis.locadora.repository.car.CarRepository;
 import br.com.solutis.locadora.response.PageResponse;
-import br.com.solutis.locadora.service.CrudService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,36 +21,34 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.REQUIRED)
-public class CarService implements CrudService<CarDto> {
+public class CarService  {
     private static final Logger LOGGER = LoggerFactory.getLogger(CarService.class);
     private final CarRepository carRepository;
     private final AccessoryRepository accessoryRepository;
     private final GenericMapper<CarDto, Car> modelMapper;
+    private final GenericMapper<CarDtoResponse, Car> modelMapperResponse;
 
-    public CarDto findById(Long id) {
+    public CarDtoResponse findById(Long id) {
         LOGGER.info("Finding car with ID: {}", id);
         Car car = getCar(id);
 
-        return modelMapper.mapModelToDto(car, CarDto.class);
+        return modelMapperResponse.mapModelToDto(car, CarDtoResponse.class);
     }
 
-    public PageResponse<CarDto> findAll(int pageNo, int pageSize) {
+    public PageResponse<CarDtoResponse> findAll(int pageNo, int pageSize) {
         try {
             LOGGER.info("Fetching cars with page number {} and page size {}.", pageNo, pageSize);
 
             Pageable paging = PageRequest.of(pageNo, pageSize);
             Page<Car> pagedCars = carRepository.findByDeletedFalseAndRentedFalse(paging);
-            List<CarDto> carDtos = modelMapper.
-                    mapList(pagedCars.getContent(), CarDto.class);
+            List<CarDtoResponse> carDtos = modelMapperResponse.mapList(pagedCars.getContent(),CarDtoResponse.class);
 
-            PageResponse<CarDto> pageResponse = new PageResponse<>();
+            PageResponse<CarDtoResponse> pageResponse = new PageResponse<>();
             pageResponse.setContent(carDtos);
             pageResponse.setCurrentPage(pagedCars.getNumber());
             pageResponse.setTotalItems(pagedCars.getTotalElements());
@@ -102,12 +100,12 @@ public class CarService implements CrudService<CarDto> {
     }
 
     public void deleteById(Long id) {
-        CarDto carDto = findById(id);
+
 
         try {
             LOGGER.info("Soft deleting car with ID: {}", id);
 
-            Car car = modelMapper.mapDtoToModel(carDto, Car.class);
+            Car car = getCar(id);
             car.setDeleted(true);
 
             carRepository.save(car);
@@ -136,13 +134,13 @@ public class CarService implements CrudService<CarDto> {
 
     }
 
-    public List<CarDto> findCarsByFilters(
+    public List<CarDtoResponse> findCarsByFilters(
             ModelCategoryEnum category,
             Accessory accessory,
             String model,
             Boolean rented) {
         List<Car> cars = carRepository.findCarsByFilters(category, accessory, model, rented);
-        return modelMapper.mapList(cars, CarDto.class);
+        return modelMapperResponse.mapList(cars, CarDtoResponse.class);
     }
     private Car getCar(Long id) {
         return carRepository.findById(id).orElseThrow(() -> {
@@ -150,4 +148,5 @@ public class CarService implements CrudService<CarDto> {
             return new CarNotFoundException(id);
         });
     }
+
 }

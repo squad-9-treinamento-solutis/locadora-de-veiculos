@@ -13,16 +13,15 @@ import java.time.LocalDate;
 public class DriverDto {
     private Long id;
 
-    @NotNull(message = "CNH is required")
-    @NotBlank(message = "CNH is required")
-    @Size(max = 10, message = "CNH must be less than 10 characters long")
-    @Size(max = 255, message = "CNH must be less than 255 characters long")
-    private String cnh;
-
     @NotNull(message = "Name is required")
     @NotBlank(message = "Name is required")
     @Size(min = 3, max = 255, message = "Name must be between 3 and 255 characters long")
     private String name;
+
+    @NotNull(message = "CNH is required")
+    @NotBlank(message = "CNH is required")
+    @Size(max = 10, message = "CNH must be less than 10 characters long")
+    private String cnh;
 
     @NotNull(message = "CPF is required")
     @NotBlank(message = "CPF is required")
@@ -30,7 +29,6 @@ public class DriverDto {
     private String cpf;
 
     @NotNull(message = "Birth Date is required")
-
     private LocalDate birthDate;
 
     @NotNull(message = "Gender is required")
