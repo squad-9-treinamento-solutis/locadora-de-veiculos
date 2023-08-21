@@ -32,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -165,12 +164,22 @@ public class RentService implements CrudService<RentDto> {
         } catch (CarNotRentedException e) {
             LOGGER.error("An error occurred while confirming rent with id {}", rentId, e);
             throw new CarException("Car with ID " + rent.getCar().getId() + " is not rented.", e);
-        }  catch (DriverNotAuthorizedException e) {
+        } catch (DriverNotAuthorizedException e) {
             LOGGER.error("An error occurred while confirming rent with id {}", driverId, e);
             throw new DriverException("Driver with ID " + driverId + " is not authorized.", e);
         } catch (Exception e) {
             LOGGER.error("An error occurred while confirming rent with id {}", rentId, e);
             throw new RentException("An error occurred while confirming rent.", e);
+        }
+    }
+
+    public List<RentDto> findFinishedRents() {
+        List<Rent> finishedRents = rentRepository.findByFinishedTrue();
+
+        try {
+            return modelMapper.mapList(finishedRents, RentDto.class);
+        } catch (Exception e) {
+            throw new RentException("An error occurred while finding finished rents.", e);
         }
     }
 
