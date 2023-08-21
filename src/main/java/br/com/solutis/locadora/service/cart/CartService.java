@@ -208,6 +208,7 @@ public class CartService implements CrudService<CartDto> {
             Cart cart = cartRepository.findByDriverId(driverId);
             Rent rent = getRentById(rentId);
             cart.getRents().remove(rent);
+            rent.setDeleted(true);
 
             Cart updatedCart = cartRepository.save(cart);
 
