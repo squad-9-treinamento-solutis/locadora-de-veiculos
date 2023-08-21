@@ -104,8 +104,6 @@ public class CartService implements CrudService<CartDto> {
             Cart driverCart = cartRepository.findByDriverId(payload.getDriverId());
             if (driverCart.isDeleted()) throw new CartNotFoundException(driverCart.getId());
 
-            driverCart.setRents(payload.getRentsIds());
-
             Cart cart = cartRepository.save(driverCart);
 
             return modelMapper.mapModelToDto(cart, CartDto.class);
@@ -215,24 +213,6 @@ public class CartService implements CrudService<CartDto> {
         } catch (Exception e) {
             LOGGER.error("An error occurred while removing rent from cart: {}", e.getMessage());
             throw new CartException("An error occurred while removing rent from cart.", e);
-        }
-    }
-
-    public Rent confirmRentByDriverId(long driverId, long rentId) {
-        try {
-            LOGGER.info("Confirming rent with ID {} from cart with driver ID: {}", rentId, driverId);
-
-            Rent rent = getRentById(rentId);
-            rent.setConfirmed(true);
-            rent.getCar().setRented(true);
-            rentRepository.save(rent);
-
-            removeRentFromCartByDriverId(driverId, rentId);
-
-            return rent;
-        } catch (Exception e) {
-            LOGGER.error("An error occurred while confirming rent from cart: {}", e.getMessage());
-            throw new CartException("An error occurred while confirming rent from cart.", e);
         }
     }
 
