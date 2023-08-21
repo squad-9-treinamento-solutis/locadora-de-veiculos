@@ -4,7 +4,10 @@ import br.com.solutis.locadora.model.entity.cart.Cart;
 import br.com.solutis.locadora.model.entity.rent.Rent;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
@@ -14,7 +17,6 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @SuperBuilder
 @Table(name = "drivers")
 public class Driver extends Person {
@@ -28,4 +30,11 @@ public class Driver extends Person {
     @JsonIgnoreProperties("drivers")
     @OneToOne(mappedBy = "driver")
     private Cart cart;
+
+    @Override
+    public String toString() {
+        return "Driver{" +
+                "cnh='" + cnh + '\'' +
+                "} " + super.toString();
+    }
 }

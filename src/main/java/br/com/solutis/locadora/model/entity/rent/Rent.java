@@ -8,7 +8,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -18,7 +17,6 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Table(name = "rents")
 public class Rent {
     @Id
@@ -79,5 +77,20 @@ public class Rent {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    @Override
+    public String toString() {
+        return "Rent{" +
+                "id=" + id +
+                ", rentDate=" + rentDate +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", value=" + value +
+                ", confirmed=" + confirmed +
+                ", deleted=" + deleted +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }

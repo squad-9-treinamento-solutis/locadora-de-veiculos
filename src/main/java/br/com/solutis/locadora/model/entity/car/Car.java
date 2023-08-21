@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -16,7 +15,6 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Table(name = "cars")
 public class Car {
     @Id
@@ -78,5 +76,21 @@ public class Car {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    @Override
+    public String toString() {
+        return "Car{" +
+                "id=" + id +
+                ", plate='" + plate + '\'' +
+                ", chassis='" + chassis + '\'' +
+                ", color='" + color + '\'' +
+                ", dailyValue=" + dailyValue +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", rented=" + rented +
+                ", deleted=" + deleted +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }
