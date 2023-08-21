@@ -1,6 +1,5 @@
 package br.com.solutis.locadora.controller.person;
 
-
 import br.com.solutis.locadora.exception.cart.CartException;
 import br.com.solutis.locadora.exception.cart.CartNotFoundException;
 import br.com.solutis.locadora.exception.person.DriverException;
@@ -47,7 +46,8 @@ public class DriverController {
     @GetMapping
     public ResponseEntity<?> findAll(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "3") int size) {
+            @RequestParam(defaultValue = "3") int size
+    ) {
         try {
             return new ResponseEntity<>(driverService.findAll(page, size), HttpStatus.OK);
         } catch (DriverException e) {
@@ -106,12 +106,32 @@ public class DriverController {
         }
     }
 
+    @Operation(
+            summary = "Lista o carrinho de um motorista",
+            description = "Retorna as informações do carrinho do motorista",
+            tags = {"id", "get"})
     @GetMapping("/{driverId}/carts")
     public ResponseEntity<?> findCartByDriverId(@PathVariable Long driverId) {
         try {
             return new ResponseEntity<>(cartService.findByDriverId(driverId), HttpStatus.OK);
         } catch (CartNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        } catch (CartException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Operation(
+            summary = "Lista todos os carrinhos",
+            description = "Retorna as informações de todos os carrinhos",
+            tags = {"all", "get", "paginated"})
+    @GetMapping("/carts")
+    public ResponseEntity<?> findAllCarts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size
+    ) {
+        try {
+            return new ResponseEntity<>(cartService.findAll(page, size), HttpStatus.OK);
         } catch (CartException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
