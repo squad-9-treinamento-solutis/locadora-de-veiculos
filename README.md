@@ -11,6 +11,7 @@ O Squad 9 está desenvolvendo uma locadora de veiculos, como parte do desafio 02
 - [Spring Data](https://spring.io/projects/spring-data-jpa)
 - [Lombok](https://projectlombok.org/)
 - [SLF4J](https://www.slf4j.org/)
+- [ModelMapper](https://modelmapper.org/)
 - [Swagger](https://swagger.io/)
 - [MySQL](https://www.mysql.com/)
 
@@ -49,8 +50,7 @@ Obs: Para ver o swagger execute a aplicação. O swagger vai ser executado na po
 **Banco de dados:**
 
 
-![desafio-locadora-banco-de-dados](https://github.com/squad-9-treinamento-solutis/locadora-de-veiculos/assets/76819323/0745adce-f8e4-4449-8569-0b87a8fdb8fa)
-
+![desafio-locadora-banco-de-dados](https://github.com/squad-9-treinamento-solutis/locadora-de-veiculos/assets/76819323/f11e01ae-59da-49b8-9294-60a750a0e2d7)
 
 ## ✒️ Autores
 
