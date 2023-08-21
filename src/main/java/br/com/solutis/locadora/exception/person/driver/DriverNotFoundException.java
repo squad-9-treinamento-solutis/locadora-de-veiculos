@@ -1,4 +1,4 @@
-package br.com.solutis.locadora.exception.person;
+package br.com.solutis.locadora.exception.person.driver;
 
 public class DriverNotFoundException extends RuntimeException {
     public DriverNotFoundException(Long id) {

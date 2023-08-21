@@ -1,4 +1,4 @@
-package br.com.solutis.locadora.exception.rent;
+package br.com.solutis.locadora.exception.rent.insurace;
 
 public class InsurancePolicyNotFoundException extends RuntimeException {
     public InsurancePolicyNotFoundException(Long id) {

@@ -2,8 +2,12 @@ package br.com.solutis.locadora.service.rent;
 
 import br.com.solutis.locadora.exception.car.CarAlreadyRentedException;
 import br.com.solutis.locadora.exception.car.CarException;
+import br.com.solutis.locadora.exception.car.CarNotRentedException;
+import br.com.solutis.locadora.exception.person.driver.DriverException;
+import br.com.solutis.locadora.exception.person.driver.DriverNotAuthorizedException;
 import br.com.solutis.locadora.exception.rent.RentAlreadyConfirmedException;
 import br.com.solutis.locadora.exception.rent.RentException;
+import br.com.solutis.locadora.exception.rent.RentNotConfirmedException;
 import br.com.solutis.locadora.exception.rent.RentNotFoundException;
 import br.com.solutis.locadora.mapper.GenericMapper;
 import br.com.solutis.locadora.model.dto.rent.RentDto;
@@ -27,6 +31,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -129,6 +134,55 @@ public class RentService implements CrudService<RentDto> {
         }
     }
 
+    public RentDto finishRent(long driverId, long rentId) {
+        LOGGER.info("Finishing rent with ID: {}", rentId);
+
+        Rent rent = getRent(rentId);
+
+        try {
+            if (!rent.isConfirmed()) {
+                throw new RentNotConfirmedException(rentId);
+            } else if (rent.isDeleted()) {
+                throw new RentNotFoundException(rentId);
+            } else if (!rent.getCar().isRented()) {
+                throw new CarNotRentedException(rent.getCar().getId());
+            } else if (rent.getDriver().getId() != driverId) {
+                throw new DriverNotAuthorizedException(driverId);
+            }
+
+            rent.setFinished(true);
+            rent.setFinishedDate(LocalDate.now());
+            rent.getCar().setRented(false);
+
+            return modelMapper.mapModelToDto(rentRepository.save(rent), RentDto.class);
+        } catch (RentNotConfirmedException e) {
+            LOGGER.error("An error occurred while confirming rent with id {}", rentId, e);
+            throw new RentException("Rent with ID " + rentId + " is not confirmed.", e);
+        } catch (RentNotFoundException e) {
+            LOGGER.error("An error occurred while confirming rent with id {}", rentId, e);
+            throw new RentException("Rent with ID " + rentId + " not found.", e);
+        } catch (CarNotRentedException e) {
+            LOGGER.error("An error occurred while confirming rent with id {}", rentId, e);
+            throw new CarException("Car with ID " + rent.getCar().getId() + " is not rented.", e);
+        } catch (DriverNotAuthorizedException e) {
+            LOGGER.error("An error occurred while confirming rent with id {}", driverId, e);
+            throw new DriverException("Driver with ID " + driverId + " is not authorized.", e);
+        } catch (Exception e) {
+            LOGGER.error("An error occurred while confirming rent with id {}", rentId, e);
+            throw new RentException("An error occurred while confirming rent.", e);
+        }
+    }
+
+    public List<RentDto> findFinishedRents() {
+        List<Rent> finishedRents = rentRepository.findByFinishedTrue();
+
+        try {
+            return modelMapper.mapList(finishedRents, RentDto.class);
+        } catch (Exception e) {
+            throw new RentException("An error occurred while finding finished rents.", e);
+        }
+    }
+
     public RentDto update(RentDto payload) {
         try {
             LOGGER.info("Updating rent with ID: {}", payload.getId());
@@ -167,8 +221,14 @@ public class RentService implements CrudService<RentDto> {
         }
     }
 
-    private void rentalCalculator(RentDto payload, BigDecimal dailyValue, BigDecimal franchiseValue) {
+    private void rentalCalculator(RentDto payload, BigDecimal dailyValue, BigDecimal franchiseValue) throws Exception {
         long daysBetween = ChronoUnit.DAYS.between(payload.getStartDate(), payload.getEndDate());
+        daysBetween = daysBetween == 0 ? 1 : daysBetween;
+
+        if (daysBetween < 1) {
+            throw new Exception("The rental period must be at least one day.");
+        }
+
         BigDecimal daysBetweenDecimal = new BigDecimal(String.valueOf(daysBetween));
         BigDecimal rentTotal = dailyValue.multiply(daysBetweenDecimal).add(franchiseValue);
 

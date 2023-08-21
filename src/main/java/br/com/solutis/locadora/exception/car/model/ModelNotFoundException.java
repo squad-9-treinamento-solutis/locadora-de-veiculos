@@ -1,4 +1,4 @@
-package br.com.solutis.locadora.exception.car;
+package br.com.solutis.locadora.exception.car.model;
 
 public class ModelNotFoundException extends RuntimeException {
     public ModelNotFoundException(Long id) {

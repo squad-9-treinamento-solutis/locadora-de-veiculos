@@ -1,16 +1,16 @@
-package br.com.solutis.locadora.service.cart;
+package br.com.solutis.locadora.service.rent;
 
-import br.com.solutis.locadora.exception.cart.CartException;
-import br.com.solutis.locadora.exception.cart.CartNotFoundException;
-import br.com.solutis.locadora.exception.person.DriverNotFoundException;
+import br.com.solutis.locadora.exception.person.driver.DriverNotFoundException;
 import br.com.solutis.locadora.exception.rent.RentNotFoundException;
+import br.com.solutis.locadora.exception.rent.cart.CartException;
+import br.com.solutis.locadora.exception.rent.cart.CartNotFoundException;
 import br.com.solutis.locadora.mapper.GenericMapper;
-import br.com.solutis.locadora.model.dto.cart.CartDto;
-import br.com.solutis.locadora.model.entity.cart.Cart;
+import br.com.solutis.locadora.model.dto.rent.CartDto;
 import br.com.solutis.locadora.model.entity.person.Driver;
+import br.com.solutis.locadora.model.entity.rent.Cart;
 import br.com.solutis.locadora.model.entity.rent.Rent;
-import br.com.solutis.locadora.repository.cart.CartRepository;
 import br.com.solutis.locadora.repository.person.DriverRepository;
+import br.com.solutis.locadora.repository.rent.CartRepository;
 import br.com.solutis.locadora.repository.rent.RentRepository;
 import br.com.solutis.locadora.response.PageResponse;
 import br.com.solutis.locadora.service.CrudService;
@@ -205,9 +205,10 @@ public class CartService implements CrudService<CartDto> {
 
             Cart cart = cartRepository.findByDriverId(driverId);
             Rent rent = getRentById(rentId);
+            rent.setCart(null);
             cart.getRents().remove(rent);
-            rent.setDeleted(true);
 
+            rentRepository.save(rent);
             Cart updatedCart = cartRepository.save(cart);
 
             return modelMapper.mapModelToDto(updatedCart, CartDto.class);
