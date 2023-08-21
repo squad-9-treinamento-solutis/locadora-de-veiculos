@@ -50,4 +50,17 @@ public class RentController {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @Operation(
+            summary = "Listando o alugueis ativos",
+            description = "Retorna as informações dos alugueis ativos"
+    )
+    @GetMapping("/active")
+    public ResponseEntity<?> findActiveRents() {
+        try {
+            return new ResponseEntity<>(rentService.findActiveRents(), HttpStatus.OK);
+        } catch (RentException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

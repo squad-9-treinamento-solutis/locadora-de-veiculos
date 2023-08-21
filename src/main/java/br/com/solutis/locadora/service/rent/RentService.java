@@ -173,6 +173,15 @@ public class RentService implements CrudService<RentDto> {
         }
     }
 
+    public List<RentDto> findActiveRents(){
+        List<Rent> activeRents = rentRepository.findByFinishedFalse(); // Filtra os aluguéis não finalizados
+
+        try {
+            return modelMapper.mapList(activeRents, RentDto.class);
+        } catch (Exception e) {
+            throw new RentException("An error occurred while finding active rents.", e);
+        }
+    }
     public List<RentDto> findFinishedRents() {
         List<Rent> finishedRents = rentRepository.findByFinishedTrue();
 
