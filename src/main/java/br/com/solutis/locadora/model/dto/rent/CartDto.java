@@ -1,4 +1,4 @@
-package br.com.solutis.locadora.model.dto.cart;
+package br.com.solutis.locadora.model.dto.rent;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
