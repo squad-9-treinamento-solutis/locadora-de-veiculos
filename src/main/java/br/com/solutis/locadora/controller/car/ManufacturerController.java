@@ -22,8 +22,7 @@ public class ManufacturerController {
 
     @Operation(
             summary = "Listar os fabricantes por id",
-            description = "Retorna as informações do fabricante por id",
-            tags = {"id", "get"}
+            description = "Retorna as informações do fabricante por id"
     )
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id) {
@@ -38,8 +37,8 @@ public class ManufacturerController {
 
     @Operation(
             summary = "Listar todos os fabricantes",
-            description = "Retorna as informações de todos os fabricantes",
-            tags = {"all", "get"})
+            description = "Retorna as informações de todos os fabricantes"
+    )
     @GetMapping
     public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "3") int size) {
         try {
@@ -51,8 +50,8 @@ public class ManufacturerController {
 
     @Operation(
             summary = "Adicionar um novo fabricante",
-            description = "Retorna as informações do fabricante adicionado",
-            tags = {"add", "post"})
+            description = "Retorna as informações do fabricante adicionado"
+    )
     @PostMapping
     public ResponseEntity<?> add(@RequestBody ManufacturerDto payload) {
         try {
@@ -64,23 +63,23 @@ public class ManufacturerController {
 
     @Operation(
             summary = "Atualiza um fabricante",
-            description = "Retorna o codigo 204 (No Content)",
-            tags = {"update", "put"})
+            description = "Retorna o codigo 204 (No Content)"
+    )
     @PutMapping
     public ResponseEntity<?> update(@RequestBody ManufacturerDto payload) {
         try {
             return new ResponseEntity<>(manufacturerService.update(payload), HttpStatus.NO_CONTENT);
         } catch (ManufacturerNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
-        }  catch (ManufacturerException e) {
+        } catch (ManufacturerException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @Operation(
             summary = "Apaga um fabricante por id",
-            description = "Retorna o codigo 204(No Content)",
-            tags = {"id", "delete"})
+            description = "Retorna o codigo 204(No Content)"
+    )
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         try {
@@ -88,7 +87,7 @@ public class ManufacturerController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (ManufacturerNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
-        }  catch (ManufacturerException e) {
+        } catch (ManufacturerException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

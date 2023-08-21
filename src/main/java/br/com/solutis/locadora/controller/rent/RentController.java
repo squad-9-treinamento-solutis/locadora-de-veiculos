@@ -19,8 +19,8 @@ public class RentController {
 
     @Operation(
             summary = "Adicionar um novo seguro",
-            description = "Retorna as informações do seguro adicionado",
-            tags = {"add", "post"})
+            description = "Retorna as informações do seguro adicionado"
+    )
     @PostMapping
     public ResponseEntity<?> add(@RequestBody RentDto payload) {
 

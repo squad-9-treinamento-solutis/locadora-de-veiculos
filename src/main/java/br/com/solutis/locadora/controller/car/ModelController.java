@@ -23,8 +23,8 @@ public class ModelController {
 
     @Operation(
             summary = "Listar por id",
-            description = "Retorna as informações do modelo do carro por id",
-            tags = {"id", "get"})
+            description = "Retorna as informações do modelo do carro por id"
+    )
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id) {
         try {
@@ -38,8 +38,8 @@ public class ModelController {
 
     @Operation(
             summary = "Listar todos os modelos de carros",
-            description = "Retorna as informações de todos os modelos de carros",
-            tags = {"all", "get", "paginated"})
+            description = "Retorna as informações de todos os modelos de carros"
+    )
     @GetMapping
     public ResponseEntity<?> findAll(
             @RequestParam(defaultValue = "0") int page,
@@ -53,8 +53,8 @@ public class ModelController {
 
     @Operation(
             summary = "Adicionar um novo modelo de carro",
-            description = "Retorna as informações do novo modelo de carro adicionado",
-            tags = {"add", "post"})
+            description = "Retorna as informações do novo modelo de carro adicionado"
+    )
     @PostMapping
     public ResponseEntity<?> add(@RequestBody ModelDto payload) {
         try {
@@ -66,23 +66,23 @@ public class ModelController {
 
     @Operation(
             summary = "Atualiza um modelo de carro",
-            description = "Retorna o codigo 204 (No Content)",
-            tags = {"update", "put"})
+            description = "Retorna o codigo 204 (No Content)"
+    )
     @PutMapping
     public ResponseEntity<?> update(@RequestBody ModelDto payload) {
         try {
             return new ResponseEntity<>(modelService.update(payload), HttpStatus.NO_CONTENT);
         } catch (ModelNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
-        }  catch (ModelException e) {
+        } catch (ModelException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @Operation(
             summary = "Apaga um modelo por id",
-            description = "Retorna o codigo 204 (No Content)",
-            tags = {"id", "delete"})
+            description = "Retorna o codigo 204 (No Content)"
+    )
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         try {
@@ -90,7 +90,7 @@ public class ModelController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (ModelNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
-        }  catch (ModelException e) {
+        } catch (ModelException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

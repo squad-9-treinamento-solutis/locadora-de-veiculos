@@ -26,8 +26,8 @@ public class CarController {
 
     @Operation(
             summary = "Listar por id",
-            description = "Retorna as informações do carro por id",
-            tags = {"id", "get"})
+            description = "Retorna as informações do carro por id"
+    )
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id) {
         try {
@@ -41,8 +41,8 @@ public class CarController {
 
     @Operation(
             summary = "Listar todos",
-            description = "Retorna as informações de todos os carros",
-            tags = {"all", "get", "paginated"})
+            description = "Retorna as informações de todos os carros"
+    )
     @GetMapping
     public ResponseEntity<?> findAll(
             @RequestParam(defaultValue = "0") int page,
@@ -56,8 +56,8 @@ public class CarController {
 
     @Operation(
             summary = "Adicionar um novo carro",
-            description = "Retorna as informações do carro adicionado",
-            tags = {"add", "post"})
+            description = "Retorna as informações do carro adicionado"
+    )
     @PostMapping
     public ResponseEntity<?> add(@RequestBody CarDto payload) {
         try {
@@ -69,8 +69,8 @@ public class CarController {
 
     @Operation(
             summary = "Atualiza um carro",
-            description = "Retorna o codigo 204 (No Content)",
-            tags = {"update", "put"})
+            description = "Retorna o codigo 204 (No Content)"
+    )
     @PutMapping
     public ResponseEntity<?> update(@RequestBody CarDto payload) {
         try {
@@ -84,8 +84,8 @@ public class CarController {
 
     @Operation(
             summary = "Apaga um carro por id",
-            description = "Retorna o codigo 204 (No Content)",
-            tags = {"id", "delete"})
+            description = "Retorna o codigo 204 (No Content)"
+    )
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         try {
@@ -100,8 +100,8 @@ public class CarController {
 
     @Operation(
             summary = "lista carros disponiveis por intervalo de data",
-            description = "Retorna o codigo 204 (No Content)",
-            tags = {"all", "get"})
+            description = "Retorna o codigo 204 (No Content)"
+    )
     @GetMapping("/available")
     public ResponseEntity<List<CarDto>> getAvailableCarsByDateRange(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,

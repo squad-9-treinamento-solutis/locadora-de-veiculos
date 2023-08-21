@@ -1,7 +1,6 @@
 package br.com.solutis.locadora.service.rent;
 
 import br.com.solutis.locadora.mapper.GenericMapper;
-import br.com.solutis.locadora.model.dto.person.DriverDto;
 import br.com.solutis.locadora.model.dto.rent.RentDto;
 import br.com.solutis.locadora.model.entity.car.Car;
 import br.com.solutis.locadora.model.entity.person.Driver;
