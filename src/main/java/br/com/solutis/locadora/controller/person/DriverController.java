@@ -9,6 +9,7 @@ import br.com.solutis.locadora.model.dto.person.DriverDto;
 import br.com.solutis.locadora.response.ErrorResponse;
 import br.com.solutis.locadora.service.cart.CartService;
 import br.com.solutis.locadora.service.person.DriverService;
+import br.com.solutis.locadora.service.rent.RentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 public class DriverController {
     private final DriverService driverService;
     private final CartService cartService;
+    private final RentService rentService;
 
     @Operation(
             summary = "Listar por id",
@@ -121,10 +123,10 @@ public class DriverController {
             summary = "Adiciona o aluguel no carrinho",
             description = "Retorna as informações do carrinho",
             tags = {"driverId", "cartId", "post", "rent"})
-    @PostMapping("/{driverId}/carts/{cartId}")
-    public ResponseEntity<?> addRentToCart(@PathVariable Long driverId, @PathVariable Long cartId) {
+    @PostMapping("/{driverId}/carts/{rentId}")
+    public ResponseEntity<?> addRentToCart(@PathVariable Long driverId, @PathVariable Long rentId) {
         try {
-            return new ResponseEntity<>(cartService.addRentToCartByDriverId(driverId, cartId), HttpStatus.OK);
+            return new ResponseEntity<>(cartService.addRentToCartByDriverId(driverId, rentId), HttpStatus.OK);
         } catch (CartNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
         } catch (CartException e) {
@@ -139,6 +141,8 @@ public class DriverController {
     @DeleteMapping("/{driverId}/carts/{rentId}")
     public ResponseEntity<?> deleteRentFromCart(@PathVariable Long driverId, @PathVariable Long rentId) {
         try {
+            rentService.deleteById(rentId);
+
             return new ResponseEntity<>(cartService.removeRentFromCartByDriverId(driverId, rentId), HttpStatus.NO_CONTENT);
         } catch (CartNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);

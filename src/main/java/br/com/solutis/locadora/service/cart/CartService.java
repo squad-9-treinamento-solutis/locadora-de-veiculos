@@ -103,7 +103,7 @@ public class CartService implements CrudService<CartDto> {
 
             Cart driverCart = cartRepository.findByDriverId(payload.getDriverId());
             if (driverCart.isDeleted()) throw new CartNotFoundException(driverCart.getId());
-           
+
             driverCart.setRents(payload.getRentsIds());
 
             Cart cart = cartRepository.save(driverCart);
@@ -208,6 +208,7 @@ public class CartService implements CrudService<CartDto> {
             Cart cart = cartRepository.findByDriverId(driverId);
             Rent rent = getRentById(rentId);
             cart.getRents().remove(rent);
+            rent.setDeleted(true);
 
             Cart updatedCart = cartRepository.save(cart);
 
