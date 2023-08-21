@@ -20,8 +20,10 @@ public class RentController {
     private final RentService rentService;
 
     @Operation(
-            summary = "Adicionar um novo aluguel",
-            description = "Retorna as informações do aluguel adicionado"
+
+            summary = "Adicionar um novo seguro",
+            description = "Retorna as informações do seguro adicionado"
+
     )
     @PostMapping
     public ResponseEntity<?> add(@RequestBody RentDto payload) {

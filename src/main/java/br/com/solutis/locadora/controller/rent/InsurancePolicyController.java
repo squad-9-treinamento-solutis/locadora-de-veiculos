@@ -23,8 +23,8 @@ public class InsurancePolicyController {
 
     @Operation(
             summary = "Listar por id",
-            description = "Retorna as informações do seguro por id",
-            tags = {"id", "get"})
+            description = "Retorna as informações do seguro por id"
+    )
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id) {
         try {
@@ -38,8 +38,8 @@ public class InsurancePolicyController {
 
     @Operation(
             summary = "Listar todos",
-            description = "Retorna as informações de todos os seguros",
-            tags = {"all", "get", "paginated"})
+            description = "Retorna as informações de todos os seguros"
+    )
     @GetMapping
     public ResponseEntity<?> findAll(
             @RequestParam(defaultValue = "0") int page,
@@ -54,8 +54,8 @@ public class InsurancePolicyController {
 
     @Operation(
             summary = "Adicionar um novo seguro",
-            description = "Retorna as informações do seguro adicionado",
-            tags = {"add", "post"})
+            description = "Retorna as informações do seguro adicionado"
+    )
     @PostMapping
     public ResponseEntity<?> add(@RequestBody InsurancePolicyDto payload) {
         try {
@@ -67,23 +67,23 @@ public class InsurancePolicyController {
 
     @Operation(
             summary = "Atualiza um seguro",
-            description = "Retorna o codigo 204 (No Content)",
-            tags = {"update", "put"})
+            description = "Retorna o codigo 204 (No Content)"
+    )
     @PutMapping
     public ResponseEntity<?> update(@RequestBody InsurancePolicyDto payload) {
         try {
             return new ResponseEntity<>(insurancePolicyService.update(payload), HttpStatus.NO_CONTENT);
         } catch (InsurancePolicyNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
-        }  catch (InsurancePolicyException e) {
+        } catch (InsurancePolicyException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @Operation(
             summary = "Apaga um seguro por id",
-            description = "Retorna o codigo 204 (No Content)",
-            tags = {"id", "delete"})
+            description = "Retorna o codigo 204 (No Content)"
+    )
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         try {
@@ -91,7 +91,7 @@ public class InsurancePolicyController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (InsurancePolicyNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
-        }  catch (InsurancePolicyException e) {
+        } catch (InsurancePolicyException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

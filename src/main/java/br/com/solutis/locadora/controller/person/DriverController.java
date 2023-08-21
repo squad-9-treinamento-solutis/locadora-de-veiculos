@@ -26,8 +26,8 @@ public class DriverController {
 
     @Operation(
             summary = "Listar por id",
-            description = "Retorna as informações do motorista por id",
-            tags = {"id", "get"})
+            description = "Retorna as informações do motorista por id"
+    )
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id) {
         try {
@@ -41,8 +41,8 @@ public class DriverController {
 
     @Operation(
             summary = "Listar todos",
-            description = "Retorna as informações de todos os motoristas",
-            tags = {"all", "get", "paginated"})
+            description = "Retorna as informações de todos os motoristas"
+    )
     @GetMapping
     public ResponseEntity<?> findAll(
             @RequestParam(defaultValue = "0") int page,
@@ -57,8 +57,8 @@ public class DriverController {
 
     @Operation(
             summary = "Adicionar um novo motorista",
-            description = "Retorna as informações do motorista adicionado",
-            tags = {"add", "post"})
+            description = "Retorna as informações do motorista adicionado"
+    )
     @PostMapping
     public ResponseEntity<?> add(@RequestBody DriverDto payload) {
         try {
@@ -74,8 +74,8 @@ public class DriverController {
 
     @Operation(
             summary = "Atualiza um motorista",
-            description = "Retorna o codigo 204 (No Content)",
-            tags = {"update", "put"})
+            description = "Retorna o codigo 204 (No Content)"
+    )
     @PutMapping
     public ResponseEntity<?> update(@RequestBody DriverDto payload) {
         try {
@@ -89,8 +89,8 @@ public class DriverController {
 
     @Operation(
             summary = "Apaga um motorista por id",
-            description = "Retorna o codigo 204 (No Content)",
-            tags = {"id", "delete"})
+            description = "Retorna o codigo 204 (No Content)"
+    )
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         try {
@@ -108,8 +108,8 @@ public class DriverController {
 
     @Operation(
             summary = "Lista o carrinho de um motorista",
-            description = "Retorna as informações do carrinho do motorista",
-            tags = {"id", "get"})
+            description = "Retorna as informações do carrinho do motorista"
+    )
     @GetMapping("/{driverId}/carts")
     public ResponseEntity<?> findCartByDriverId(@PathVariable Long driverId) {
         try {
@@ -123,8 +123,8 @@ public class DriverController {
 
     @Operation(
             summary = "Adiciona o aluguel no carrinho",
-            description = "Retorna as informações do carrinho",
-            tags = {"driverId", "cartId", "post", "rent"})
+            description = "Retorna as informações do carrinho"
+    )
     @PostMapping("/{driverId}/carts/{cartId}")
     public ResponseEntity<?> addRentToCart(@PathVariable Long driverId, @PathVariable Long cartId) {
         try {
@@ -138,8 +138,8 @@ public class DriverController {
 
     @Operation(
             summary = "Apaga o aluguel do carrinho",
-            description = "Retorna o codigo 204 (No Content)",
-            tags = {"id", "delete", "rent"})
+            description = "Retorna o codigo 204 (No Content)"
+    )
     @DeleteMapping("/{driverId}/carts/{rentId}")
     public ResponseEntity<?> deleteRentFromCart(@PathVariable Long driverId, @PathVariable Long rentId) {
         try {
@@ -150,11 +150,11 @@ public class DriverController {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-  
-  @Operation(
+
+    @Operation(
             summary = "Lista todos os carrinhos",
-            description = "Retorna as informações de todos os carrinhos",
-            tags = {"all", "get", "paginated"})
+            description = "Retorna as informações de todos os carrinhos"
+    )
     @GetMapping("/carts")
     public ResponseEntity<?> findAllCarts(
             @RequestParam(defaultValue = "0") int page,

@@ -22,8 +22,7 @@ public class AccessoryController {
 
     @Operation(
             summary = "Listar por id",
-            description = "Retorna as informações do acessório por id",
-            tags = {"id", "get"})
+            description = "Retorna as informações do acessório por id")
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id) {
         try {
@@ -37,8 +36,8 @@ public class AccessoryController {
 
     @Operation(
             summary = "Listar todos",
-            description = "Retorna as informações de todos os acessórios",
-            tags = {"all", "get", "paginated"})
+            description = "Retorna as informações de todos os acessórios"
+    )
     @GetMapping
     public ResponseEntity<?> findAll(
             @RequestParam(defaultValue = "0") int page,
@@ -52,8 +51,8 @@ public class AccessoryController {
 
     @Operation(
             summary = "Adicionar um novo acessório",
-            description = "Retorna as informações do acessório adicionado",
-            tags = {"add", "post"})
+            description = "Retorna as informações do acessório adicionado"
+    )
     @PostMapping
     public ResponseEntity<?> add(@RequestBody AccessoryDto payload) {
         try {
@@ -65,8 +64,8 @@ public class AccessoryController {
 
     @Operation(
             summary = "Atualizar um acessório",
-            description = "Retorna o codigo 204 (No Content)",
-            tags = {"update", "put"})
+            description = "Retorna o codigo 204 (No Content)"
+    )
     @PutMapping
     public ResponseEntity<?> update(@RequestBody AccessoryDto payload) {
         try {
@@ -80,8 +79,8 @@ public class AccessoryController {
 
     @Operation(
             summary = "Apagar um acessório por id",
-            description = "Retorna o codigo 204 (No Content)",
-            tags = {"delete", "delete"})
+            description = "Retorna o codigo 204 (No Content)"
+    )
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         try {
