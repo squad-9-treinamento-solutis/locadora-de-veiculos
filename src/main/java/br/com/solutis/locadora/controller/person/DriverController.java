@@ -122,6 +122,36 @@ public class DriverController {
     }
 
     @Operation(
+            summary = "Adiciona o aluguel no carrinho",
+            description = "Retorna as informações do carrinho",
+            tags = {"driverId", "cartId", "post", "rent"})
+    @PostMapping("/{driverId}/carts/{cartId}")
+    public ResponseEntity<?> addRentToCart(@PathVariable Long driverId, @PathVariable Long cartId) {
+        try {
+            return new ResponseEntity<>(cartService.addRentToCartByDriverId(driverId, cartId), HttpStatus.OK);
+        } catch (CartNotFoundException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        } catch (CartException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Operation(
+            summary = "Apaga o aluguel do carrinho",
+            description = "Retorna o codigo 204 (No Content)",
+            tags = {"id", "delete", "rent"})
+    @DeleteMapping("/{driverId}/carts/{rentId}")
+    public ResponseEntity<?> deleteRentFromCart(@PathVariable Long driverId, @PathVariable Long rentId) {
+        try {
+            return new ResponseEntity<>(cartService.removeRentFromCartByDriverId(driverId, rentId), HttpStatus.NO_CONTENT);
+        } catch (CartNotFoundException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        } catch (CartException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+  
+  @Operation(
             summary = "Lista todos os carrinhos",
             description = "Retorna as informações de todos os carrinhos",
             tags = {"all", "get", "paginated"})
