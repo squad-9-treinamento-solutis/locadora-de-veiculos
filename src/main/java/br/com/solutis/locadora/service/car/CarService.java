@@ -5,7 +5,9 @@ import br.com.solutis.locadora.exception.car.CarNotFoundException;
 import br.com.solutis.locadora.exception.car.ManufacturerNotFoundException;
 import br.com.solutis.locadora.mapper.GenericMapper;
 import br.com.solutis.locadora.model.dto.car.CarDto;
+import br.com.solutis.locadora.model.entity.car.Accessory;
 import br.com.solutis.locadora.model.entity.car.Car;
+import br.com.solutis.locadora.repository.car.AccessoryRepository;
 import br.com.solutis.locadora.repository.car.CarRepository;
 import br.com.solutis.locadora.response.PageResponse;
 import br.com.solutis.locadora.service.CrudService;
@@ -28,6 +30,7 @@ import java.util.List;
 public class CarService implements CrudService<CarDto> {
     private static final Logger LOGGER = LoggerFactory.getLogger(CarService.class);
     private final CarRepository carRepository;
+    private final AccessoryRepository accessoryRepository;
     private final GenericMapper<CarDto, Car> modelMapper;
 
     public CarDto findById(Long id) {
@@ -63,10 +66,13 @@ public class CarService implements CrudService<CarDto> {
         try {
             LOGGER.info("Adding car: {}", payload);
 
-            Car car = carRepository
-                    .save(modelMapper.mapDtoToModel(payload, Car.class));
+            List<Accessory> accessories = accessoryRepository.findAllById(payload.getAccessoriesIds());
 
-            return modelMapper.mapModelToDto(car, CarDto.class);
+            Car car = modelMapper.mapDtoToModel(payload, Car.class);
+            car.setAccessories(accessories);
+            car.setRented(false);
+
+            return modelMapper.mapModelToDto(carRepository.save(car), CarDto.class);
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new CarException("An error occurred while adding car.", e);
