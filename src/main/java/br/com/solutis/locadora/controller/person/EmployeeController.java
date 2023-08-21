@@ -1,10 +1,11 @@
-package br.com.solutis.locadora.controller.car;
+package br.com.solutis.locadora.controller.person;
 
-import br.com.solutis.locadora.exception.car.AccessoryException;
-import br.com.solutis.locadora.exception.car.AccessoryNotFoundException;
-import br.com.solutis.locadora.model.dto.car.AccessoryDto;
+
+import br.com.solutis.locadora.exception.person.EmployeeException;
+import br.com.solutis.locadora.exception.person.EmployeeNotFoundException;
+import br.com.solutis.locadora.model.dto.person.EmployeeDto;
 import br.com.solutis.locadora.response.ErrorResponse;
-import br.com.solutis.locadora.service.car.AccessoryService;
+import br.com.solutis.locadora.service.person.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -12,84 +13,89 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "AccessoryController")
+@Tag(name = "EmployeeController")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/accessories")
+@RequestMapping("/employees")
 @CrossOrigin
-public class AccessoryController {
-    private final AccessoryService accessoryService;
+public class EmployeeController {
+    private final EmployeeService employeeService;
 
     @Operation(
             summary = "Listar por id",
-            description = "Retorna as informações do acessório por id")
+            description = "Retorna as informações do funcionario por id"
+    )
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id) {
         try {
-            return new ResponseEntity<>(accessoryService.findById(id), HttpStatus.OK);
-        } catch (AccessoryNotFoundException e) {
+            return new ResponseEntity<>(employeeService.findById(id), HttpStatus.OK);
+        } catch (EmployeeNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
-        } catch (AccessoryException e) {
+        } catch (EmployeeException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @Operation(
             summary = "Listar todos",
-            description = "Retorna as informações de todos os acessórios"
+            description = "Retorna as informações de todos os funcionarios"
     )
     @GetMapping
     public ResponseEntity<?> findAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "3") int size) {
         try {
-            return new ResponseEntity<>(accessoryService.findAll(page, size), HttpStatus.OK);
-        } catch (AccessoryException e) {
+            return new ResponseEntity<>(employeeService.findAll(page, size), HttpStatus.OK);
+        } catch (EmployeeException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @Operation(
-            summary = "Adicionar um novo acessório",
-            description = "Retorna as informações do acessório adicionado"
+            summary = "Adicionar um novo funcionario",
+            description = "Retorna as informações do funcionario adicionado"
     )
     @PostMapping
-    public ResponseEntity<?> add(@RequestBody AccessoryDto payload) {
+    public ResponseEntity<?> add(@RequestBody EmployeeDto payload) {
         try {
-            return new ResponseEntity<>(accessoryService.add(payload), HttpStatus.CREATED);
-        } catch (AccessoryException e) {
+            EmployeeDto employeeDto = employeeService.add(payload);
+
+            return new ResponseEntity<>(employeeDto, HttpStatus.CREATED);
+        } catch (EmployeeException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @Operation(
-            summary = "Atualizar um acessório",
+            summary = "Atualiza um funcionario",
             description = "Retorna o codigo 204 (No Content)"
     )
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody AccessoryDto payload) {
+    public ResponseEntity<?> update(@RequestBody EmployeeDto payload) {
         try {
-            return new ResponseEntity<>(accessoryService.update(payload), HttpStatus.NO_CONTENT);
-        } catch (AccessoryNotFoundException e) {
+            return new ResponseEntity<>(employeeService.update(payload), HttpStatus.NO_CONTENT);
+        } catch (EmployeeNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
-        } catch (AccessoryException e) {
+        } catch (EmployeeException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @Operation(
-            summary = "Apagar um acessório por id",
+            summary = "Apaga um funcionario por id",
             description = "Retorna o codigo 204 (No Content)"
     )
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    public ResponseEntity<?> deleteById(@PathVariable Long id) {
         try {
-            accessoryService.deleteById(id);
+            employeeService.deleteById(id);
+
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (AccessoryNotFoundException e) {
+        } catch (EmployeeNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
-        } catch (AccessoryException e) {
+        } catch (EmployeeException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }
