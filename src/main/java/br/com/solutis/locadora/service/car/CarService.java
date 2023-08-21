@@ -5,7 +5,9 @@ import br.com.solutis.locadora.exception.car.CarNotFoundException;
 import br.com.solutis.locadora.exception.car.ManufacturerNotFoundException;
 import br.com.solutis.locadora.mapper.GenericMapper;
 import br.com.solutis.locadora.model.dto.car.CarDto;
+import br.com.solutis.locadora.model.entity.car.Accessory;
 import br.com.solutis.locadora.model.entity.car.Car;
+import br.com.solutis.locadora.model.entity.car.ModelCategoryEnum;
 import br.com.solutis.locadora.repository.car.CarRepository;
 import br.com.solutis.locadora.response.PageResponse;
 import br.com.solutis.locadora.service.CrudService;
@@ -129,11 +131,14 @@ public class CarService implements CrudService<CarDto> {
 
     }
 
-    public List<CarDto> findAvailableCarsByDateRange(LocalDate startDate, LocalDate endDate) {
-        List<Car> availableCars = carRepository.findAvailableCarsByDateRange(startDate, endDate);
-        return modelMapper.mapList(availableCars, CarDto.class);
+    public List<CarDto> findCarsByFilters(
+            ModelCategoryEnum category,
+            Accessory accessory,
+            String model,
+            Boolean rented) {
+        List<Car> cars = carRepository.findCarsByFilters(category, accessory, model, rented);
+        return modelMapper.mapList(cars, CarDto.class);
     }
-
     private Car getCar(Long id) {
         return carRepository.findById(id).orElseThrow(() -> {
             LOGGER.error("Car with ID {} not found.", id);

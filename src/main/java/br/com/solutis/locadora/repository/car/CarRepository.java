@@ -1,5 +1,7 @@
 package br.com.solutis.locadora.repository.car;
 
+import br.com.solutis.locadora.model.entity.car.ModelCategoryEnum;
+import br.com.solutis.locadora.model.entity.car.Accessory;
 import br.com.solutis.locadora.model.entity.car.Car;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +19,16 @@ public interface CarRepository extends JpaRepository<Car, Long> {
 
     @Query("SELECT DISTINCT c FROM Car c " +
             "LEFT JOIN c.rents r " +
-            "WHERE c.rented = false AND " +
-            "(r.endDate < :startDate OR r.startDate > :endDate OR r IS NULL)")
-    List<Car> findAvailableCarsByDateRange(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+            "WHERE (:rented IS NULL OR c.rented = :rented) " +
+            "AND (:accessory IS NULL OR :accessory MEMBER OF c.accessories) " +
+            "AND (c.deleted = false) " +
+            "AND (:category IS NULL OR c.model.category = :category) " +
+            "AND ((:rented = true) OR (c.rented = false))"+
+            "AND (:model IS NULL OR c.model.description = :model)")
+
+    List<Car> findCarsByFilters(
+            @Param("category") ModelCategoryEnum category,
+            @Param("accessory") Accessory accessory,
+            @Param("model") String model,
+            @Param("rented") Boolean rented);
 }

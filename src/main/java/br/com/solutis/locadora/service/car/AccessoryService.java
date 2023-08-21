@@ -65,7 +65,7 @@ public class AccessoryService implements CrudService<AccessoryDto> {
                     .save(modelMapper.mapDtoToModel(payload, Accessory.class));
 
             return modelMapper.mapModelToDto(accessory, AccessoryDto.class);
-        } catch (Exception e) {
+        } catch (AccessoryException e) {
             LOGGER.error(e.getMessage());
             throw new AccessoryException("An error occurred while adding a new accessory.", e);
         }
