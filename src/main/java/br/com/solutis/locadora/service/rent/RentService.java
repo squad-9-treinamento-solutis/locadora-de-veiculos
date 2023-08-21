@@ -1,5 +1,7 @@
 package br.com.solutis.locadora.service.rent;
 
+import br.com.solutis.locadora.exception.rent.RentException;
+import br.com.solutis.locadora.exception.rent.RentNotFoundException;
 import br.com.solutis.locadora.mapper.GenericMapper;
 import br.com.solutis.locadora.model.dto.rent.RentDto;
 import br.com.solutis.locadora.model.entity.car.Car;
@@ -13,6 +15,8 @@ import br.com.solutis.locadora.repository.rent.RentRepository;
 import br.com.solutis.locadora.response.PageResponse;
 import br.com.solutis.locadora.service.CrudService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +28,7 @@ import java.time.temporal.ChronoUnit;
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.REQUIRED)
 public class RentService implements CrudService<RentDto> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RentService.class);
 
     private final RentRepository rentRepository;
     private final GenericMapper<RentDto, Rent> modelMapper;
@@ -56,6 +61,27 @@ public class RentService implements CrudService<RentDto> {
         } catch (Exception e) {
             throw new RuntimeException("An error occurred while adding rent.", e);
         }
+    }
+
+    public RentDto finishRental(Long id) {
+        try {
+            Rent rent = rentRepository.findById(id).orElseThrow(() -> new RentNotFoundException(id));
+
+            if (!rent.getCar().isRented()) {
+                Car car = carRepository.findById(rent.getCar().getId()).orElseThrow();
+                car.setRented(false);
+
+                Rent updatedRent = rentRepository.save(rent);
+
+                return modelMapper.mapModelToDto(updatedRent, RentDto.class);
+            } else {
+                LOGGER.error("This rental is already finished.");
+            }
+        } catch (RentException e) {
+            throw new RuntimeException("An error occurred while finishing the rental.", e);
+        }
+        return null;
+
     }
 
     public RentDto update(RentDto payload) {
