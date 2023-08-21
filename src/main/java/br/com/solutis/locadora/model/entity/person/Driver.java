@@ -1,6 +1,6 @@
 package br.com.solutis.locadora.model.entity.person;
 
-import br.com.solutis.locadora.model.entity.cart.Cart;
+import br.com.solutis.locadora.model.entity.rent.Cart;
 import br.com.solutis.locadora.model.entity.rent.Rent;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;

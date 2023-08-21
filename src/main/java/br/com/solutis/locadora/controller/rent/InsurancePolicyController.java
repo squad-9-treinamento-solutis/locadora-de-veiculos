@@ -1,7 +1,7 @@
 package br.com.solutis.locadora.controller.rent;
 
-import br.com.solutis.locadora.exception.rent.InsurancePolicyException;
-import br.com.solutis.locadora.exception.rent.InsurancePolicyNotFoundException;
+import br.com.solutis.locadora.exception.rent.insurace.InsurancePolicyException;
+import br.com.solutis.locadora.exception.rent.insurace.InsurancePolicyNotFoundException;
 import br.com.solutis.locadora.model.dto.rent.InsurancePolicyDto;
 import br.com.solutis.locadora.response.ErrorResponse;
 import br.com.solutis.locadora.service.rent.InsurancePolicyService;

@@ -1,7 +1,6 @@
-package br.com.solutis.locadora.model.entity.cart;
+package br.com.solutis.locadora.model.entity.rent;
 
 import br.com.solutis.locadora.model.entity.person.Driver;
-import br.com.solutis.locadora.model.entity.rent.Rent;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

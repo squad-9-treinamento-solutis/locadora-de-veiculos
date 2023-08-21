@@ -1,4 +1,4 @@
-package br.com.solutis.locadora.exception.car;
+package br.com.solutis.locadora.exception.car.manufacturer;
 
 public class ManufacturerNotFoundException extends RuntimeException {
     public ManufacturerNotFoundException(Long id) {

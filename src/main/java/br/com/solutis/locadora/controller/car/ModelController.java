@@ -1,7 +1,7 @@
 package br.com.solutis.locadora.controller.car;
 
-import br.com.solutis.locadora.exception.car.ModelException;
-import br.com.solutis.locadora.exception.car.ModelNotFoundException;
+import br.com.solutis.locadora.exception.car.model.ModelException;
+import br.com.solutis.locadora.exception.car.model.ModelNotFoundException;
 import br.com.solutis.locadora.model.dto.car.ModelDto;
 import br.com.solutis.locadora.response.ErrorResponse;
 import br.com.solutis.locadora.service.car.ModelService;

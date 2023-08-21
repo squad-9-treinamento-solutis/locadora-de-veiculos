@@ -1,7 +1,7 @@
 package br.com.solutis.locadora.service.person;
 
-import br.com.solutis.locadora.exception.person.DriverException;
-import br.com.solutis.locadora.exception.person.DriverNotFoundException;
+import br.com.solutis.locadora.exception.person.driver.DriverException;
+import br.com.solutis.locadora.exception.person.driver.DriverNotFoundException;
 import br.com.solutis.locadora.mapper.GenericMapper;
 import br.com.solutis.locadora.model.dto.person.DriverDto;
 import br.com.solutis.locadora.model.entity.person.Driver;
