@@ -36,4 +36,18 @@ public class RentController {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+    @Operation(
+            summary = "Listando o alugueis finalizados",
+            description = "Retorna as informações dos alugueis finalizados"
+    )
+    @GetMapping("/finished")
+    public ResponseEntity<?> finishRent() {
+        try {
+            return new ResponseEntity<>(rentService.findFinishedRents(), HttpStatus.OK);
+        } catch (RentException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
