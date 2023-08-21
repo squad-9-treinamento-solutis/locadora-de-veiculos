@@ -5,6 +5,8 @@ import br.com.solutis.locadora.exception.cart.CartException;
 import br.com.solutis.locadora.exception.cart.CartNotFoundException;
 import br.com.solutis.locadora.exception.person.DriverException;
 import br.com.solutis.locadora.exception.person.DriverNotFoundException;
+import br.com.solutis.locadora.exception.rent.RentException;
+import br.com.solutis.locadora.exception.rent.RentNotFoundException;
 import br.com.solutis.locadora.model.dto.person.DriverDto;
 import br.com.solutis.locadora.response.ErrorResponse;
 import br.com.solutis.locadora.service.cart.CartService;
@@ -121,10 +123,10 @@ public class DriverController {
             summary = "Adiciona o aluguel no carrinho",
             description = "Retorna as informações do carrinho",
             tags = {"driverId", "cartId", "post", "rent"})
-    @PostMapping("/{driverId}/carts/{cartId}")
-    public ResponseEntity<?> addRentToCart(@PathVariable Long driverId, @PathVariable Long cartId) {
+    @PostMapping("/{driverId}/carts/{rentId}")
+    public ResponseEntity<?> addRentToCart(@PathVariable Long driverId, @PathVariable Long rentId) {
         try {
-            return new ResponseEntity<>(cartService.addRentToCartByDriverId(driverId, cartId), HttpStatus.OK);
+            return new ResponseEntity<>(cartService.addRentToCartByDriverId(driverId, rentId), HttpStatus.OK);
         } catch (CartNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
         } catch (CartException e) {
@@ -140,9 +142,9 @@ public class DriverController {
     public ResponseEntity<?> deleteRentFromCart(@PathVariable Long driverId, @PathVariable Long rentId) {
         try {
             return new ResponseEntity<>(cartService.removeRentFromCartByDriverId(driverId, rentId), HttpStatus.NO_CONTENT);
-        } catch (CartNotFoundException e) {
+        } catch (RentNotFoundException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
-        } catch (CartException e) {
+        } catch (RentException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
