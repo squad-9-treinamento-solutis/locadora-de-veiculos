@@ -61,7 +61,7 @@ public class CarService  {
         }
     }
 
-    public CarDtoResponse add(CarDto payload) {
+    public CarDto add(CarDto payload) {
         try {
             LOGGER.info("Adding car: {}", payload);
 
@@ -71,7 +71,7 @@ public class CarService  {
             car.setAccessories(accessories);
             car.setRented(false);
 
-            return modelMapperResponse.mapModelToDto(carRepository.save(car), CarDtoResponse.class);
+            return modelMapper.mapModelToDto(carRepository.save(car), CarDto.class);
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new CarException("An error occurred while adding car.", e);

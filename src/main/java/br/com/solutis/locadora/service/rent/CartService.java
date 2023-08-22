@@ -95,7 +95,7 @@ public class CartService {
         }
     }
 
-    public CartDtoResponse update(CartDto payload) {
+    public CartDto update(CartDto payload) {
         try {
             LOGGER.info("Updating cart: {}", payload);
 
@@ -104,7 +104,7 @@ public class CartService {
 
             Cart cart = cartRepository.save(driverCart);
 
-            return modelMapperResponse.mapModelToDto(cart, CartDtoResponse.class);
+            return modelMapper.mapModelToDto(cart, CartDto.class);
         } catch (Exception e) {
             LOGGER.error("An error occurred while updating cart: {}", e.getMessage());
             throw new CartException("An error occurred while updating cart.", e);
@@ -126,7 +126,7 @@ public class CartService {
         }
     }
 
-    public CartDtoResponse addByDriverId(long driverId) {
+    public CartDto addByDriverId(long driverId) {
         try {
             LOGGER.info("Adding cart with driver ID: {}", driverId);
 
@@ -137,7 +137,7 @@ public class CartService {
 
             Cart savedCart = cartRepository.save(cart);
 
-            return modelMapperResponse.mapModelToDto(savedCart, CartDtoResponse.class);
+            return modelMapper.mapModelToDto(savedCart, CartDto.class);
         } catch (Exception e) {
             LOGGER.error("An error occurred while adding cart: {}", e.getMessage());
             throw new CartException("An error occurred while adding cart.", e);
@@ -179,7 +179,7 @@ public class CartService {
         }
     }
 
-    public CartDtoResponse addRentToCartByDriverId(long driverId, long rentId) {
+    public CartDto addRentToCartByDriverId(long driverId, long rentId) {
         try {
             LOGGER.info("Adding rent with ID {} to cart with driver ID: {}", rentId, driverId);
 
@@ -189,7 +189,7 @@ public class CartService {
 
             Cart updatedCart = cartRepository.save(cart);
 
-            return modelMapperResponse.mapModelToDto(updatedCart, CartDtoResponse.class);
+            return modelMapper.mapModelToDto(updatedCart, CartDto.class);
         } catch (Exception e) {
             LOGGER.error("An error occurred while adding rent to cart: {}", e.getMessage());
             throw new CartException("An error occurred while adding rent to cart.", e);
