@@ -174,6 +174,16 @@ public class RentService {
         }
     }
 
+    public List<RentDtoResponse> findActiveRents(){
+        List<Rent> activeRents = rentRepository.findByFinishedFalse();
+
+        try {
+            return modelMapperResponse.mapList(activeRents, RentDtoResponse.class);
+        } catch (Exception e) {
+            throw new RentException("An error occurred while finding active rents.", e);
+        }
+    }
+
     public List<RentDtoResponse> findFinishedRents() {
         List<Rent> finishedRents = rentRepository.findByFinishedTrue();
 
