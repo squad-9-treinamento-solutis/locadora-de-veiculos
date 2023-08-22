@@ -35,10 +35,10 @@ public class AccessoryService implements CrudService<AccessoryDto> {
         return modelMapper.mapModelToDto(accessory, AccessoryDto.class);
     }
 
-    public PageResponse<AccessoryDto> findAll(int pageNo, int pageSize) {
-        try {
-            LOGGER.info("Fetching accessories with page number {} and page size {}.", pageNo, pageSize);
+    public PageResponse<AccessoryDto> findAll(int pageNo, int pageSize) throws AccessoryNotFoundException{
 
+            LOGGER.info("Fetching accessories with page number {} and page size {}.", pageNo, pageSize);
+            try{
             Pageable paging = PageRequest.of(pageNo, pageSize);
             Page<Accessory> pagedAccessories = accessoryRepository.findAll(paging);
             List<AccessoryDto> accessoryDtos = modelMapper.
@@ -51,31 +51,34 @@ public class AccessoryService implements CrudService<AccessoryDto> {
             pageResponse.setTotalPages(pagedAccessories.getTotalPages());
 
             return pageResponse;
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage());
-            throw new AccessoryException("An error occurred while fetching accessories.", e);
-        }
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage());
+                throw new AccessoryException("An error occurred while finding accessory.", e);
+            }
     }
 
-    public AccessoryDto add(AccessoryDto payload) {
-        try {
+    public AccessoryDto add(AccessoryDto payload) throws AccessoryException{
+
+        try{
             LOGGER.info("Adding accessory {}.", payload);
 
             Accessory accessory = accessoryRepository
                     .save(modelMapper.mapDtoToModel(payload, Accessory.class));
 
             return modelMapper.mapModelToDto(accessory, AccessoryDto.class);
-        } catch (AccessoryException e) {
+        } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new AccessoryException("An error occurred while adding a new accessory.", e);
+            throw new AccessoryException("An error occurred while add accessory.", e);
         }
     }
 
-    public AccessoryDto update(AccessoryDto payload) {
+    public AccessoryDto update(AccessoryDto payload) throws AccessoryException{
         Accessory existingAccessory = getAccessory(payload.getId());
         if (existingAccessory.isDeleted()) throw new AccessoryNotFoundException(existingAccessory.getId());
 
-        try {
+        try{
+
+
             LOGGER.info("Updating accessory {}.", payload);
             AccessoryDto accessoryDto = modelMapper
                     .mapModelToDto(existingAccessory, AccessoryDto.class);
@@ -86,9 +89,10 @@ public class AccessoryService implements CrudService<AccessoryDto> {
                     .save(modelMapper.mapDtoToModel(accessoryDto, Accessory.class));
 
             return modelMapper.mapModelToDto(accessory, AccessoryDto.class);
+
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
-            throw new AccessoryException("An error occurred while updating accessory.", e);
+        LOGGER.error(e.getMessage());
+        throw new AccessoryException("An error occurred while updating accessory.", e);
         }
     }
 

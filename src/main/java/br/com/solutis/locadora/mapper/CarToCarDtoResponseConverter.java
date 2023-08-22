@@ -9,26 +9,26 @@ import org.modelmapper.AbstractConverter;
 public class CarToCarDtoResponseConverter extends AbstractConverter<Car, CarDtoResponse> {
     @Override
     protected CarDtoResponse convert(Car car) {
-        CarDtoResponse dto = new CarDtoResponse();
+        CarDtoResponse carDtoResponse = new CarDtoResponse();
 
-        dto.setId(car.getId());
-        dto.setColor(car.getColor());
-        dto.setPlate(car.getPlate());
-        dto.setChassis(car.getChassis());
-        dto.setDailyValue(car.getDailyValue());
-        dto.setRented(car.isRented());
+        carDtoResponse.setId(car.getId());
+        carDtoResponse.setColor(car.getColor());
+        carDtoResponse.setPlate(car.getPlate());
+        carDtoResponse.setChassis(car.getChassis());
+        carDtoResponse.setDailyValue(car.getDailyValue());
+        carDtoResponse.setRented(car.isRented());
 
-        dto.setAccessories(car.getAccessories());
+        carDtoResponse.setAccessories(car.getAccessories());
 
         if (car.getModel() != null) {
-            dto.setDescription(car.getModel().getDescription());
-            dto.setCategory(car.getModel().getCategory());
+            carDtoResponse.setDescription(car.getModel().getDescription());
+            carDtoResponse.setCategory(car.getModel().getCategory());
             if (car.getModel().getManufacturer() != null) {
-                dto.setName(car.getModel().getManufacturer().getName());
+                carDtoResponse.setName(car.getModel().getManufacturer().getName());
             }
         }
 
-        return dto;
+        return carDtoResponse;
     }
 
 }

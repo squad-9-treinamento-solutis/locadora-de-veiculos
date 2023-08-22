@@ -6,7 +6,9 @@ import br.com.solutis.locadora.exception.rent.RentNotFoundException;
 import br.com.solutis.locadora.exception.rent.cart.CartException;
 import br.com.solutis.locadora.exception.rent.cart.CartNotFoundException;
 import br.com.solutis.locadora.model.dto.rent.CartDto;
+import br.com.solutis.locadora.model.dto.rent.CartDtoResponse;
 import br.com.solutis.locadora.model.dto.rent.RentDto;
+import br.com.solutis.locadora.model.dto.rent.RentDtoResponse;
 import br.com.solutis.locadora.response.ErrorResponse;
 import br.com.solutis.locadora.service.rent.CartService;
 import br.com.solutis.locadora.service.rent.RentService;
@@ -65,7 +67,7 @@ public class CartController {
     public ResponseEntity<?> addRent(@PathVariable Long driverId, @RequestBody RentDto payload) {
         try {
             payload.setDriverId(driverId);
-            RentDto rentDto = rentService.add(payload);
+            RentDtoResponse rentDto = rentService.add(payload);
 
             cartService.addRentToCartByDriverId(driverId, rentDto.getId());
 
@@ -87,7 +89,7 @@ public class CartController {
     public ResponseEntity<?> confirmRentFromCart(@PathVariable Long driverId, @PathVariable Long rentId) {
         try {
             rentService.confirmRent(rentId);
-            CartDto cartDto = cartService.removeRentFromCartByDriverId(driverId, rentId);
+            CartDtoResponse cartDto = cartService.removeRentFromCartByDriverId(driverId, rentId);
 
             return new ResponseEntity<>(cartDto, HttpStatus.OK);
         } catch (RentNotFoundException e) {

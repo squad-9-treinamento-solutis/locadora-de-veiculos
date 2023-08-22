@@ -61,7 +61,7 @@ public class CarService  {
         }
     }
 
-    public CarDto add(CarDto payload) {
+    public CarDtoResponse add(CarDto payload) {
         try {
             LOGGER.info("Adding car: {}", payload);
 
@@ -71,14 +71,14 @@ public class CarService  {
             car.setAccessories(accessories);
             car.setRented(false);
 
-            return modelMapper.mapModelToDto(carRepository.save(car), CarDto.class);
+            return modelMapperResponse.mapModelToDto(carRepository.save(car), CarDtoResponse.class);
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new CarException("An error occurred while adding car.", e);
         }
     }
 
-    public CarDto update(CarDto payload) {
+    public CarDtoResponse update(CarDto payload) {
         Car existingCar = getCar(payload.getId());
         if (existingCar.isDeleted()) throw new ManufacturerNotFoundException(existingCar.getId());
 
@@ -92,7 +92,7 @@ public class CarService  {
             Car car = carRepository
                     .save(modelMapper.mapDtoToModel(carDto, Car.class));
 
-            return modelMapper.mapModelToDto(car, CarDto.class);
+            return modelMapperResponse.mapModelToDto(car, CarDtoResponse.class);
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new CarException("An error occurred while updating car.", e);
@@ -139,6 +139,7 @@ public class CarService  {
             Accessory accessory,
             String model,
             Boolean rented) {
+
         List<Car> cars = carRepository.findCarsByFilters(category, accessory, model, rented);
         return modelMapperResponse.mapList(cars, CarDtoResponse.class);
     }
