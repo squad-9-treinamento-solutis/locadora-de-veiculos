@@ -77,7 +77,7 @@ public class RentService {
         }
     }
 
-    public RentDtoResponse add(RentDto payload) {
+    public RentDto add(RentDto payload) {
         try {
             InsurancePolicy insurancePolicy = insurancePolicyRepository.findById(payload.getInsurancePolicyId()).orElseThrow();
             Car car = carRepository.findById(payload.getCarId()).orElseThrow();
@@ -92,7 +92,7 @@ public class RentService {
 
             Rent rent = rentRepository.save(modelMapper.mapDtoToModel(payload, Rent.class));
 
-            return modelMapperResponse.mapModelToDto(rent, RentDtoResponse.class);
+            return modelMapper.mapModelToDto(rent, RentDto.class);
         } catch (CarAlreadyRentedException e) {
             LOGGER.error("An error occurred while adding rent.", e);
             throw new CarException("Car with ID " + payload.getCarId() + " is already rented.", e);

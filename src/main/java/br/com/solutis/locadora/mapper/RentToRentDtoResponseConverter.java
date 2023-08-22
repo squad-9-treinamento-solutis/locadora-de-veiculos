@@ -25,9 +25,11 @@ public class RentToRentDtoResponseConverter extends AbstractConverter<Rent, Rent
         rentDtoResponse.setTheftCoverage(rent.getInsurancePolicy().isTheftCoverage());
         rentDtoResponse.setPlate(rent.getCar().getPlate());
         rentDtoResponse.setColor(rent.getCar().getColor());
-        rentDtoResponse.setModel(rent.getCar().getModel().getDescription());
-        rentDtoResponse.setCategory(rent.getCar().getModel().getCategory());
-        rentDtoResponse.setManufacturer(rent.getCar().getModel().getManufacturer().getName());
+        if(rent.getCar().getModel()!= null){
+            rentDtoResponse.setModel(rent.getCar().getModel().getDescription());
+            rentDtoResponse.setCategory(rent.getCar().getModel().getCategory());
+            rentDtoResponse.setManufacturer(rent.getCar().getModel().getManufacturer().getName());
+        }
 
         return rentDtoResponse;
     }

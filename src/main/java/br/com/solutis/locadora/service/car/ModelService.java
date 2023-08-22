@@ -60,13 +60,13 @@ public class ModelService {
         }
     }
 
-    public ModelDtoResponse add(ModelDto payload) {
+    public ModelDto add(ModelDto payload) {
         try {
             LOGGER.info("Adding model: {}", payload);
 
             Model model = modelRepository.save(modelMapper.mapDtoToModel(payload, Model.class));
 
-            return modelMapperResponse.mapModelToDto(model, ModelDtoResponse.class);
+            return modelMapper.mapModelToDto(model, ModelDto.class);
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new ModelException("An error occurred while adding the car model", e);

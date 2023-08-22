@@ -67,7 +67,7 @@ public class CartController {
     public ResponseEntity<?> addRent(@PathVariable Long driverId, @RequestBody RentDto payload) {
         try {
             payload.setDriverId(driverId);
-            RentDtoResponse rentDto = rentService.add(payload);
+            RentDto rentDto = rentService.add(payload);
 
             cartService.addRentToCartByDriverId(driverId, rentDto.getId());
 
