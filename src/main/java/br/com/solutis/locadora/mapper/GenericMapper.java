@@ -11,7 +11,12 @@ import java.util.stream.Collectors;
 public class GenericMapper<S, T> {
     @Bean
     public ModelMapper modelMapper() {
-        return new ModelMapper();
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.addConverter(new CarToCarDtoResponseConverter());
+        modelMapper.addConverter(new CartToCartDtoResponseConverter());
+        modelMapper.addConverter(new RentToRentDtoResponseConverter());
+        modelMapper.addConverter(new ModelToModelDtoResponseConverter());
+        return modelMapper;
     }
 
     public T mapDtoToModel(S dto, Class<T> targetClass) {

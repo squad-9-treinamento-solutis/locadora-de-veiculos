@@ -5,6 +5,7 @@ import br.com.solutis.locadora.exception.rent.RentNotFoundException;
 import br.com.solutis.locadora.exception.rent.cart.CartException;
 import br.com.solutis.locadora.exception.rent.cart.CartNotFoundException;
 import br.com.solutis.locadora.mapper.GenericMapper;
+import br.com.solutis.locadora.model.dto.rent.CartDtoResponse;
 import br.com.solutis.locadora.model.dto.rent.CartDto;
 import br.com.solutis.locadora.model.entity.person.Driver;
 import br.com.solutis.locadora.model.entity.rent.Cart;
@@ -13,7 +14,6 @@ import br.com.solutis.locadora.repository.person.DriverRepository;
 import br.com.solutis.locadora.repository.rent.CartRepository;
 import br.com.solutis.locadora.repository.rent.RentRepository;
 import br.com.solutis.locadora.response.PageResponse;
-import br.com.solutis.locadora.service.CrudService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,25 +29,23 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.REQUIRED)
-public class CartService implements CrudService<CartDto> {
+public class CartService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CartService.class);
     private final CartRepository cartRepository;
     private final RentRepository rentRepository;
     private final DriverRepository driverRepository;
     private final GenericMapper<CartDto, Cart> modelMapper;
+    private final GenericMapper<CartDtoResponse,Cart> modelMapperResponse;
 
-    public CartDto findById(Long id) {
+    public CartDtoResponse findById(Long id) {
         LOGGER.info("Finding cart with ID: {}", id);
 
-        Cart cart = cartRepository.findById(id).orElseThrow(() -> {
-            LOGGER.error("Cart with ID {} not found.", id);
-            return new CartNotFoundException(id);
-        });
+        Cart cart = cartRepository.findById(id).orElseThrow(() -> new CartNotFoundException(id));
 
-        return modelMapper.mapModelToDto(cart, CartDto.class);
+        return modelMapperResponse.mapModelToDto(cart, CartDtoResponse.class);
     }
 
-    public CartDto findByDriverId(Long driverId) {
+    public CartDtoResponse findByDriverId(Long driverId) {
         LOGGER.info("Finding cart with driver ID: {}", driverId);
 
         Cart cart = cartRepository.findByDriverId(driverId);
@@ -57,21 +55,21 @@ public class CartService implements CrudService<CartDto> {
             throw new CartNotFoundException(driverId);
         }
 
-        return modelMapper.mapModelToDto(cart, CartDto.class);
+        return modelMapperResponse.mapModelToDto(cart, CartDtoResponse.class);
     }
 
-    public PageResponse<CartDto> findAll(int pageNo, int pageSize) {
+    public PageResponse<CartDtoResponse> findAll(int pageNo, int pageSize) {
         try {
             LOGGER.info("Fetching carts with page number {} and page size {}.", pageNo, pageSize);
 
             Pageable paging = PageRequest.of(pageNo, pageSize);
             Page<Cart> pagedCarts = cartRepository.findAll(paging);
 
-            List<CartDto> cartDtos = modelMapper.
-                    mapList(pagedCarts.getContent(), CartDto.class);
+            List<CartDtoResponse> cartDtosResponse = modelMapperResponse.
+                    mapList(pagedCarts.getContent(), CartDtoResponse.class);
 
-            PageResponse<CartDto> pageResponse = new PageResponse<>();
-            pageResponse.setContent(cartDtos);
+            PageResponse<CartDtoResponse> pageResponse = new PageResponse<>();
+            pageResponse.setContent(cartDtosResponse);
             pageResponse.setCurrentPage(pagedCarts.getNumber());
             pageResponse.setTotalItems(pagedCarts.getTotalElements());
             pageResponse.setTotalPages(pagedCarts.getTotalPages());
@@ -83,21 +81,21 @@ public class CartService implements CrudService<CartDto> {
         }
     }
 
-    public CartDto add(CartDto payload) {
+    public CartDtoResponse add(CartDto payload) {
         try {
             LOGGER.info("Adding a new cart: {}", payload);
 
             Cart cart = cartRepository
                     .save(modelMapper.mapDtoToModel(payload, Cart.class));
 
-            return modelMapper.mapModelToDto(cart, CartDto.class);
+            return modelMapperResponse.mapModelToDto(cart, CartDtoResponse.class);
         } catch (Exception e) {
             LOGGER.error("An error occurred while adding a new cart: {}", e.getMessage());
             throw new CartException("An error occurred while adding a new cart.", e);
         }
     }
 
-    public CartDto update(CartDto payload) {
+    public CartDtoResponse update(CartDto payload) {
         try {
             LOGGER.info("Updating cart: {}", payload);
 
@@ -106,7 +104,7 @@ public class CartService implements CrudService<CartDto> {
 
             Cart cart = cartRepository.save(driverCart);
 
-            return modelMapper.mapModelToDto(cart, CartDto.class);
+            return modelMapperResponse.mapModelToDto(cart, CartDtoResponse.class);
         } catch (Exception e) {
             LOGGER.error("An error occurred while updating cart: {}", e.getMessage());
             throw new CartException("An error occurred while updating cart.", e);
@@ -114,12 +112,11 @@ public class CartService implements CrudService<CartDto> {
     }
 
     public void deleteById(Long id) {
-        CartDto cartDto = findById(id);
+        Cart cart = cartRepository.findById(id).orElseThrow();
 
         try {
             LOGGER.info("Soft deleting cart with ID: {}", id);
 
-            Cart cart = modelMapper.mapDtoToModel(cartDto, Cart.class);
             cart.setDeleted(true);
 
             cartRepository.save(cart);
@@ -129,7 +126,7 @@ public class CartService implements CrudService<CartDto> {
         }
     }
 
-    public CartDto addByDriverId(long driverId) {
+    public CartDtoResponse addByDriverId(long driverId) {
         try {
             LOGGER.info("Adding cart with driver ID: {}", driverId);
 
@@ -140,7 +137,7 @@ public class CartService implements CrudService<CartDto> {
 
             Cart savedCart = cartRepository.save(cart);
 
-            return modelMapper.mapModelToDto(savedCart, CartDto.class);
+            return modelMapperResponse.mapModelToDto(savedCart, CartDtoResponse.class);
         } catch (Exception e) {
             LOGGER.error("An error occurred while adding cart: {}", e.getMessage());
             throw new CartException("An error occurred while adding cart.", e);
@@ -182,7 +179,7 @@ public class CartService implements CrudService<CartDto> {
         }
     }
 
-    public CartDto addRentToCartByDriverId(long driverId, long rentId) {
+    public CartDtoResponse addRentToCartByDriverId(long driverId, long rentId) {
         try {
             LOGGER.info("Adding rent with ID {} to cart with driver ID: {}", rentId, driverId);
 
@@ -192,14 +189,14 @@ public class CartService implements CrudService<CartDto> {
 
             Cart updatedCart = cartRepository.save(cart);
 
-            return modelMapper.mapModelToDto(updatedCart, CartDto.class);
+            return modelMapperResponse.mapModelToDto(updatedCart, CartDtoResponse.class);
         } catch (Exception e) {
             LOGGER.error("An error occurred while adding rent to cart: {}", e.getMessage());
             throw new CartException("An error occurred while adding rent to cart.", e);
         }
     }
 
-    public CartDto removeRentFromCartByDriverId(long driverId, long rentId) {
+    public CartDtoResponse removeRentFromCartByDriverId(long driverId, long rentId) {
         try {
             LOGGER.info("Removing rent with ID {} from cart with driver ID: {}", rentId, driverId);
 
@@ -211,7 +208,7 @@ public class CartService implements CrudService<CartDto> {
             rentRepository.save(rent);
             Cart updatedCart = cartRepository.save(cart);
 
-            return modelMapper.mapModelToDto(updatedCart, CartDto.class);
+            return modelMapperResponse.mapModelToDto(updatedCart, CartDtoResponse.class);
         } catch (Exception e) {
             LOGGER.error("An error occurred while removing rent from cart: {}", e.getMessage());
             throw new CartException("An error occurred while removing rent from cart.", e);

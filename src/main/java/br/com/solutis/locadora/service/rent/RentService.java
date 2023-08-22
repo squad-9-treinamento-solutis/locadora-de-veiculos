@@ -11,6 +11,7 @@ import br.com.solutis.locadora.exception.rent.RentNotConfirmedException;
 import br.com.solutis.locadora.exception.rent.RentNotFoundException;
 import br.com.solutis.locadora.mapper.GenericMapper;
 import br.com.solutis.locadora.model.dto.rent.RentDto;
+import br.com.solutis.locadora.model.dto.rent.RentDtoResponse;
 import br.com.solutis.locadora.model.entity.car.Car;
 import br.com.solutis.locadora.model.entity.person.Driver;
 import br.com.solutis.locadora.model.entity.rent.InsurancePolicy;
@@ -20,7 +21,6 @@ import br.com.solutis.locadora.repository.person.DriverRepository;
 import br.com.solutis.locadora.repository.rent.InsurancePolicyRepository;
 import br.com.solutis.locadora.repository.rent.RentRepository;
 import br.com.solutis.locadora.response.PageResponse;
-import br.com.solutis.locadora.service.CrudService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,32 +38,33 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.REQUIRED)
-public class RentService implements CrudService<RentDto> {
+public class RentService {
     private static final Logger LOGGER = LoggerFactory.getLogger(RentService.class);
 
     private final RentRepository rentRepository;
     private final GenericMapper<RentDto, Rent> modelMapper;
+    private final GenericMapper<RentDtoResponse, Rent> modelMapperResponse;
     private final InsurancePolicyRepository insurancePolicyRepository;
     private final CarRepository carRepository;
     private final DriverRepository driverRepository;
 
-    public RentDto findById(Long id) {
+    public RentDtoResponse findById(Long id) {
         LOGGER.info("Finding rent with ID: {}", id);
 
         Rent rent = getRent(id);
 
-        return modelMapper.mapModelToDto(rent, RentDto.class);
+        return modelMapperResponse.mapModelToDto(rent, RentDtoResponse.class);
     }
 
-    public PageResponse<RentDto> findAll(int pageNo, int pageSize) {
+    public PageResponse<RentDtoResponse> findAll(int pageNo, int pageSize) {
         try {
             LOGGER.info("Finding all rents");
 
             Page<Rent> pagedRents = rentRepository.findAll(PageRequest.of(pageNo, pageSize));
 
-            List<RentDto> rentDtos = modelMapper.mapList(pagedRents.getContent(), RentDto.class);
+            List<RentDtoResponse> rentDtos = modelMapper.mapList(pagedRents.getContent(), RentDtoResponse.class);
 
-            PageResponse<RentDto> pageResponse = new PageResponse<>();
+            PageResponse<RentDtoResponse> pageResponse = new PageResponse<>();
             pageResponse.setContent(rentDtos);
             pageResponse.setCurrentPage(pagedRents.getNumber());
             pageResponse.setTotalItems(pagedRents.getTotalElements());
@@ -76,7 +77,7 @@ public class RentService implements CrudService<RentDto> {
         }
     }
 
-    public RentDto add(RentDto payload) {
+    public RentDtoResponse add(RentDto payload) {
         try {
             InsurancePolicy insurancePolicy = insurancePolicyRepository.findById(payload.getInsurancePolicyId()).orElseThrow();
             Car car = carRepository.findById(payload.getCarId()).orElseThrow();
@@ -91,7 +92,7 @@ public class RentService implements CrudService<RentDto> {
 
             Rent rent = rentRepository.save(modelMapper.mapDtoToModel(payload, Rent.class));
 
-            return modelMapper.mapModelToDto(rent, RentDto.class);
+            return modelMapperResponse.mapModelToDto(rent, RentDtoResponse.class);
         } catch (CarAlreadyRentedException e) {
             LOGGER.error("An error occurred while adding rent.", e);
             throw new CarException("Car with ID " + payload.getCarId() + " is already rented.", e);
@@ -101,7 +102,7 @@ public class RentService implements CrudService<RentDto> {
         }
     }
 
-    public RentDto confirmRent(Long id) {
+    public RentDtoResponse confirmRent(Long id) {
         LOGGER.info("Confirming rent with id {}", id);
 
         Rent rent = getRent(id);
@@ -118,7 +119,7 @@ public class RentService implements CrudService<RentDto> {
             rent.setConfirmed(true);
             rent.getCar().setRented(true);
 
-            return modelMapper.mapModelToDto(rentRepository.save(rent), RentDto.class);
+            return modelMapperResponse.mapModelToDto(rentRepository.save(rent), RentDtoResponse.class);
         } catch (RentAlreadyConfirmedException e) {
             LOGGER.error("An error occurred while confirming rent with id {}", id, e);
             throw new RentException("Rent with ID " + id + " is already confirmed.", e);
@@ -134,7 +135,7 @@ public class RentService implements CrudService<RentDto> {
         }
     }
 
-    public RentDto finishRent(long driverId, long rentId) {
+    public RentDtoResponse finishRent(long driverId, long rentId) {
         LOGGER.info("Finishing rent with ID: {}", rentId);
 
         Rent rent = getRent(rentId);
@@ -154,7 +155,7 @@ public class RentService implements CrudService<RentDto> {
             rent.setFinishedDate(LocalDate.now());
             rent.getCar().setRented(false);
 
-            return modelMapper.mapModelToDto(rentRepository.save(rent), RentDto.class);
+            return modelMapperResponse.mapModelToDto(rentRepository.save(rent), RentDtoResponse.class);
         } catch (RentNotConfirmedException e) {
             LOGGER.error("An error occurred while confirming rent with id {}", rentId, e);
             throw new RentException("Rent with ID " + rentId + " is not confirmed.", e);
@@ -173,17 +174,17 @@ public class RentService implements CrudService<RentDto> {
         }
     }
 
-    public List<RentDto> findFinishedRents() {
+    public List<RentDtoResponse> findFinishedRents() {
         List<Rent> finishedRents = rentRepository.findByFinishedTrue();
 
         try {
-            return modelMapper.mapList(finishedRents, RentDto.class);
+            return modelMapperResponse.mapList(finishedRents, RentDtoResponse.class);
         } catch (Exception e) {
             throw new RentException("An error occurred while finding finished rents.", e);
         }
     }
 
-    public RentDto update(RentDto payload) {
+    public RentDtoResponse update(RentDto payload) {
         try {
             LOGGER.info("Updating rent with ID: {}", payload.getId());
 
@@ -196,7 +197,7 @@ public class RentService implements CrudService<RentDto> {
 
             updateFields(rent, payload);
 
-            return modelMapper.mapModelToDto(rentRepository.save(rent), RentDto.class);
+            return modelMapperResponse.mapModelToDto(rentRepository.save(rent), RentDtoResponse.class);
         } catch (Exception e) {
             LOGGER.error("An error occurred while updating rent with ID: {}", payload.getId(), e);
             throw new RentException("An error occurred while updating rent.", e);
@@ -206,10 +207,9 @@ public class RentService implements CrudService<RentDto> {
     public void deleteById(Long id) {
         LOGGER.info("Deleting rent with ID: {}", id);
 
-        RentDto rentDto = findById(id);
+        Rent rent = getRent(id);
 
         try {
-            Rent rent = modelMapper.mapDtoToModel(rentDto, Rent.class);
 
             rent.setDeleted(true);
             rent.getCar().setRented(false);

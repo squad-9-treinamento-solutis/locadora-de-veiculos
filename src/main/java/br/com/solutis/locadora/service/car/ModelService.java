@@ -4,6 +4,7 @@ import br.com.solutis.locadora.exception.car.model.ModelException;
 import br.com.solutis.locadora.exception.car.model.ModelNotFoundException;
 import br.com.solutis.locadora.mapper.GenericMapper;
 import br.com.solutis.locadora.model.dto.car.ModelDto;
+import br.com.solutis.locadora.model.dto.car.ModelDtoResponse;
 import br.com.solutis.locadora.model.entity.car.Model;
 import br.com.solutis.locadora.repository.car.ModelRepository;
 import br.com.solutis.locadora.response.PageResponse;
@@ -23,30 +24,31 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.REQUIRED)
-public class ModelService implements CrudService<ModelDto> {
+public class ModelService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ModelService.class);
     private final ModelRepository modelRepository;
     private final GenericMapper<ModelDto, Model> modelMapper;
+    private final GenericMapper<ModelDtoResponse, Model> modelMapperResponse;
 
-    public ModelDto findById(Long id) {
+    public ModelDtoResponse findById(Long id) {
         LOGGER.info("Finding model with ID: {}", id);
         Model model = getModel(id);
 
-        return modelMapper.mapModelToDto(model, ModelDto.class);
+        return modelMapperResponse.mapModelToDto(model, ModelDtoResponse.class);
     }
 
-    public PageResponse<ModelDto> findAll(int pageNo, int pageSize) {
+    public PageResponse<ModelDtoResponse> findAll(int pageNo, int pageSize) {
         try {
             LOGGER.info("Fetching models with page number {} and page size {}.", pageNo, pageSize);
 
             Pageable paging = PageRequest.of(pageNo, pageSize);
             Page<Model> pagedModels = modelRepository.findByDeletedFalse(paging);
 
-            List<ModelDto> manufacturerDtos = modelMapper
-                    .mapList(pagedModels.getContent(), ModelDto.class);
+            List<ModelDtoResponse> modelDtos = modelMapper
+                    .mapList(pagedModels.getContent(), ModelDtoResponse.class);
 
-            PageResponse<ModelDto> pageResponse = new PageResponse<>();
-            pageResponse.setContent(manufacturerDtos);
+            PageResponse<ModelDtoResponse> pageResponse = new PageResponse<>();
+            pageResponse.setContent(modelDtos);
             pageResponse.setCurrentPage(pagedModels.getNumber());
             pageResponse.setTotalItems(pagedModels.getTotalElements());
             pageResponse.setTotalPages(pagedModels.getTotalPages());
@@ -58,20 +60,20 @@ public class ModelService implements CrudService<ModelDto> {
         }
     }
 
-    public ModelDto add(ModelDto payload) {
+    public ModelDtoResponse add(ModelDto payload) {
         try {
             LOGGER.info("Adding model: {}", payload);
 
             Model model = modelRepository.save(modelMapper.mapDtoToModel(payload, Model.class));
 
-            return modelMapper.mapModelToDto(model, ModelDto.class);
+            return modelMapperResponse.mapModelToDto(model, ModelDtoResponse.class);
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new ModelException("An error occurred while adding the car model", e);
         }
     }
 
-    public ModelDto update(ModelDto payload) {
+    public ModelDtoResponse update(ModelDto payload) {
         Model existingModel = getModel(payload.getId());
         if (existingModel.isDeleted()) throw new ModelNotFoundException(existingModel.getId());
 
@@ -85,7 +87,7 @@ public class ModelService implements CrudService<ModelDto> {
             Model model = modelRepository
                     .save(modelMapper.mapDtoToModel(modelDto, Model.class));
 
-            return modelMapper.mapModelToDto(model, ModelDto.class);
+            return modelMapperResponse.mapModelToDto(model, ModelDtoResponse.class);
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             throw new ModelException("An error occurred while updating the car model.", e);
@@ -93,11 +95,11 @@ public class ModelService implements CrudService<ModelDto> {
     }
 
     public void deleteById(Long id) {
-        ModelDto modelDto = findById(id);
+        Model model = getModel(id);
         try {
             LOGGER.info("Soft deleting model with ID {}", id);
 
-            Model model = modelMapper.mapDtoToModel(modelDto, Model.class);
+
             model.setDeleted(true);
 
             modelRepository.save(model);
